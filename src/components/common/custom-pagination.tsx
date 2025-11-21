@@ -20,19 +20,23 @@ const GROUP_PAGINATION = 1;
 
 export const CustomPagination = ({ totalPages, currentPage, handlePageChange, nextPage, prevPage }: Props) => {
   const paginationArray = Array.from({ length: totalPages }, (_, i) => i + 1);
-  let paginationToDisplay = [
-    1,
-    ...paginationArray.slice(
-      Math.max(1, currentPage - 1 - GROUP_PAGINATION),
-      Math.min(totalPages - 1, currentPage + GROUP_PAGINATION)
-    ),
-    totalPages
-  ];
 
-  if (paginationToDisplay[1] - paginationToDisplay[0] > 1) paginationToDisplay.splice(1, 0, 0);
+  let paginationToDisplay: number[] = [];
+  if (currentPage > 0 && currentPage <= totalPages) {
+    paginationToDisplay = [
+      1,
+      ...paginationArray.slice(
+        Math.max(1, currentPage - 1 - GROUP_PAGINATION),
+        Math.min(totalPages - 1, currentPage + GROUP_PAGINATION)
+      ),
+      totalPages
+    ];
 
-  if (paginationToDisplay.at(-1)! - paginationToDisplay.at(-2)! > 1) {
-    paginationToDisplay.splice(paginationToDisplay.length - 1, 0, 0);
+    if (paginationToDisplay[1] - paginationToDisplay[0] > 1) paginationToDisplay.splice(1, 0, 0);
+
+    if (paginationToDisplay.at(-1)! - paginationToDisplay.at(-2)! > 1) {
+      paginationToDisplay.splice(paginationToDisplay.length - 1, 0, 0);
+    }
   }
 
   return (
