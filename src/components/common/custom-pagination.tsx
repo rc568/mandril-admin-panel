@@ -28,9 +28,10 @@ export const CustomPagination = ({ totalPages, currentPage, handlePageChange, ne
       ...paginationArray.slice(
         Math.max(1, currentPage - 1 - GROUP_PAGINATION),
         Math.min(totalPages - 1, currentPage + GROUP_PAGINATION)
-      ),
-      totalPages
+      )
     ];
+
+    if (totalPages !== 1) paginationToDisplay.push(totalPages);
 
     if (paginationToDisplay[1] - paginationToDisplay[0] > 1) paginationToDisplay.splice(1, 0, 0);
 
