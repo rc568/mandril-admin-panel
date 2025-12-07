@@ -24,6 +24,7 @@ const getStatusBadge = (status: OrderStatus) => {
       return <Badge className="bg-gray-100 text-gray-800">Desconocido</Badge>;
   }
 };
+
 const getSalesChannelBadge = (channel: string) => {
   switch (channel) {
     case 'WhatsApp':
@@ -34,6 +35,10 @@ const getSalesChannelBadge = (channel: string) => {
       return <Badge className="bg-blue-100 text-blue-800">{channel}</Badge>;
     case 'Mercado Libre':
       return <Badge className="bg-amber-100 text-amber-800">{channel}</Badge>;
+    case 'Ripley':
+      return <Badge className="bg-purple-100 text-purple-800">{channel}</Badge>;
+    case 'Linio':
+      return <Badge className="bg-orange-500 text-orange-100">{channel}</Badge>;
     default:
       return <Badge className="bg-gray-100 text-gray-800">{channel}</Badge>;
   }

@@ -1,14 +1,32 @@
 import { ordersApi } from '../api/orders.api';
 import type { GetOrdersMapped } from '../interfaces/get-orders-mapped.interface';
-import type { GetOrdersApiResponse } from '../interfaces/get-orders.interface';
+import type { GetOrdersApiResponse, GetOrdersQueryParams } from '../interfaces/get-orders.interface';
 import { mapOrderToDisplay } from '../mappers/get-orders-by-page.mapper';
 
-export const getOrdersByPage = async (page: number = 1, limit: number = 24): Promise<GetOrdersMapped> => {
+export const getOrdersByPage = async ({
+  page,
+  limit,
+  startDate,
+  endDate,
+  search,
+  channel,
+  status,
+  invoiceType
+}: GetOrdersQueryParams): Promise<GetOrdersMapped> => {
+  const params: Record<string, string | number | Date> = {
+    page: page,
+    limit: limit
+  };
+
+  if (startDate) params.minDate = startDate;
+  if (endDate) params.maxDate = endDate;
+  if (search) params.search = search;
+  if (channel) params.channel = channel;
+  if (status) params.status = status;
+  if (invoiceType) params.invoiceType = invoiceType;
+
   const response = await ordersApi.get<GetOrdersApiResponse>('/', {
-    params: {
-      page: page,
-      limit: limit
-    }
+    params: params
   });
   const { pagination, orders } = response.data.data;
 

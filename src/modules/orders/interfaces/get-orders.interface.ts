@@ -17,3 +17,14 @@ export interface ApiPayload {
 export interface GetOrdersApiResponse {
   data: ApiPayload;
 }
+
+export interface GetOrdersQueryParams {
+  page: number;
+  limit: number;
+  search?: string;
+  channel?: string;
+  status?: string;
+  invoiceType?: string;
+  startDate?: Date;
+  endDate?: Date;
+}

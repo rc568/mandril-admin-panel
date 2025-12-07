@@ -11,3 +11,9 @@ export const formatDate = (isoString: string) => {
     timeZone: 'America/Lima'
   }).format(date);
 };
+
+export const formattedDate = (date: string | Date) => {
+  return Intl.DateTimeFormat('es-PE', {
+    dateStyle: 'long'
+  }).format(new Date(date));
+};
