@@ -12,8 +12,14 @@ export const formatDate = (isoString: string) => {
   }).format(date);
 };
 
-export const formattedDate = (date: string | Date) => {
+export const formatLongDate = (date: string | Date) => {
   return Intl.DateTimeFormat('es-PE', {
     dateStyle: 'long'
+  }).format(new Date(date));
+};
+
+export const formatShortDate = (date: string | Date) => {
+  return Intl.DateTimeFormat('es-PE', {
+    dateStyle: 'short'
   }).format(new Date(date));
 };

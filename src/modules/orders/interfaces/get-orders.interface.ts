@@ -27,4 +27,5 @@ export interface GetOrdersQueryParams {
   invoiceType?: string;
   startDate?: Date;
   endDate?: Date;
+  sortBy?: string;
 }

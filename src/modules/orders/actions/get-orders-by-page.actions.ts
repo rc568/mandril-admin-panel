@@ -11,7 +11,8 @@ export const getOrdersByPage = async ({
   search,
   channel,
   status,
-  invoiceType
+  invoiceType,
+  sortBy
 }: GetOrdersQueryParams): Promise<GetOrdersMapped> => {
   const params: Record<string, string | number | Date> = {
     page: page,
@@ -24,6 +25,7 @@ export const getOrdersByPage = async ({
   if (channel) params.channel = channel;
   if (status) params.status = status;
   if (invoiceType) params.invoiceType = invoiceType;
+  if (sortBy) params.sortBy = sortBy;
 
   const response = await ordersApi.get<GetOrdersApiResponse>('/', {
     params: params
