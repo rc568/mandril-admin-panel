@@ -64,7 +64,7 @@ export const OrderListFilters = ({ initialFilters = {}, applyFilters }: Props) =
           <>
             <span className="text-sm font-semibold">Filtros activos: </span>
             {activeFiltersEntries.map(([key, value]) => (
-              <Badge variant={'outline'} className="rounded-none text-sm bg-gray-100" key={value.toString()}>
+              <Badge variant={'outline'} className="text-sm font-normal bg-gray-100" key={value.toString()}>
                 {salesChannelOptions && getFilterDisplayValue(key, value, salesChannelOptions)}
                 <Button variant={'ghost'} size={'icon-xs'} onClick={() => deleteFilter(key)}>
                   <X />
