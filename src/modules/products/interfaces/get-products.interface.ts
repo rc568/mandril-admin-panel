@@ -17,3 +17,14 @@ export interface ApiPayload {
 export interface GetProductsApiResponse {
   data: ApiPayload;
 }
+
+export interface GetProductsQueryParams {
+  page: number;
+  limit: number;
+  catalogId?: string;
+  categoryId?: string;
+  isActive?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  orderBy?: string;
+}
