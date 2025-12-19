@@ -11,6 +11,7 @@ import {
   SidebarMenuItem
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
+import { useAuthStore } from '@/modules/auth/store/auth.store';
 import { Building2, FileText, Home, Package, Plane, Settings, ShoppingCart } from 'lucide-react';
 import { Link, useLocation } from 'react-router';
 
@@ -46,6 +47,8 @@ export function AppSidebar() {
   const { pathname } = useLocation();
 
   const isActive = (path: string) => pathname === path;
+
+  const { user } = useAuthStore();
 
   return (
     <Sidebar className="border-r border-sidebar-border" collapsible="icon">
@@ -105,6 +108,15 @@ export function AppSidebar() {
                 <span className="group-data-[collapsible=icon]:hidden">Configuración</span>
               </Link>
             </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <div className="flex gap-2 mb-4">
+              <div className="size-10 bg-green-300 rounded-full text-center">C</div>
+              <div className="flex flex-col gap-0 text-sm">
+                <span className="font-bold">{`${user?.userName} - ${user?.role}`}</span>
+                <span>{user?.email}</span>
+              </div>
+            </div>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
