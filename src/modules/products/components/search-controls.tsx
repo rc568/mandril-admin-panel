@@ -1,4 +1,10 @@
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Filter, Search, SortDesc } from 'lucide-react';
 
@@ -10,10 +16,23 @@ export const SearchControls = () => {
         <Input placeholder="Buscar productos..." className="pl-10" />
       </div>
 
-      <Button variant="outline" className="flex items-center gap-2">
-        <Filter className="w-4 h-4" />
-        Filtros
-      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button variant="outline" className="flex items-center gap-2">
+            <Filter className="w-4 h-4" />
+            Filtros
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {/* <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuSeparator /> */}
+          <DropdownMenuItem>Catálogo</DropdownMenuItem>
+          <DropdownMenuItem>Categoría</DropdownMenuItem>
+          <DropdownMenuItem>Visibilidad</DropdownMenuItem>
+          <DropdownMenuItem>Estado Stock</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
       <Button variant="outline" className="flex items-center gap-2">
         <SortDesc className="w-4 h-4" />
         Ordenar por

@@ -1,45 +1,23 @@
 import { CustomPagination } from '@/components/common/custom-pagination';
 import { Title } from '@/components/common/title';
 import { useQuery } from '@tanstack/react-query';
-import { useSearchParams } from 'react-router';
+
 import { getProductsByPage } from '../actions/get-products-by-page.action';
 import { ProductList } from '../components/product-list';
+import { ProductListFilters } from '../components/product-list-filters';
+import { ProductListOrderBy } from '../components/product-list-order-by';
 import { ProductPerPageOptions } from '../components/product-per-page-options';
 import { ProductsStats } from '../components/products-stats';
-import { SearchControls } from '../components/search-controls';
+import { useProductsParams } from '../hooks/use-products-params';
 
 export const ProductListPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const queryPage = searchParams.get('page') ?? '1';
-  const queryLimit = searchParams.get('limit') ?? '48';
-
-  const page = Number.isNaN(parseInt(queryPage)) || parseInt(queryPage) <= 1 ? 1 : parseInt(queryPage);
-  const limit =
-    Number.isNaN(parseInt(queryLimit)) || parseInt(queryLimit) > 96 || parseInt(queryLimit) <= 0
-      ? 48
-      : parseInt(queryLimit);
+  const { filters, setFilters, setLimit, setPage, setOrderBy } = useProductsParams();
 
   const { data, isFetching, isLoading } = useQuery({
-    queryKey: ['products', page, limit],
-    queryFn: () => getProductsByPage(+page, +limit),
+    queryKey: ['products', filters],
+    queryFn: () => getProductsByPage(filters),
     staleTime: 1000 * 60 * 5
   });
-
-  const pageChange = (page: number) => {
-    setSearchParams((prev) => {
-      prev.set('page', page.toString());
-      return prev;
-    });
-  };
-
-  const limitChange = (limit: string) => {
-    setSearchParams((prev) => {
-      prev.set('limit', limit);
-      prev.delete('page');
-      return prev;
-    });
-  };
 
   if (isLoading) return <h1>Cargando página ...</h1>;
 
@@ -52,15 +30,27 @@ export const ProductListPage = () => {
       ) : (
         <>
           <ProductsStats />
-          <SearchControls />
+          <div className="flex gap-2 pt-2 pb-4">
+            <ProductListFilters
+              initialFilters={{
+                catalogId: filters.catalogId,
+                categoryId: filters.categoryId,
+                isActive: filters.isActive,
+                maxPrice: filters.maxPrice,
+                minPrice: filters.minPrice
+              }}
+              applyFilters={setFilters}
+            />
+            <ProductListOrderBy orderBy={filters.orderBy} handleClick={setOrderBy} />
+          </div>
           {data.products.length > 0 ? (
             <ProductList products={data.products}>
               <ProductPerPageOptions
-                limit={limit}
-                page={page}
+                limit={filters.limit}
+                page={filters.page}
                 elements="productos"
                 totalItems={data.pagination.totalItems}
-                handleValueChange={limitChange}
+                handleValueChange={setLimit}
               />
             </ProductList>
           ) : (
@@ -68,8 +58,8 @@ export const ProductListPage = () => {
           )}
           <CustomPagination
             totalPages={data.pagination.totalPages}
-            handlePageChange={pageChange}
-            currentPage={+page}
+            handlePageChange={setPage}
+            currentPage={filters.page}
             nextPage={data.pagination.nextPage}
             prevPage={data.pagination.prevPage}
           />

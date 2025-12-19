@@ -1,18 +1,34 @@
 import { AppLayout } from '@/components/layout/app-layout';
+import { AuthLayout } from '@/components/layout/auth-layout';
+import { AuthenticatedRoute, NotAuthenticatedRoute } from '@/components/routes/protected-routes';
+import { LoginPage } from '@/modules/auth/pages/login-page';
 import { DashboardPage } from '@/modules/dashboard/pages/dashboard-page';
-import { OrdersPage } from '@/modules/orders/orders-page';
+import { OrderListPage } from '@/modules/orders/pages/order-list-page';
 import { ProductListPage } from '@/modules/products';
 import { createBrowserRouter, Navigate } from 'react-router';
 
 export const appRouter = createBrowserRouter([
   {
     path: '/',
-    Component: AppLayout,
+    element: (
+      <AuthenticatedRoute>
+        <AppLayout />
+      </AuthenticatedRoute>
+    ),
     children: [
       { index: true, Component: DashboardPage },
       { path: 'productos', Component: ProductListPage },
-      { path: 'ventas', Component: OrdersPage }
+      { path: 'ventas', Component: OrderListPage }
     ]
+  },
+  {
+    path: '/auth/login',
+    element: (
+      <NotAuthenticatedRoute>
+        <AuthLayout />
+      </NotAuthenticatedRoute>
+    ),
+    children: [{ index: true, Component: LoginPage }]
   },
   { path: '*', element: <Navigate to="/" /> }
 ]);

@@ -3,7 +3,7 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components
 import { Package } from 'lucide-react';
 import { type PropsWithChildren } from 'react';
 import type { ProductMapped } from '../interfaces/get-products-mapped.interface';
-import { ProductListRow } from './product-list-row';
+import { ProductListItem } from './product-list-row';
 
 interface Props extends PropsWithChildren {
   products: ProductMapped[];
@@ -38,7 +38,7 @@ export const ProductList = ({ products, children }: Props) => {
           </TableHeader>
           <TableBody>
             {products.map((product) => (
-              <ProductListRow product={product} key={product.id} />
+              <ProductListItem product={product} key={product.id} />
             ))}
           </TableBody>
         </Table>
