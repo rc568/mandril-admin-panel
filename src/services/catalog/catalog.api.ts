@@ -1,7 +1,7 @@
-import axios from 'axios';
+import { baseApi } from '@/lib/axios/api';
+import type { GetCatalogsApiResponse } from './interfaces/get-all-catalogs.interface';
 
-const BASE_URL = import.meta.env.VITE_API_URL;
-
-export const catalogApi = axios.create({
-  baseURL: `${BASE_URL}/api/catalogs`
-});
+export const getCatalogs = async () => {
+  const response = await baseApi.get<GetCatalogsApiResponse>('/catalogs');
+  return response.data;
+};

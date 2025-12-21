@@ -1,7 +1,7 @@
-import axios from 'axios';
+import { baseApi } from '@/lib/axios/api';
+import type { GetCategoriesApiResponse } from './interfaces/get-all-categories.interface';
 
-const BASE_URL = import.meta.env.VITE_API_URL;
-
-export const categoryApi = axios.create({
-  baseURL: `${BASE_URL}/api/categories`
-});
+export const getCategories = async () => {
+  const response = await baseApi.get<GetCategoriesApiResponse>('/categories');
+  return response.data;
+};
