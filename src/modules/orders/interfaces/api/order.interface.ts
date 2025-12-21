@@ -12,7 +12,7 @@ export interface Client {
   documentNumber: string | null;
 }
 
-export interface Product {
+export interface OrderProduct {
   code: string;
   name: string;
   price: string;
@@ -34,5 +34,5 @@ export interface Order {
   createdBy: string;
   client: Client;
   channel: string;
-  products: Product[];
+  products: OrderProduct[];
 }
