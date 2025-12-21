@@ -1,6 +1,6 @@
 import { formatCurrency, formatPercentage } from '@/lib/currency';
-import type { ProductMapped } from '../interfaces/get-products-mapped.interface';
-import type { Product } from '../interfaces/product.interface';
+import type { ProductMapped } from '../interfaces/api/get-products-mapped.interface';
+import type { Product } from '../interfaces/api/product.interface';
 
 export const mapProductToDisplay = (product: Product): ProductMapped => {
   const { productVariant, ...rest } = product;
