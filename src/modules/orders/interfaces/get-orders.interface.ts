@@ -9,13 +9,9 @@ interface Pagination {
   prevPage: number | null;
 }
 
-export interface ApiPayload {
-  pagination: Pagination;
-  orders: Order[];
-}
-
 export interface GetOrdersApiResponse {
-  data: ApiPayload;
+  orders: Order[];
+  pagination: Pagination;
 }
 
 export interface GetOrdersQueryParams {

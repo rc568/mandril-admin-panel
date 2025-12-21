@@ -30,7 +30,7 @@ export const getOrdersByPage = async ({
   const response = await ordersApi.get<GetOrdersApiResponse>('/', {
     params: params
   });
-  const { pagination, orders } = response.data.data;
+  const { pagination, orders } = response.data;
 
   return {
     pagination,

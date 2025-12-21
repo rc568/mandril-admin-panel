@@ -4,5 +4,5 @@ import type { GetCategoriesApiResponse } from './interfaces/get-all-categories.i
 
 export const getAllCategories = async (): Promise<Category[]> => {
   const response = await categoryApi.get<GetCategoriesApiResponse>('/');
-  return response.data.data.sort((a, b) => a.name.localeCompare(b.name));
+  return response.data.sort((a, b) => a.name.localeCompare(b.name));
 };

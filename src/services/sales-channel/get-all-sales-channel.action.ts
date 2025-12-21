@@ -3,5 +3,5 @@ import { salesChannelApi } from './sales-channel.api';
 
 export const getAllSalesChannel = async () => {
   const response = await salesChannelApi.get<GetSalesChannelApiResponse>('/');
-  return response.data.data;
+  return response.data;
 };

@@ -28,7 +28,7 @@ export const getProductsByPage = async ({
   const response = await productApi.get<GetProductsApiResponse>('/', {
     params: params
   });
-  const { pagination, products } = response.data.data;
+  const { pagination, products } = response.data;
 
   return {
     pagination,
