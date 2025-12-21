@@ -9,13 +9,9 @@ interface Pagination {
   prevPage: number | null;
 }
 
-export interface ApiPayload {
-  pagination: Pagination;
-  orders: Order[];
-}
-
 export interface GetOrdersApiResponse {
-  data: ApiPayload;
+  orders: Order[];
+  pagination: Pagination;
 }
 
 export interface GetOrdersQueryParams {
@@ -25,7 +21,7 @@ export interface GetOrdersQueryParams {
   channel?: string;
   status?: string;
   invoiceType?: string;
-  startDate?: Date;
-  endDate?: Date;
+  minDate?: Date;
+  maxDate?: Date;
   sortBy?: string;
 }

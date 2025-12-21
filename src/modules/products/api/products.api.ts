@@ -1,7 +1,11 @@
-import axios from 'axios';
+import { baseApi } from '@/lib/axios/api';
+import type { GetProductsApiResponse } from '../interfaces/api/get-products.interface';
+import type { GetProductsFilters } from '../interfaces/ui/get-products-filters.interface';
 
-const BASE_URL = import.meta.env.VITE_API_URL;
+export const getProducts = async (params: GetProductsFilters) => {
+  const response = await baseApi.get<GetProductsApiResponse>('/products', {
+    params: params
+  });
 
-export const productApi = axios.create({
-  baseURL: `${BASE_URL}/api/products`
-});
+  return response.data;
+};

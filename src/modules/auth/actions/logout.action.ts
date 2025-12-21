@@ -1,10 +1,9 @@
 import axios from 'axios';
 import { logout } from '../api/auth.api';
 
-export const logoutAction = async () => {
+export const logoutAction = async (): Promise<void> => {
   try {
-    const { data } = await logout();
-    return data;
+    await logout();
   } catch (error) {
     if (axios.isAxiosError(error)) throw error.response?.data;
     throw new Error('Error insesperado.');

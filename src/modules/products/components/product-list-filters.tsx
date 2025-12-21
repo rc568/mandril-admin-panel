@@ -9,17 +9,18 @@ import { getAllCategories } from '@/services/category/get-all-categories.action'
 import { useQuery } from '@tanstack/react-query';
 import { Filter, X } from 'lucide-react';
 import { useState } from 'react';
-import type { GetProductsQueryParams } from '../interfaces/get-products.interface';
+
+import type { GetProductsFilters } from '../interfaces/ui/get-products-filters.interface';
 import { getFilterDisplayValue } from '../utils/product-list-filters.utils';
 
 export type LocalProductsFilters = Pick<
-  GetProductsQueryParams,
+  GetProductsFilters,
   'catalogId' | 'categoryId' | 'isActive' | 'minPrice' | 'maxPrice'
 >;
 
 export interface Props {
   initialFilters?: LocalProductsFilters;
-  applyFilters: (filters: Partial<GetProductsQueryParams>) => void;
+  applyFilters: (filters: Partial<GetProductsFilters>) => void;
 }
 
 export const ProductListFilters = ({ initialFilters = {}, applyFilters }: Props) => {

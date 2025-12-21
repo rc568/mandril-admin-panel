@@ -11,17 +11,15 @@ import { useQuery } from '@tanstack/react-query';
 import { CalendarIcon, Filter, X } from 'lucide-react';
 import { useState } from 'react';
 import { INVOICE_TYPES_ARRAY, ORDER_STATUS_OPTIONS_WITH_ALL } from '../constants/order.constants';
-import type { GetOrdersQueryParams } from '../interfaces/get-orders.interface';
+
+import type { GetOrdersFilters } from '../interfaces/ui/get-orders-filters.interface';
 import { getFilterDisplayValue } from '../utils/order-list-filters.utils';
 
-export type LocalOrderFilters = Pick<
-  GetOrdersQueryParams,
-  'status' | 'channel' | 'startDate' | 'endDate' | 'invoiceType'
->;
+export type LocalOrderFilters = Pick<GetOrdersFilters, 'status' | 'channel' | 'startDate' | 'endDate' | 'invoiceType'>;
 
 export interface Props {
   initialFilters?: LocalOrderFilters;
-  applyFilters: (filters: Partial<GetOrdersQueryParams>) => void;
+  applyFilters: (filters: Partial<GetOrdersFilters>) => void;
 }
 
 export const OrderListFilters = ({ initialFilters = {}, applyFilters }: Props) => {

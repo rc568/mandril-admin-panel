@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { checkAuthAction } from '../actions/check-auth.action';
 import { loginAction } from '../actions/login.action';
 import { logoutAction } from '../actions/logout.action';
-import type { LoginBody, LogoutResponse } from '../interface/login.interface';
+import type { LoginBody } from '../interface/login.interface';
 import type { User } from '../interface/user.interface';
 
 type AuthStatus = 'authenticated' | 'non-authenticated' | 'checking';
@@ -13,7 +13,7 @@ type AuthState = {
   isAdmin: () => boolean;
   checkAuthStatus: () => Promise<boolean>;
   login: (body: LoginBody) => Promise<boolean>;
-  logout: () => Promise<LogoutResponse | undefined>;
+  logout: () => Promise<void>;
 };
 
 export const useAuthStore = create<AuthState>()((set, get) => ({
@@ -48,9 +48,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   },
   logout: async () => {
     try {
-      const data = await logoutAction();
+      await logoutAction();
       set({ user: null, authStatus: 'non-authenticated' });
-      return data;
     } catch (error) {
       set({ user: null, authStatus: 'non-authenticated' });
     }

@@ -9,13 +9,9 @@ interface Pagination {
   prevPage: number | null;
 }
 
-export interface ApiPayload {
+export interface GetProductsApiResponse {
   pagination: Pagination;
   products: Product[];
-}
-
-export interface GetProductsApiResponse {
-  data: ApiPayload;
 }
 
 export interface GetProductsQueryParams {

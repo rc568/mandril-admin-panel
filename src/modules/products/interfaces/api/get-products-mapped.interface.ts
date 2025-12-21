@@ -1,4 +1,4 @@
-import type { ApiPayload } from './get-products.interface';
+import type { GetProductsApiResponse } from './get-products.interface';
 import type { Product, ProductVariant } from './product.interface';
 
 export type StockStatus = 'Sin Stock' | 'Bajo Stock' | 'En Stock';
@@ -12,6 +12,6 @@ export interface ProductMapped extends Product {
   productVariant: ProductVariantMapped[];
 }
 
-export interface GetProductsMapped extends ApiPayload {
+export interface GetProductsMapped extends GetProductsApiResponse {
   products: ProductMapped[];
 }

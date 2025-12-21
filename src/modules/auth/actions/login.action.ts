@@ -9,7 +9,7 @@ export const loginAction = async ({ password, userName }: LoginBody) => {
       password: password
     });
 
-    return data.data;
+    return data;
   } catch (error) {
     if (axios.isAxiosError(error)) throw error.response?.data;
     throw new Error('Error insesperado.');
