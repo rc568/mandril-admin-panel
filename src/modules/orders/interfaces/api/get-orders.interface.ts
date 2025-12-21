@@ -21,7 +21,7 @@ export interface GetOrdersQueryParams {
   channel?: string;
   status?: string;
   invoiceType?: string;
-  startDate?: Date;
-  endDate?: Date;
+  minDate?: Date;
+  maxDate?: Date;
   sortBy?: string;
 }

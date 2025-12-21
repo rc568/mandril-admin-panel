@@ -1,36 +1,14 @@
-import { ordersApi } from '../api/orders.api';
-import type { GetOrdersMapped } from '../interfaces/get-orders-mapped.interface';
-import type { GetOrdersApiResponse, GetOrdersQueryParams } from '../interfaces/get-orders.interface';
+import { getOrders } from '../api/orders.api';
+import type { GetOrdersMapped } from '../interfaces/api/get-orders-mapped.interface';
+import type { GetOrdersFilters } from '../interfaces/ui/get-orders-filters.interface';
+
 import { mapOrderToDisplay } from '../mappers/get-orders-by-page.mapper';
+import { orderFiltersToApiQuery } from '../mappers/order-filters-to-api-query.mapper';
 
-export const getOrdersByPage = async ({
-  page,
-  limit,
-  startDate,
-  endDate,
-  search,
-  channel,
-  status,
-  invoiceType,
-  sortBy
-}: GetOrdersQueryParams): Promise<GetOrdersMapped> => {
-  const params: Record<string, string | number | Date> = {
-    page: page,
-    limit: limit
-  };
-
-  if (startDate) params.minDate = startDate;
-  if (endDate) params.maxDate = endDate;
-  if (search) params.search = search;
-  if (channel) params.channel = channel;
-  if (status) params.status = status;
-  if (invoiceType) params.invoiceType = invoiceType;
-  if (sortBy) params.sortBy = sortBy;
-
-  const response = await ordersApi.get<GetOrdersApiResponse>('/', {
-    params: params
-  });
-  const { pagination, orders } = response.data;
+export const getOrdersByPage = async (filters: GetOrdersFilters): Promise<GetOrdersMapped> => {
+  const params = orderFiltersToApiQuery(filters);
+  const data = await getOrders(params);
+  const { pagination, orders } = data;
 
   return {
     pagination,

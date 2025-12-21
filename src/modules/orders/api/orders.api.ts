@@ -1,7 +1,10 @@
-import axios from 'axios';
+import { baseApi } from '@/lib/axios/api';
+import type { GetOrdersApiResponse, GetOrdersQueryParams } from '../interfaces/api/get-orders.interface';
 
-const BASE_URL = import.meta.env.VITE_API_URL;
+export const getOrders = async (params: GetOrdersQueryParams) => {
+  const response = await baseApi.get<GetOrdersApiResponse>('/orders', {
+    params: params
+  });
 
-export const ordersApi = axios.create({
-  baseURL: `${BASE_URL}/api/orders`
-});
+  return response.data;
+};

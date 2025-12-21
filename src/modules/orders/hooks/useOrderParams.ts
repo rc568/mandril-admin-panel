@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router';
 import { INVOICE_TYPE_KEYS, ORDER_SORT_BY_ARRAY, ORDER_STATUS } from '../constants/order.constants';
-import type { GetOrdersQueryParams } from '../interfaces/get-orders.interface';
+import type { GetOrdersFilters } from '../interfaces/ui/get-orders-filters.interface';
 
 interface UseTableFiltersConfig {
   defaultPage?: number;
@@ -37,7 +37,7 @@ export const useOrderParams = (config: UseTableFiltersConfig = {}) => {
   const endDate = queryEndDate ? new Date(queryEndDate) : undefined;
   const sortBy = querySortBy && ORDER_SORT_BY_ARRAY.includes(querySortBy) ? querySortBy : undefined;
 
-  const filters: GetOrdersQueryParams = {
+  const filters: GetOrdersFilters = {
     limit,
     page,
     search,
@@ -80,7 +80,7 @@ export const useOrderParams = (config: UseTableFiltersConfig = {}) => {
     });
   };
 
-  const setFilters = (newFilters: Partial<GetOrdersQueryParams>) => {
+  const setFilters = (newFilters: Partial<GetOrdersFilters>) => {
     setSearchParams((prev) => {
       const newFiltersEntries = Object.entries(newFilters);
 
