@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router';
 import { PRODUCT_ORDER_BY_ARRAY } from '../constants/product.constants';
-import type { GetProductsQueryParams } from '../interfaces/get-products.interface';
+import type { GetProductsFilters } from '../interfaces/ui/get-products-filters.interface';
 
 interface UseTableFiltersConfig {
   defaultPage?: number;
@@ -35,7 +35,7 @@ export const useProductsParams = (config: UseTableFiltersConfig = {}) => {
   const maxPrice = queryMaxPrice && !Number.isNaN(Number(queryMaxPrice)) ? queryMaxPrice : undefined;
   const orderBy = queryOrderBy && PRODUCT_ORDER_BY_ARRAY.includes(queryOrderBy) ? queryOrderBy : undefined;
 
-  const filters: GetProductsQueryParams = {
+  const filters: GetProductsFilters = {
     limit,
     page,
     catalogId,
@@ -69,7 +69,7 @@ export const useProductsParams = (config: UseTableFiltersConfig = {}) => {
     });
   };
 
-  const setFilters = (newFilters: Partial<GetProductsQueryParams>) => {
+  const setFilters = (newFilters: Partial<GetProductsFilters>) => {
     setSearchParams((prev) => {
       const newFiltersEntries = Object.entries(newFilters);
 
