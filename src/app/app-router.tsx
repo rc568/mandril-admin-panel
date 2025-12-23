@@ -22,7 +22,7 @@ export const appRouter = createBrowserRouter([
         path: 'productos',
         children: [
           { index: true, Component: ProductListPage },
-          { path: 'edit/:id', Component: ProductEditPage }
+          { path: 'editar/:id', Component: ProductEditPage }
         ]
       },
       { path: 'ventas', Component: OrderListPage }
