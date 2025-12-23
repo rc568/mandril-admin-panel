@@ -38,7 +38,7 @@ export const ProductListItem = ({ product }: Props) => {
       <TableRow className="bg-muted/20" key={variant.id}>
         <TableCell>{variant.code}</TableCell>
         <TableCell className="font-medium">
-          <Link to={`edit/${product.slug}`}>{product.name}</Link>
+          <Link to={`editar/${product.slug}`}>{product.name}</Link>
         </TableCell>
         <TableCell>{variant.quantityInStock}</TableCell>
         <TableCell>{variant.purchasePrice}</TableCell>
@@ -66,7 +66,7 @@ export const ProductListItem = ({ product }: Props) => {
       <TableRow className="bg-muted/20 border-0">
         <TableCell></TableCell>
         <TableCell colSpan={8} className="font-medium">
-          <Link to={`edit/${product.slug}`}>{product.name}</Link>
+          <Link to={`editar/${product.slug}`}>{product.name}</Link>
         </TableCell>
       </TableRow>
       {product.productVariant.map((variant, index) => (
