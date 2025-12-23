@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Package } from 'lucide-react';
 import type { PropsWithChildren } from 'react';
-import type { OrderMapped } from '../interfaces/get-orders-mapped.interface';
+import type { OrderMapped } from '../interfaces/api/get-orders-mapped.interface';
 import { OrderListItem } from './order-list-item';
 
 interface Props extends PropsWithChildren {
