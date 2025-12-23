@@ -48,7 +48,7 @@ export const ProductListItem = ({ product }: Props) => {
         <TableCell>{getStockStatusBadge(variant.stockStatus)}</TableCell>
         <TableCell className="flex gap-2 justify-end items-center">
           <Link
-            to={product.slug}
+            to={`editar/${product.slug}`}
             className="inline-flex items-center justify-center border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5"
           >
             <Edit className="w-4 h-4" />
@@ -91,7 +91,7 @@ export const ProductListItem = ({ product }: Props) => {
           <TableCell>{getStockStatusBadge(variant.stockStatus)}</TableCell>
           <TableCell className={`flex gap-2 justify-end items-center`}>
             <Link
-              to={product.slug}
+              to={`editar/${product.slug}`}
               className="inline-flex items-center justify-center border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5"
             >
               <Edit className="w-4 h-4" />
