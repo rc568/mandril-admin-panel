@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import { Edit, Trash2 } from 'lucide-react';
-import type { ProductMapped } from '../interfaces/get-products-mapped.interface';
+import { Link } from 'react-router';
+import type { ProductMapped } from '../interfaces/api/get-products-mapped.interface';
 
 interface Props {
   product: ProductMapped;
@@ -36,7 +37,9 @@ export const ProductListItem = ({ product }: Props) => {
     return product.productVariant.map((variant) => (
       <TableRow className="bg-muted/20" key={variant.id}>
         <TableCell>{variant.code}</TableCell>
-        <TableCell className="font-medium">{product.name}</TableCell>
+        <TableCell className="font-medium">
+          <Link to={`edit/${product.slug}`}>{product.name}</Link>
+        </TableCell>
         <TableCell>{variant.quantityInStock}</TableCell>
         <TableCell>{variant.purchasePrice}</TableCell>
         <TableCell>{variant.profitPercentage}</TableCell>
@@ -44,9 +47,12 @@ export const ProductListItem = ({ product }: Props) => {
         <TableCell>{getStatusBadge(variant.isActive)}</TableCell>
         <TableCell>{getStockStatusBadge(variant.stockStatus)}</TableCell>
         <TableCell className="flex gap-2 justify-end items-center">
-          <Button variant="outline" size="sm">
+          <Link
+            to={product.slug}
+            className="inline-flex items-center justify-center border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5"
+          >
             <Edit className="w-4 h-4" />
-          </Button>
+          </Link>
           <Button variant="outline" size="sm">
             <Trash2 className="w-4 h-4" />
           </Button>
@@ -60,7 +66,7 @@ export const ProductListItem = ({ product }: Props) => {
       <TableRow className="bg-muted/20 border-0">
         <TableCell></TableCell>
         <TableCell colSpan={8} className="font-medium">
-          {product.name}
+          <Link to={`edit/${product.slug}`}>{product.name}</Link>
         </TableCell>
       </TableRow>
       {product.productVariant.map((variant, index) => (
@@ -84,9 +90,12 @@ export const ProductListItem = ({ product }: Props) => {
           <TableCell>{getStatusBadge(variant.isActive)}</TableCell>
           <TableCell>{getStockStatusBadge(variant.stockStatus)}</TableCell>
           <TableCell className={`flex gap-2 justify-end items-center`}>
-            <Button variant="outline" size="sm">
+            <Link
+              to={product.slug}
+              className="inline-flex items-center justify-center border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5"
+            >
               <Edit className="w-4 h-4" />
-            </Button>
+            </Link>
             <Button variant="outline" size="sm">
               <Trash2 className="w-4 h-4" />
             </Button>

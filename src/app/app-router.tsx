@@ -4,7 +4,8 @@ import { AuthenticatedRoute, NotAuthenticatedRoute } from '@/components/routes/p
 import { LoginPage } from '@/modules/auth/pages/login-page';
 import { DashboardPage } from '@/modules/dashboard/pages/dashboard-page';
 import { OrderListPage } from '@/modules/orders/pages/order-list-page';
-import { ProductListPage } from '@/modules/products';
+import { ProductEditPage, ProductListPage } from '@/modules/products/pages';
+
 import { createBrowserRouter, Navigate } from 'react-router';
 
 export const appRouter = createBrowserRouter([
@@ -17,7 +18,13 @@ export const appRouter = createBrowserRouter([
     ),
     children: [
       { index: true, Component: DashboardPage },
-      { path: 'productos', Component: ProductListPage },
+      {
+        path: 'productos',
+        children: [
+          { index: true, Component: ProductListPage },
+          { path: 'edit/:id', Component: ProductEditPage }
+        ]
+      },
       { path: 'ventas', Component: OrderListPage }
     ]
   },

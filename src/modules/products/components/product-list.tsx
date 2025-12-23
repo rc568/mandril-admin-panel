@@ -2,7 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Package } from 'lucide-react';
 import { type PropsWithChildren } from 'react';
-import type { ProductMapped } from '../interfaces/get-products-mapped.interface';
+
+import type { ProductMapped } from '../interfaces/api/get-products-mapped.interface';
 import { ProductListItem } from './product-list-row';
 
 interface Props extends PropsWithChildren {
