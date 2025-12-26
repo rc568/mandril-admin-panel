@@ -110,13 +110,15 @@ export function AppSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <div className="flex gap-2 mb-4">
-              <div className="size-10 bg-green-300 rounded-full text-center">C</div>
-              <div className="flex flex-col gap-0 text-sm">
-                <span className="font-bold">{`${user?.userName} - ${user?.role}`}</span>
-                <span>{user?.email}</span>
+            <SidebarMenuButton asChild tooltip="Contacto" className="h-fit">
+              <div className="flex gap-2 mb-4">
+                <div className="size-10 bg-green-300 rounded-full text-center">C</div>
+                <div className="flex flex-col gap-0 text-sm">
+                  <span className="font-bold">{`${user?.userName} - ${user?.role}`}</span>
+                  <span>{user?.email}</span>
+                </div>
               </div>
-            </div>
+            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
