@@ -1,9 +1,11 @@
 export interface Category {
+  id: number;
   name: string;
   slug: string;
 }
 
 export interface Catalog {
+  id: number;
   name: string;
   slug: string;
 }
@@ -31,7 +33,9 @@ interface Image {
 
 interface VariantAttribute {
   value: string;
+  valueId: number;
   attribute: string;
+  attributeId: number;
 }
 
 export interface Product {
