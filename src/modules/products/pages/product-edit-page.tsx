@@ -4,6 +4,7 @@ import { useParams } from 'react-router';
 
 import { getProductByIdAction } from '../actions/get-product-by-id.action';
 import { ProductEdit } from '../components/product-edit';
+import { mapProductToEditForm } from '../mappers/product-to-edit-form.mapper';
 
 export const ProductEditPage = () => {
   const params = useParams();
@@ -26,7 +27,7 @@ export const ProductEditPage = () => {
   return (
     <div className="max-w-7xl mx-auto">
       <Title title="Editar Producto" subtitle="Modifica tu producto." />
-      <ProductEdit product={product} />
+      <ProductEdit productForm={mapProductToEditForm(product)} productUI={product} />
     </div>
   );
 };
