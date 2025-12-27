@@ -13,14 +13,22 @@ import { getAllCategories } from '@/services/category/get-all-categories.action'
 import { useQuery } from '@tanstack/react-query';
 import { Info, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import type { ProductMapped } from '../interfaces/api/get-products-mapped.interface';
+import type { ProductEditFormMapper } from '../interfaces/ui/product-edit-form.interface';
 
 interface Props {
-  product: ProductMapped;
+  productForm: ProductEditFormMapper;
+  productUI: ProductMapped;
 }
 
-export const ProductEdit = ({ product }: Props) => {
+export const ProductEdit = ({ productForm, productUI }: Props) => {
   const [_localFilters, _setLocalFilters] = useState();
+  const { register, handleSubmit, control } = useForm({
+    defaultValues: productForm
+  });
+
+  const onSubmit = (data: any) => console.log(data);
 
   const { data: categories } = useQuery({
     queryKey: ['categories'],
@@ -35,7 +43,7 @@ export const ProductEdit = ({ product }: Props) => {
   });
 
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       {/* Form Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.5fr] gap-6 my-6">
         <Card>
@@ -47,7 +55,7 @@ export const ProductEdit = ({ product }: Props) => {
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-foreground">Nombre del Producto</Label>
-                  <Input value={product.name} onChange={() => {}} className="bg-background" />
+                  <Input {...register('name')} placeholder="Nombre del producto" className="bg-background" />
                   <p className="text-xs text-muted-foreground">
                     Do not exceed 20 characters when entering the product name.
                   </p>
@@ -55,7 +63,7 @@ export const ProductEdit = ({ product }: Props) => {
 
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-foreground">Slug</Label>
-                  <Input value={product.slug} onChange={() => {}} className="bg-background" />
+                  <Input {...register('slug')} placeholder="Slug del producto" className="bg-background" />
                   <p className="text-xs text-muted-foreground">
                     Do not exceed 20 characters when entering the product name.
                   </p>
@@ -68,40 +76,52 @@ export const ProductEdit = ({ product }: Props) => {
                     Categoría
                     <Info className="h-3 w-3 text-muted-foreground" />
                   </Label>
-                  <Select value={'11'} onValueChange={() => {}}>
-                    <SelectTrigger className="bg-background w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories &&
-                        categories.map((cat) => {
-                          return (
-                            <SelectItem key={cat.id} value={cat.id.toString()}>
-                              {cat.name}
-                            </SelectItem>
-                          );
-                        })}
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    control={control}
+                    name="categoryId"
+                    render={({ field }) => (
+                      <Select value={field.value?.toString()} onValueChange={(v) => field.onChange(v)}>
+                        <SelectTrigger className="bg-background w-full">
+                          <SelectValue placeholder="Seleccionar Categoría" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {categories &&
+                            categories.map((cat) => {
+                              return (
+                                <SelectItem key={cat.id} value={cat.id.toString()}>
+                                  {cat.name}
+                                </SelectItem>
+                              );
+                            })}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
 
                 <div className="space-y-2">
                   <Label className="text-sm font-medium text-foreground">Catálogo</Label>
-                  <Select value={'2'} onValueChange={() => {}}>
-                    <SelectTrigger className="bg-background w-full">
-                      <SelectValue placeholder="Seleccionar Catálogo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {catalogs &&
-                        catalogs.map((cat) => {
-                          return (
-                            <SelectItem key={cat.id} value={cat.id.toString()}>
-                              {cat.name}
-                            </SelectItem>
-                          );
-                        })}
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    control={control}
+                    name="catalogId"
+                    render={({ field }) => (
+                      <Select value={field.value?.toString()} onValueChange={(v) => field.onChange(v)}>
+                        <SelectTrigger className="bg-background w-full">
+                          <SelectValue placeholder="Seleccionar Catálogo" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {catalogs &&
+                            catalogs.map((cat) => {
+                              return (
+                                <SelectItem key={cat.id} value={cat.id.toString()}>
+                                  {cat.name}
+                                </SelectItem>
+                              );
+                            })}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
               </div>
 
@@ -111,23 +131,25 @@ export const ProductEdit = ({ product }: Props) => {
                   <Info className="h-3 w-3 text-muted-foreground" />
                 </Label>
                 <div className="p-4 border">
-                  <MarkdownViewer content={product.description ?? ''} />
+                  <MarkdownViewer content={productForm.description ?? ''} />
                 </div>
               </div>
 
               <div className="space-y-2">
                 <Label className="text-sm font-medium text-foreground">Atributos de producto</Label>
                 <div className="flex items-center gap-2">
-                  {product.attributes.length > 0 ? (
+                  {productUI.attributes.length > 0 ? (
                     <>
-                      {product.attributes.map((attr) => (
-                        <Badge variant={'outline'}>{attr.name}</Badge>
+                      {productUI.attributes.map((attr) => (
+                        <Badge key={attr.name} variant={'outline'}>
+                          {attr.name}
+                        </Badge>
                       ))}
                     </>
                   ) : (
                     <span className="text-sm text-muted-foreground pr-2">Sin atributos</span>
                   )}
-                  <Button size={'sm'}>
+                  <Button size={'sm'} type="button">
                     <Plus />
                     Añadir atributo
                   </Button>
@@ -163,12 +185,12 @@ export const ProductEdit = ({ product }: Props) => {
                 <h3 className="font-semibold text-base">Detalles del registro:</h3>
                 <div className="flex justify-between w-full">
                   <span className="italic">Creado por:</span>
-                  <span>{product.createdBy}</span>
+                  <span>{productUI.createdBy}</span>
                 </div>
 
                 <div className="flex justify-between w-full">
                   <span className="italic">Fecha de creación:</span>
-                  <span>{formatShortDate(product.createdAt)}</span>
+                  <span>{formatShortDate(productUI.createdAt)}</span>
                 </div>
               </div>
             </article>
@@ -176,7 +198,7 @@ export const ProductEdit = ({ product }: Props) => {
         </Card>
 
         <h2 className="text-xl font-semibold">Variantes del producto</h2>
-        {product.productVariant.map((pv) => {
+        {productUI.productVariant.map((pv, index) => {
           return (
             <Card className="col-span-1 row-span-1 lg:col-span-2" key={pv.id}>
               <CardHeader className="border-b">
@@ -188,34 +210,34 @@ export const ProductEdit = ({ product }: Props) => {
                         return <Badge key={va.attribute} variant={'outline'}>{`${va.attribute}: ${va.value}`}</Badge>;
                       })}
                     </div>
-                    <Button size={'icon'} variant={'ghost'}>
+                    <Button size={'icon'} variant={'ghost'} type="button">
                       <Trash2 className="size-5" />
                     </Button>
                   </div>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className=" grid grid-cols-4 gap-4" key={pv.id}>
+                <div className=" grid grid-cols-4 gap-4">
                   <div className="space-y-1">
                     <Label className="text-sm font-medium text-foreground shrink-0 grow">Precio de Compra</Label>
-                    <Input value={pv.purchasePrice} onChange={() => {}} className="bg-background" />
+                    <Input {...register(`variants.${index}.purchasePrice`)} className="bg-background" />
                   </div>
 
                   <div className="space-y-1">
                     <Label className="text-sm font-medium text-foreground">
                       Precio de Venta <span className="italic text-success">(Ganancia: 100%)</span>
                     </Label>
-                    <Input value={pv.price} onChange={() => {}} className="bg-background" />
+                    <Input {...register(`variants.${index}.price`)} className="bg-background" />
                   </div>
 
                   <div className="space-y-1">
                     <Label className="text-sm font-medium text-foreground shrink-0 grow">Precio Oferta</Label>
-                    <Input value={pv.purchasePrice} onChange={() => {}} className="bg-background" />
+                    <Input className="bg-background" />
                   </div>
 
                   <div className="space-y-1">
                     <Label className="text-sm font-medium text-foreground shrink-0 grow">Duración Oferta</Label>
-                    <Input value={'01/01/26 - 31/01/26'} onChange={() => {}} className="bg-background" />
+                    <Input className="bg-background" />
                     {/* <Calendar
                       mode="single"
                       selected={new Date()}
@@ -230,12 +252,17 @@ export const ProductEdit = ({ product }: Props) => {
 
                   <div className="space-y-1">
                     <Label className="text-sm font-medium text-foreground">Stock</Label>
-                    <Input value={pv.quantityInStock} type="number" onChange={() => {}} className="bg-background" />
+                    <Input
+                      {...register(`variants.${index}.quantityInStock`)}
+                      type="number"
+                      onChange={() => {}}
+                      className="bg-background"
+                    />
                   </div>
 
                   <div className="space-y-1">
                     <Label className="text-sm font-medium text-foreground">Stock Alerta</Label>
-                    <Input value={5} type="number" onChange={() => {}} className="bg-background" />
+                    <Input className="bg-background" />
                   </div>
 
                   <div className="space-y-1 col-start-3 row-start-1 col-span-2 row-span-4">
@@ -253,7 +280,11 @@ export const ProductEdit = ({ product }: Props) => {
                                 key={image.id}
                                 className="shrink-0 max-w-56 border-foreground/20 border rounded-sm p-2"
                               >
-                                <img src={image.imageUrl} alt={product.name} className="w-full h-full object-contain" />
+                                <img
+                                  src={image.imageUrl}
+                                  alt={productUI.name}
+                                  className="w-full h-full object-contain"
+                                />
                               </div>
                             );
                           })}
@@ -266,7 +297,13 @@ export const ProductEdit = ({ product }: Props) => {
                     <div className="text-sm font-medium text-foreground opacity-0">Activo</div>
                     <div className="flex justify-between items-center grow">
                       <Label className="text-sm font-medium text-foreground">Activo</Label>
-                      <Switch defaultChecked={pv.isActive} />
+                      <Controller
+                        control={control}
+                        name={`variants.${index}.isActive`}
+                        render={({ field }) => (
+                          <Switch checked={field.value} onCheckedChange={(v) => field.onChange(v)} />
+                        )}
+                      />
                     </div>
                   </div>
 
@@ -302,7 +339,7 @@ export const ProductEdit = ({ product }: Props) => {
                   {pv.variantAttributes.length > 0 ? (
                     pv.variantAttributes.map((va) => {
                       return (
-                        <div className="flex-1 space-y-1">
+                        <div className="flex-1 space-y-1" key={va.attributeId}>
                           <Label className="text-sm font-medium text-foreground ">{va.attribute}</Label>
                           <Input value={va.value} onChange={() => {}} className="bg-background" />
                         </div>
@@ -316,7 +353,11 @@ export const ProductEdit = ({ product }: Props) => {
             </Card>
           );
         })}
+
+        <Button type="submit" className="col-start-2 col-span-1 w-fit">
+          Guardar cambios
+        </Button>
       </div>
-    </>
+    </form>
   );
 };
