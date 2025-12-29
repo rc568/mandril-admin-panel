@@ -1,8 +1,10 @@
 import { z } from '../../../lib/zod';
 
-// const productAttributeSchema = z.array(z.object({
-//     attributeId: z.int()
-// }))
+const productAttributeSchema = z.array(
+  z.object({
+    attributeId: z.int()
+  })
+);
 
 const variantAttributeValueMapSchema = z.array(
   z.object({
@@ -12,15 +14,25 @@ const variantAttributeValueMapSchema = z.array(
 );
 
 const productVariantSchema = z.object({
-  price: z
-    .number()
-    .positive()
-    .transform((p) => p.toFixed(6)),
-  purchasePrice: z
-    .number()
-    .positive()
-    .transform((p) => p.toFixed(6)),
+  price: z.number().positive(),
+  purchasePrice: z.number().positive(),
   quantityInStock: z.number().int().min(0).optional().default(0)
+});
+
+export const createProductSchema = z.object({
+  name: z.string().min(3).max(255),
+  slug: z.string().min(3).max(255),
+  description: z.string().optional(),
+  categoryId: z.number(),
+  catalogId: z.number(),
+  attributesId: productAttributeSchema.optional(),
+  variants: z
+    .array(
+      productVariantSchema.extend({
+        attributes: variantAttributeValueMapSchema.optional()
+      })
+    )
+    .nonempty()
 });
 
 export const productEditSchema = z
