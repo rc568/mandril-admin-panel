@@ -4,12 +4,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { getAllCatalogs } from '@/services/catalog/get-all-catalogs.action';
-import { getAllCategories } from '@/services/category/get-all-categories.action';
-import { useQuery } from '@tanstack/react-query';
 import { Filter, X } from 'lucide-react';
 import { useState } from 'react';
 
+import { useCatalogs, useCategories } from '@/hooks/query';
 import type { GetProductsFilters } from '../interfaces/ui/get-products-filters.interface';
 import { getFilterDisplayValue } from '../utils/product-list-filters.utils';
 
@@ -26,17 +24,8 @@ export interface Props {
 export const ProductListFilters = ({ initialFilters = {}, applyFilters }: Props) => {
   const [localFilters, setLocalFilters] = useState<LocalProductsFilters>(initialFilters);
 
-  const { data: categories } = useQuery({
-    queryKey: ['categories'],
-    queryFn: getAllCategories,
-    staleTime: 1000 * 60 * 60
-  });
-
-  const { data: catalogs } = useQuery({
-    queryKey: ['catalogs'],
-    queryFn: getAllCatalogs,
-    staleTime: 1000 * 60 * 60
-  });
+  const { data: categories } = useCategories();
+  const { data: catalogs } = useCatalogs();
 
   const updateLocalFilters = (newFilters: LocalProductsFilters) => {
     setLocalFilters((prev) => ({ ...prev, ...newFilters }));

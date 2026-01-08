@@ -1,8 +1,6 @@
 import { Button } from '@/components/ui/button';
-import { getAllAttributesAction } from '@/services/attributes/actions/get-all-attributes.action';
-import { getAllCatalogs } from '@/services/catalog/get-all-catalogs.action';
-import { getAllCategories } from '@/services/category/get-all-categories.action';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useAttributes, useCatalogs, useCategories } from '@/hooks/query';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { createProductAction } from '../../actions/create-product.action';
 import { useProductCreateForm } from '../../hooks/use-product-create-form';
@@ -19,23 +17,9 @@ export const ProductCreate = () => {
 
   const { register, handleSubmit, control, formState } = form;
 
-  const { data: categories } = useQuery({
-    queryKey: ['categories'],
-    queryFn: getAllCategories,
-    staleTime: 1000 * 60 * 60
-  });
-
-  const { data: catalogs } = useQuery({
-    queryKey: ['catalogs'],
-    queryFn: getAllCatalogs,
-    staleTime: 1000 * 60 * 60
-  });
-
-  const { data: attributes } = useQuery({
-    queryKey: ['attributes'],
-    queryFn: getAllAttributesAction,
-    staleTime: 1000 * 60 * 60
-  });
+  const { data: categories } = useCategories();
+  const { data: catalogs } = useCatalogs();
+  const { data: attributes } = useAttributes();
 
   const createProductMutation = useMutation({
     mutationFn: createProductAction
