@@ -6,11 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { useCatalogs, useCategories } from '@/hooks/query';
 import { formatCurrency } from '@/lib/currency';
 import { formatShortDate } from '@/lib/date-utils';
-import { getAllCatalogs } from '@/services/catalog/get-all-catalogs.action';
-import { getAllCategories } from '@/services/category/get-all-categories.action';
-import { useQuery } from '@tanstack/react-query';
 import { Info, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -30,17 +28,8 @@ export const ProductEdit = ({ productForm, productUI }: Props) => {
 
   const onSubmit = (data: any) => console.log(data);
 
-  const { data: categories } = useQuery({
-    queryKey: ['categories'],
-    queryFn: getAllCategories,
-    staleTime: 1000 * 60 * 60
-  });
-
-  const { data: catalogs } = useQuery({
-    queryKey: ['catalogs'],
-    queryFn: getAllCatalogs,
-    staleTime: 1000 * 60 * 60
-  });
+  const { data: categories } = useCategories();
+  const { data: catalogs } = useCatalogs();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
