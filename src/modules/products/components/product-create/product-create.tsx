@@ -1,8 +1,6 @@
 import { Button } from '@/components/ui/button';
-import { useAttributes, useCatalogs, useCategories } from '@/hooks/query';
-import { useMutation } from '@tanstack/react-query';
+import { useAttributes, useCatalogs, useCategories, useProduct } from '@/hooks/query';
 import { useState } from 'react';
-import { createProductAction } from '../../actions/create-product.action';
 import { useProductCreateForm } from '../../hooks/use-product-create-form';
 import type { CreateProductForm } from '../../interfaces/ui/create-product-form.interface';
 import { ProductAddAttributesDialog } from './../product-create/product-add-attributes-dialog';
@@ -12,27 +10,27 @@ import { ProductVariantsSection } from './product-variants-section';
 export const ProductCreate = () => {
   const [isAttributesModalOpen, setIsAttributesModalOpen] = useState(false);
 
-  const { form, attributesFA, selectedAttributesId, variantsFA, checkedAttributeId, clearAttributes } =
-    useProductCreateForm();
-
-  const { register, handleSubmit, control, formState } = form;
+  const {
+    form: { register, handleSubmit, control, formState },
+    attributesFA,
+    selectedAttributesId,
+    variantsFA,
+    checkedAttributeId,
+    clearAttributes
+  } = useProductCreateForm();
 
   const { data: categories } = useCategories();
   const { data: catalogs } = useCatalogs();
   const { data: attributes } = useAttributes();
 
-  const createProductMutation = useMutation({
-    mutationFn: createProductAction
-  });
+  const { mutation: mutateProduct } = useProduct();
 
   const onSubmit = async (newProduct: CreateProductForm) => {
-    await createProductMutation.mutateAsync(newProduct, {
+    await mutateProduct.mutateAsync(newProduct, {
       onSuccess: (res) => console.log('producto creado', res),
       onError: (res) => console.log(res.message)
     });
   };
-
-  const { isPending } = createProductMutation;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -57,7 +55,7 @@ export const ProductCreate = () => {
           variantsField={variantsFA}
         />
 
-        <Button type="submit" disabled={isPending} className="w-fit justify-self-end">
+        <Button type="submit" disabled={mutateProduct.isPending} className="w-fit justify-self-end">
           Crear producto
         </Button>
 
