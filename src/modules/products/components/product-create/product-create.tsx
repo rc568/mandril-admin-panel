@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { useAttributes, useCatalogs, useCategories, useProduct } from '@/hooks/query';
+import { useAttributes, useProduct } from '@/hooks/query';
 import { useState } from 'react';
 import { useProductCreateForm } from '../../hooks/use-product-create-form';
 import type { CreateProductForm } from '../../interfaces/ui/create-product-form.interface';
@@ -19,8 +19,6 @@ export const ProductCreate = () => {
     clearAttributes
   } = useProductCreateForm();
 
-  const { data: categories } = useCategories();
-  const { data: catalogs } = useCatalogs();
   const { data: attributes } = useAttributes();
 
   const { mutation: mutateProduct } = useProduct();
@@ -37,8 +35,6 @@ export const ProductCreate = () => {
       <div className="grid grid-cols-1 gap-6 my-6">
         <ProductGeneralInfo
           attributes={attributes ?? []}
-          catalogs={catalogs ?? []}
-          categories={categories ?? []}
           attributesField={attributesFA}
           register={register}
           control={control}
