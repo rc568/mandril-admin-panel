@@ -34,7 +34,13 @@ export const ProductGeneralInfo = ({ attributes, attributesField, register, cont
               <Label htmlFor="name" className="text-sm font-medium text-foreground">
                 Nombre del Producto
               </Label>
-              <Input id="name" {...register('name')} placeholder="Nombre del producto" className="bg-background" />
+              <Input
+                id="name"
+                {...register('name')}
+                placeholder="Nombre del producto"
+                className="bg-background"
+                autoComplete="off"
+              />
               {errors.name?.message && <FormErrorMessage text={errors.name.message} />}
             </div>
 
@@ -42,7 +48,13 @@ export const ProductGeneralInfo = ({ attributes, attributesField, register, cont
               <Label htmlFor="slug" className="text-sm font-medium text-foreground">
                 Slug
               </Label>
-              <Input id="slug" {...register('slug')} placeholder="Slug del producto" className="bg-background" />
+              <Input
+                id="slug"
+                {...register('slug')}
+                placeholder="Slug del producto"
+                className="bg-background"
+                autoComplete="off"
+              />
               {errors.slug?.message && <FormErrorMessage text={errors.slug.message} />}
             </div>
           </div>
