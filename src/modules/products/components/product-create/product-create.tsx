@@ -1,23 +1,22 @@
 import { Button } from '@/components/ui/button';
 import { useAttributes, useProduct } from '@/hooks/query';
+import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { useState } from 'react';
-import { useProductCreateForm } from '../../hooks/use-product-create-form';
+import { FormProvider, useForm } from 'react-hook-form';
+import { ProductCreateProvider } from '../../context/product-create-context';
 import type { CreateProductForm } from '../../interfaces/ui/create-product-form.interface';
-import { ProductAddAttributesDialog } from './../product-create/product-add-attributes-dialog';
+import { createProductSchema } from '../../validators/product.validators';
+import { ProductAddAttributesDialog } from './product-add-attributes-dialog';
 import { ProductGeneralInfo } from './product-general-info';
 import { ProductVariantsSection } from './product-variants-section';
 
 export const ProductCreate = () => {
   const [isAttributesModalOpen, setIsAttributesModalOpen] = useState(false);
 
-  const {
-    form: { register, handleSubmit, control, formState },
-    attributesFA,
-    selectedAttributesId,
-    variantsFA,
-    checkedAttributeId,
-    clearAttributes
-  } = useProductCreateForm();
+  const form = useForm<CreateProductForm>({
+    resolver: standardSchemaResolver(createProductSchema),
+    defaultValues: { variants: [{ attributes: [], price: 0, purchasePrice: 0, quantityInStock: 0 }] }
+  });
 
   const { data: attributes } = useAttributes();
 
@@ -31,39 +30,26 @@ export const ProductCreate = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="grid grid-cols-1 gap-6 my-6">
-        <ProductGeneralInfo
-          attributes={attributes ?? []}
-          attributesField={attributesFA}
-          register={register}
-          control={control}
-          errors={formState.errors}
-          onAdd={() => setIsAttributesModalOpen(true)}
-        />
+    <FormProvider {...form}>
+      <ProductCreateProvider>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="grid grid-cols-1 gap-6 my-6">
+            <ProductGeneralInfo attributes={attributes ?? []} onAdd={() => setIsAttributesModalOpen(true)} />
 
-        <ProductVariantsSection
-          register={register}
-          control={control}
-          errors={formState.errors}
-          attributes={attributes ?? []}
-          attributesField={attributesFA}
-          variantsField={variantsFA}
-        />
+            <ProductVariantsSection attributes={attributes ?? []} />
 
-        <Button type="submit" disabled={mutateProduct.isPending} className="w-fit justify-self-end">
-          Crear producto
-        </Button>
+            <Button type="submit" disabled={mutateProduct.isPending} className="w-fit justify-self-end">
+              Crear producto
+            </Button>
 
-        <ProductAddAttributesDialog
-          open={isAttributesModalOpen}
-          onOpenChange={setIsAttributesModalOpen}
-          attributes={attributes ?? []}
-          selectedAttributesId={selectedAttributesId}
-          onToggle={checkedAttributeId}
-          cleanAttributes={clearAttributes}
-        />
-      </div>
-    </form>
+            <ProductAddAttributesDialog
+              open={isAttributesModalOpen}
+              onOpenChange={setIsAttributesModalOpen}
+              attributes={attributes ?? []}
+            />
+          </div>
+        </form>
+      </ProductCreateProvider>
+    </FormProvider>
   );
 };

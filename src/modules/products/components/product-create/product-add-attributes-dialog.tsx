@@ -11,24 +11,17 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
+import { useProductCreateContext } from '../../hooks/use-product-create-context';
 
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   attributes: GetAttributesApiResponse;
-  selectedAttributesId: number[];
-  onToggle: (attributeId: number) => void;
-  cleanAttributes: () => void;
 }
 
-export const ProductAddAttributesDialog = ({
-  open,
-  onOpenChange,
-  attributes,
-  onToggle,
-  cleanAttributes,
-  selectedAttributesId
-}: Props) => {
+export const ProductAddAttributesDialog = ({ open, onOpenChange, attributes }: Props) => {
+  const { checkedAttributeId, clearAttributes, selectedAttributesId } = useProductCreateContext();
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md" showCloseButton={false}>
@@ -44,7 +37,7 @@ export const ProductAddAttributesDialog = ({
                 <Checkbox
                   id={attr.name}
                   checked={selectedAttributesId.includes(attr.id)}
-                  onCheckedChange={() => onToggle(attr.id)}
+                  onCheckedChange={() => checkedAttributeId(attr.id)}
                 />
                 <Label htmlFor={attr.name} className="capitalize text-sm text-foreground cursor-pointer flex-1">
                   {attr.name}
@@ -60,7 +53,7 @@ export const ProductAddAttributesDialog = ({
               Cancelar
             </Button>
           </DialogClose>
-          <Button onClick={cleanAttributes} variant={'outline'} type="button">
+          <Button onClick={clearAttributes} variant={'outline'} type="button">
             Borrar atributos
           </Button>
           <Button type="button">Guardar cambios</Button>
