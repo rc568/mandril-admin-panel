@@ -7,21 +7,25 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
 import { Info, Plus } from 'lucide-react';
-import { type Control, type FieldErrors, type UseFieldArrayReturn, type UseFormRegister } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import type { CreateProductForm } from '../../interfaces/ui/create-product-form.interface';
 import { CatalogSelectInput } from '../catalog-select-input';
 import { CategorySelectInput } from '../category-select-input';
 
 interface Props {
   attributes: GetAttributesApiResponse;
-  register: UseFormRegister<CreateProductForm>;
-  control: Control<CreateProductForm>;
-  attributesField: UseFieldArrayReturn<CreateProductForm, 'attributesId'>;
-  errors: FieldErrors<CreateProductForm>;
   onAdd: () => void;
 }
 
-export const ProductGeneralInfo = ({ attributes, attributesField, register, control, errors, onAdd }: Props) => {
+export const ProductGeneralInfo = ({ attributes, onAdd }: Props) => {
+  const {
+    register,
+    control,
+    formState: { errors }
+  } = useFormContext<CreateProductForm>();
+
+  const attributesField = useWatch({ control: control, name: `attributesId` });
+
   return (
     <Card>
       <CardHeader>
@@ -82,9 +86,9 @@ export const ProductGeneralInfo = ({ attributes, attributesField, register, cont
           <div className="space-y-2">
             <h3 className="text-sm font-medium text-foreground">Atributos de producto</h3>
             <div className="flex items-center gap-2">
-              {attributesField.fields.length > 0 ? (
-                attributesField.fields.map((attrField) => (
-                  <Badge key={attrField.id} variant={'outline'} className="px-3 py-1">
+              {attributesField && attributesField.length > 0 ? (
+                attributesField?.map((attrField) => (
+                  <Badge key={attrField.attributeId} variant={'outline'} className="px-3 py-1">
                     {attributes && attributes.find((attr) => attrField.attributeId === attr.id)?.name}
                   </Badge>
                 ))

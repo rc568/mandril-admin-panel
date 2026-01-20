@@ -1,40 +1,33 @@
-import { FormErrorMessage } from '@/components/common/form-error-message';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
-import { Info, Plus, Trash2 } from 'lucide-react';
-import type { Control, FieldErrors, UseFieldArrayReturn, UseFormRegister } from 'react-hook-form';
+import { Plus } from 'lucide-react';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { useProductCreateContext } from '../../hooks/use-product-create-context';
 import type { CreateProductForm } from '../../interfaces/ui/create-product-form.interface';
-import { VariantAttributeField } from './variant-attribute-field';
+import { ProductVariantCard } from './product-variant-card';
 
 interface Props {
   attributes: GetAttributesApiResponse;
-  control: Control<CreateProductForm>;
-  register: UseFormRegister<CreateProductForm>;
-  attributesField: UseFieldArrayReturn<CreateProductForm, 'attributesId'>;
-  variantsField: UseFieldArrayReturn<CreateProductForm, 'variants'>;
-  errors: FieldErrors<CreateProductForm>;
 }
 
-export const ProductVariantsSection = ({
-  attributes,
-  control,
-  register,
-  attributesField,
-  variantsField,
-  errors
-}: Props) => {
+export const ProductVariantsSection = ({ attributes }: Props) => {
+  const { control } = useFormContext<CreateProductForm>();
+  const {
+    variantsFA: { append, remove, fields: variantsField }
+  } = useProductCreateContext();
+  const attributesFieldWatch = useWatch({ control: control, name: `attributesId` }) ?? [];
+
+  const removeVariant = (index: number) => remove(index);
+
   return (
     <>
       <div className="flex justify-between">
         <h2 className="text-xl font-semibold">Variantes del producto</h2>
         <Button
           type="button"
-          disabled={attributesField.fields.length <= 0}
+          disabled={attributesFieldWatch.length <= 0}
           onClick={() => {
-            variantsField.append({ price: 0, purchasePrice: 0, quantityInStock: 0, attributes: [] });
+            append({ price: 0, purchasePrice: 0, quantityInStock: 0, attributes: [] });
           }}
         >
           <Plus />
@@ -42,175 +35,15 @@ export const ProductVariantsSection = ({
         </Button>
       </div>
 
-      {variantsField.fields.map((variant, index) => {
-        return (
-          <Card key={variant.id}>
-            <CardHeader className="border-b">
-              <CardTitle>
-                <div className="flex justify-between items-center">
-                  <span>Variante {index + 1}</span>
-                  {index > 1 && attributesField.fields.length >= 0 && (
-                    <Button size={'icon'} variant={'ghost'} type="button" onClick={() => variantsField.remove(index)}>
-                      <Trash2 className="size-5" />
-                    </Button>
-                  )}
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className=" grid grid-cols-4 gap-4">
-                <div className="space-y-1">
-                  <Label
-                    htmlFor={`variant-${variant.id}-purchase-price`}
-                    className="text-sm font-medium text-foreground"
-                  >
-                    Precio de Compra
-                  </Label>
-                  <Input
-                    id={`variant-${variant.id}-purchase-price`}
-                    {...register(`variants.${index}.purchasePrice`)}
-                    className="bg-background"
-                    placeholder="Precio de Compra"
-                  />
-                  {errors.variants?.[index]?.purchasePrice && (
-                    <FormErrorMessage text={errors.variants[index].purchasePrice.message ?? ''} />
-                  )}
-                </div>
-
-                <div className="space-y-1">
-                  <Label htmlFor={`variant-${variant.id}-price`} className="text-sm font-medium text-foreground">
-                    Precio de Venta <span className="italic text-success">(Ganancia: 100%)</span>
-                  </Label>
-                  <Input
-                    id={`variant-${variant.id}-price`}
-                    {...register(`variants.${index}.price`)}
-                    className="bg-background"
-                    placeholder="Precio de Venta"
-                  />
-                  {errors.variants?.[index]?.price && (
-                    <FormErrorMessage text={errors.variants[index].price.message ?? ''} />
-                  )}
-                </div>
-
-                {/* <div className="space-y-1">
-                    <Label className="text-sm font-medium text-foreground shrink-0 grow">Precio Oferta</Label>
-                    <Input className="bg-background" />
-                  </div>
-
-                  <div className="space-y-1">
-                    <Label className="text-sm font-medium text-foreground shrink-0 grow">Duración Oferta</Label>
-                    <Input className="bg-background" />
-                    <Calendar
-                      mode="single"
-                      selected={new Date()}
-                      defaultMonth={new Date()}
-                      captionLayout="dropdown"
-                      startMonth={new Date(2021, 1)}
-                      // onSelect={(date) => updateLocalFilters({ startDate: date })}
-                      // disabled={(date) => (localFilters.endDate ? date > localFilters.endDate : false)}
-                      className="pointer-events-auto"
-                    />
-                  </div> */}
-
-                <div className="space-y-1">
-                  <Label htmlFor={`variant-${variant.id}-stock`} className="text-sm font-medium text-foreground">
-                    Stock
-                  </Label>
-                  <Input
-                    id={`variant-${variant.id}-stock`}
-                    {...register(`variants.${index}.quantityInStock`)}
-                    type="number"
-                    className="bg-background"
-                    placeholder="Stock"
-                  />
-                  {errors.variants?.[index]?.quantityInStock && (
-                    <FormErrorMessage text={errors.variants[index].quantityInStock.message ?? ''} />
-                  )}
-                </div>
-
-                {/* <div className="space-y-1">
-                    <Label className="text-sm font-medium text-foreground">Stock Alerta</Label>
-                    <Input className="bg-background" />
-                  </div> */}
-
-                <div className="space-y-1 col-start-3 row-start-1 col-span-2 row-span-2">
-                  <span className="text-sm font-medium text-foreground flex items-center gap-2">
-                    Imágenes de productos
-                    <Info className="h-3 w-3 text-muted-foreground" />
-                  </span>
-
-                  <div className="rounded-lg border-border bg-muted/30 overflow-hidden">
-                    <div className="inset-0 bg-white overflow-x-auto overflow-y-hidden">
-                      <div className="flex gap-2 p-2">
-                        {[0, 1, 2].map((image) => {
-                          return (
-                            <div key={image} className="shrink-0 max-w-56 border-foreground/20 border rounded-sm p-2">
-                              <img
-                                src={image.toString()}
-                                alt={image.toString()}
-                                className="w-full h-full object-contain"
-                              />
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* <div className="space-y-1">
-                    <Label className="text-sm font-medium text-foreground">Garantía</Label>
-                    <Input value={'3 meses'} onChange={() => {}} className="bg-background" />
-                  </div>
-
-                  <div className="space-y-1 row-start-5">
-                    <Label className="text-sm font-medium text-foreground">Largo (cm)</Label>
-                    <Input value={'15'} onChange={() => {}} className="bg-background" />
-                  </div>
-
-                  <div className="space-y-1">
-                    <Label className="text-sm font-medium text-foreground">Ancho (cm)</Label>
-                    <Input value={'12'} onChange={() => {}} className="bg-background" />
-                  </div>
-
-                  <div className="space-y-1">
-                    <Label className="text-sm font-medium text-foreground">Alto (cm)</Label>
-                    <Input value={'11'} onChange={() => {}} className="bg-background" />
-                  </div>
-
-                  <div className="space-y-1">
-                    <Label className="text-sm font-medium text-foreground">Peso (gramos)</Label>
-                    <Input value={'500'} onChange={() => {}} className="bg-background" />
-                  </div> */}
-
-                <div className="col-span-4 row-start-4 border-t flex flex-col gap-2">
-                  <span className="text-sm font-medium text-foreground pt-4">Atributos</span>
-                  {attributesField.fields.length > 0 ? (
-                    attributesField.fields.map((attrField, indexField) => (
-                      <div key={attrField.id}>
-                        <VariantAttributeField
-                          attributeId={attrField.attributeId}
-                          attributeIndex={indexField}
-                          attributeName={attributes.find((attr) => attr.id === attrField.attributeId)?.name}
-                          control={control}
-                          variantIndex={index}
-                        />
-                        {errors.variants?.[index]?.attributes?.[indexField]?.valueId && (
-                          <FormErrorMessage
-                            text={errors.variants[index].attributes[indexField].valueId?.message ?? ''}
-                          />
-                        )}
-                      </div>
-                    ))
-                  ) : (
-                    <span className="text-sm text-muted-foreground">Sin atributos</span>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        );
-      })}
+      {variantsField.map((variant, index) => (
+        <ProductVariantCard
+          key={variant.id}
+          index={index}
+          variantId={variant.id}
+          attributes={attributes}
+          onDelete={removeVariant}
+        />
+      ))}
     </>
   );
 };
