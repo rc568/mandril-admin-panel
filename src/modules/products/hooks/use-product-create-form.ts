@@ -2,7 +2,7 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import type { CreateProductForm } from '../interfaces/ui/create-product-form.interface';
 
 export const useProductCreateForm = () => {
-  const { getValues } = useFormContext<CreateProductForm>();
+  const { getValues, setValue } = useFormContext<CreateProductForm>();
 
   const variantsFA = useFieldArray<CreateProductForm, 'variants'>({
     name: 'variants'
@@ -32,13 +32,15 @@ export const useProductCreateForm = () => {
     }
 
     if (newAttributesLength <= 0 && variants.length > 1) {
-      return variantsFA.remove(variants.map((_, index) => index).slice(1));
+      variantsFA.remove(variants.map((_, index) => index).slice(1));
+      setValue(`variants.${0}.attributes`, []);
     }
   };
 
   const clearAttributes = () => {
     const variants = getValues('variants');
     variantsFA.remove(variants.map((_, index) => index).slice(1));
+    setValue(`variants.${0}.attributes`, []);
     attributesFA.remove();
   };
 
