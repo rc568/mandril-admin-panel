@@ -11,7 +11,7 @@ export const App = () => {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <Toaster />
+        <Toaster richColors toastOptions={{ classNames: { title: 'text-sm', description: 'text-sm' } }} />
         <CheckAuthProvider>
           <RouterProvider router={appRouter} />
         </CheckAuthProvider>

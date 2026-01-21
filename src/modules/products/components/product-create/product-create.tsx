@@ -3,6 +3,8 @@ import { useAttributes, useProduct } from '@/hooks/query';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
+import { toast } from 'sonner';
 import { ProductCreateProvider } from '../../context/product-create-context';
 import type { CreateProductForm } from '../../interfaces/ui/create-product-form.interface';
 import { createProductSchema } from '../../validators/product.validators';
@@ -12,6 +14,7 @@ import { ProductVariantsSection } from './product-variants-section';
 
 export const ProductCreate = () => {
   const [isAttributesModalOpen, setIsAttributesModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const form = useForm<CreateProductForm>({
     resolver: standardSchemaResolver(createProductSchema),
@@ -24,8 +27,31 @@ export const ProductCreate = () => {
 
   const onSubmit = async (newProduct: CreateProductForm) => {
     await mutateProduct.mutateAsync(newProduct, {
-      onSuccess: (res) => console.log('producto creado', res),
-      onError: (res) => console.log(res.message)
+      onSuccess: (res) => {
+        toast.success('Producto creado exitosamente.');
+        navigate(`/productos/editar/${res.slug}`);
+      },
+      onError: (error) => {
+        const apiError = error.response?.data;
+
+        if (apiError?.validationErrors && apiError?.validationErrors.length > 0) {
+          toast.error('Errores de validación:', {
+            description: (
+              <ul>
+                {apiError.validationErrors.map((val) => (
+                  <li key={val.field}>
+                    <span className="capitalize font-bold">{val.field}: </span>
+                    {val.message}
+                  </li>
+                ))}
+              </ul>
+            )
+          });
+          return;
+        }
+
+        toast.error(apiError?.message ?? 'Ocurrió un error inesperado.');
+      }
     });
   };
 
