@@ -1,10 +1,12 @@
 import { FormErrorMessage } from '@/components/common/form-error-message';
-import { MarkdownViewer } from '@/components/common/markdown-viewer';
+import { TextEditor } from '@/components/common/text-editor/text-editor';
+import { TextToolbar } from '@/components/common/text-editor/text-toolbar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { TextEditorProvider } from '@/context/text-editor-provider';
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
 import { Info, Plus } from 'lucide-react';
 import { useFormContext, useWatch } from 'react-hook-form';
@@ -73,15 +75,18 @@ export const ProductGeneralInfo = ({ attributes, onAdd }: Props) => {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label id="description" className="text-sm font-medium text-foreground flex items-center gap-2">
-              Descripción (*)
-              <Info className="h-3 w-3 text-muted-foreground" />
-            </Label>
-            <div aria-labelledby="description" className="p-4 border">
-              <MarkdownViewer content="" />
+          <TextEditorProvider content="*Escribir descripción...*">
+            <div className="space-y-2">
+              <Label id="description" className="text-sm font-medium text-foreground flex items-center gap-2">
+                Descripción (*)
+                <Info className="h-3 w-3 text-muted-foreground" />
+              </Label>
+              <div aria-labelledby="description" className="p-2 border space-y-2">
+                <TextToolbar />
+                <TextEditor />
+              </div>
             </div>
-          </div>
+          </TextEditorProvider>
 
           <div className="space-y-2">
             <h3 className="text-sm font-medium text-foreground">Atributos de producto</h3>
