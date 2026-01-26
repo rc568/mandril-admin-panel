@@ -1,14 +1,12 @@
 import { FormErrorMessage } from '@/components/common/form-error-message';
-import { TextEditor } from '@/components/common/text-editor/text-editor';
-import { TextToolbar } from '@/components/common/text-editor/text-toolbar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { TextEditorProvider } from '@/context/text-editor-provider';
+import { DescriptionField } from '@/modules/products/components/description-field';
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
-import { Info, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import type { CreateProductForm } from '../../interfaces/ui/create-product-form.interface';
 import { CatalogSelectInput } from '../catalog-select-input';
@@ -75,18 +73,9 @@ export const ProductGeneralInfo = ({ attributes, onAdd }: Props) => {
             </div>
           </div>
 
-          <TextEditorProvider content="*Escribir descripción" className="prose prose-sm border min-h-28 max-w-full p-2">
-            <div className="space-y-2">
-              <Label id="description" className="text-sm font-medium text-foreground flex items-center gap-2">
-                Descripción (*)
-                <Info className="h-3 w-3 text-muted-foreground" />
-              </Label>
-              <div aria-labelledby="description" className="space-y-2">
-                <TextToolbar />
-                <TextEditor />
-              </div>
-            </div>
-          </TextEditorProvider>
+          <div className="space-y-2">
+            <DescriptionField defaultContent="*Descripción del producto...*" />
+          </div>
 
           <div className="space-y-2">
             <h3 className="text-sm font-medium text-foreground">Atributos de producto</h3>

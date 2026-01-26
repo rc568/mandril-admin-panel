@@ -7,15 +7,20 @@ import { useMemo, type PropsWithChildren } from 'react';
 interface Props extends PropsWithChildren {
   content?: string;
   className?: string;
+  onChange?: (value: string) => void;
 }
 
-export const TextEditorProvider = ({ children, className, content, ...editorOptions }: Props) => {
+export const TextEditorProvider = ({ children, className, content, onChange, ...editorOptions }: Props) => {
   const editor = useEditor({
     ...editorOptions,
     content: content,
     contentType: 'markdown',
     extensions: [StarterKit, Markdown, Underline],
-    editorProps: { attributes: { class: className ?? '' } }
+    editorProps: { attributes: { class: className ?? '' } },
+    onUpdate({ editor }) {
+      const markdown = editor.getMarkdown();
+      onChange?.(markdown);
+    }
   });
 
   const providerValue = useMemo(() => ({ editor }), [editor]);
