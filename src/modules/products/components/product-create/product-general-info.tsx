@@ -75,13 +75,13 @@ export const ProductGeneralInfo = ({ attributes, onAdd }: Props) => {
             </div>
           </div>
 
-          <TextEditorProvider content="*Escribir descripción...*">
+          <TextEditorProvider content="*Escribir descripción" className="prose prose-sm border min-h-28 max-w-full p-2">
             <div className="space-y-2">
               <Label id="description" className="text-sm font-medium text-foreground flex items-center gap-2">
                 Descripción (*)
                 <Info className="h-3 w-3 text-muted-foreground" />
               </Label>
-              <div aria-labelledby="description" className="p-2 border space-y-2">
+              <div aria-labelledby="description" className="space-y-2">
                 <TextToolbar />
                 <TextEditor />
               </div>
