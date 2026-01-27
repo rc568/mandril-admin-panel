@@ -23,7 +23,12 @@ export const ProductListPage = () => {
 
   return (
     <>
-      <Title title="Productos" subtitle="Catálogo de productos" />
+      <Title
+        title="Productos"
+        subtitle="Catálogo de productos"
+        linkText="Crear Producto"
+        redirectTo="/productos/crear"
+      />
 
       {isFetching || !data ? (
         <h1>Cargando datos ...</h1>
