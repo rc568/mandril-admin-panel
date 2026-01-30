@@ -7,4 +7,5 @@ export interface GetProductsFilters {
   minPrice?: string;
   maxPrice?: string;
   orderBy?: string;
+  search?: string;
 }

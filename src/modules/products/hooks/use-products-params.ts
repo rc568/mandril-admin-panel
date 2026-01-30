@@ -21,6 +21,7 @@ export const useProductsParams = (config: UseTableFiltersConfig = {}) => {
   const queryMinPrice = searchParams.get('minPrice');
   const queryMaxPrice = searchParams.get('maxPrice');
   const queryOrderBy = searchParams.get('orderBy');
+  const querySearch = searchParams.get('search');
 
   const page = Number.isNaN(parseInt(queryPage)) || parseInt(queryPage) <= 0 ? defaultPage : parseInt(queryPage);
   const limit =
@@ -34,6 +35,7 @@ export const useProductsParams = (config: UseTableFiltersConfig = {}) => {
   const minPrice = queryMinPrice && !Number.isNaN(Number(queryMinPrice)) ? queryMinPrice : undefined;
   const maxPrice = queryMaxPrice && !Number.isNaN(Number(queryMaxPrice)) ? queryMaxPrice : undefined;
   const orderBy = queryOrderBy && PRODUCT_ORDER_BY_ARRAY.includes(queryOrderBy) ? queryOrderBy : undefined;
+  const search = querySearch ? querySearch.trim() : undefined;
 
   const filters: GetProductsFilters = {
     limit,
@@ -43,7 +45,8 @@ export const useProductsParams = (config: UseTableFiltersConfig = {}) => {
     isActive,
     minPrice,
     maxPrice,
-    orderBy
+    orderBy,
+    search
   };
 
   const setPage = (page: number) => {
@@ -67,6 +70,14 @@ export const useProductsParams = (config: UseTableFiltersConfig = {}) => {
       prev.set('orderBy', orderBy);
       return prev;
     });
+  };
+
+  const setSearch = (search: string) => {
+    if (search.trim().length === 0) return;
+
+    const searchParams = new URLSearchParams();
+    searchParams.set('search', search.trim());
+    setSearchParams(searchParams);
   };
 
   const setFilters = (newFilters: Partial<GetProductsFilters>) => {
@@ -106,6 +117,7 @@ export const useProductsParams = (config: UseTableFiltersConfig = {}) => {
 
   return {
     filters,
+    setSearch,
     setPage,
     setLimit,
     setOrderBy,

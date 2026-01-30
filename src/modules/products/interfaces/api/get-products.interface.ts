@@ -23,4 +23,5 @@ export interface GetProductsQueryParams {
   minPrice?: string;
   maxPrice?: string;
   orderBy?: string;
+  search?: string;
 }
