@@ -2,6 +2,7 @@ import { CustomPagination } from '@/components/common/custom-pagination';
 import { Title } from '@/components/common/title';
 import { useQuery } from '@tanstack/react-query';
 
+import { SearchBar } from '@/components/common/search-bar';
 import { getProductsByPage } from '../actions/get-products-by-page.action';
 import { ProductList } from '../components/product-list';
 import { ProductListFilters } from '../components/product-list-filters';
@@ -11,7 +12,7 @@ import { ProductsStats } from '../components/products-stats';
 import { useProductsParams } from '../hooks/use-products-params';
 
 export const ProductListPage = () => {
-  const { filters, setFilters, setLimit, setPage, setOrderBy } = useProductsParams();
+  const { filters, setFilters, setLimit, setPage, setOrderBy, setSearch } = useProductsParams();
 
   const { data, isFetching, isLoading } = useQuery({
     queryKey: ['products', filters],
@@ -35,6 +36,7 @@ export const ProductListPage = () => {
       ) : (
         <>
           <ProductsStats />
+          <SearchBar onSearch={setSearch} />
           <div className="flex gap-2 pt-2 pb-4">
             <ProductListFilters
               initialFilters={{
