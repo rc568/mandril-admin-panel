@@ -19,12 +19,20 @@ const productVariantSchema = z.object({
   quantityInStock: z.coerce.number().int().min(0)
 });
 
-export const createProductSchema = z.object({
+export const baseProductSchema = z.object({
   name: z.string().min(3).max(255),
   slug: z.string().min(3).max(255),
   description: z.string().optional(),
   categoryId: z.coerce.number(),
   catalogId: z.coerce.number(),
+  variants: z.array(
+    productVariantSchema.extend({
+      attributes: variantAttributeValueMapSchema.optional()
+    })
+  )
+});
+
+export const createProductSchema = baseProductSchema.extend({
   attributesId: productAttributeSchema.optional(),
   variants: z
     .array(
@@ -35,17 +43,7 @@ export const createProductSchema = z.object({
     .nonempty()
 });
 
-export const productEditSchema = z
-  .object({
-    name: z.string().max(255),
-    slug: z
-      .string()
-      .max(255)
-      .regex(/^[0-9a-z-]+$/),
-    description: z.string().optional(),
-    categoryId: z.int(),
-    catalogId: z.int()
-  })
+export const editProductSchema = baseProductSchema
   .extend({
     // isActive: z.boolean().optional(),
     variants: z

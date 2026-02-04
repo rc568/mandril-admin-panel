@@ -6,33 +6,41 @@ import { Label } from '@/components/ui/label';
 import { productProfit } from '@/lib/pricing-calculations';
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
 import { ImageIcon, Info, Trash2 } from 'lucide-react';
-import { useFormContext, useWatch } from 'react-hook-form';
-import type { CreateProductForm } from '../../interfaces/ui/create-product-form.interface';
+import type { Path, UseFormReturn } from 'react-hook-form';
+import type { BaseProductFields } from '../../interfaces/ui/create-product-form.interface';
+import { VariantAttributeField } from '../product-create/variant-attribute-field';
 import { ProfitPercentage } from '../profit-percentage';
-import { VariantAttributeField } from './variant-attribute-field';
 
-interface Props {
+interface Props<T extends BaseProductFields> {
   attributes: GetAttributesApiResponse;
+  attributesField: { attributeId: number }[];
+  form: UseFormReturn<T>;
   index: number;
-  variantId: string;
+  id: string;
+  code?: string;
+  watchPrice: number;
+  watchPurchasePrice: number;
   onDelete: (index: number) => void;
 }
 
-export const ProductVariantCard = ({ attributes, variantId, index, onDelete }: Props) => {
+export const ProductVariantCardUI = <T extends BaseProductFields>({
+  attributes,
+  attributesField,
+  form,
+  index,
+  id,
+  watchPrice,
+  watchPurchasePrice,
+  onDelete
+}: Props<T>) => {
   const {
     control,
     register,
     formState: { errors }
-  } = useFormContext<CreateProductForm>();
-
-  const attributesField = useWatch({ control: control, name: `attributesId` }) ?? [];
-
-  const { price: watchPrice, purchasePrice: watchPurchasePrice } = useWatch({
-    control,
-    name: `variants.${index}`
-  });
-
-  const domId = `variant-${variantId}`;
+  } = form;
+  const variantErrors = errors.variants as any;
+  const currentVariantError = variantErrors?.[index];
+  const domId = `variant-${id}`;
 
   return (
     <Card>
@@ -56,13 +64,13 @@ export const ProductVariantCard = ({ attributes, variantId, index, onDelete }: P
             </Label>
             <Input
               id={`${domId}-purchase-price`}
-              {...register(`variants.${index}.purchasePrice`)}
+              {...register(`variants.${index}.purchasePrice` as Path<T>)}
               type="number"
               className="bg-background"
               placeholder="Precio de Compra"
             />
-            {errors.variants?.[index]?.purchasePrice && (
-              <FormErrorMessage text={errors.variants[index].purchasePrice.message ?? ''} />
+            {currentVariantError?.purchasePrice && (
+              <FormErrorMessage text={currentVariantError.purchasePrice.message ?? ''} />
             )}
           </div>
 
@@ -78,12 +86,12 @@ export const ProductVariantCard = ({ attributes, variantId, index, onDelete }: P
             </Label>
             <Input
               id={`${domId}-price`}
-              {...register(`variants.${index}.price`)}
+              {...register(`variants.${index}.price` as Path<T>)}
               type="number"
               className="bg-background"
               placeholder="Precio de Venta"
             />
-            {errors.variants?.[index]?.price && <FormErrorMessage text={errors.variants[index].price.message ?? ''} />}
+            {currentVariantError?.price && <FormErrorMessage text={currentVariantError.price.message ?? ''} />}
           </div>
 
           {/* <div className="space-y-1">
@@ -112,13 +120,13 @@ export const ProductVariantCard = ({ attributes, variantId, index, onDelete }: P
             </Label>
             <Input
               id={`${domId}-stock`}
-              {...register(`variants.${index}.quantityInStock`)}
+              {...register(`variants.${index}.quantityInStock` as Path<T>)}
               type="number"
               className="bg-background"
               placeholder="Stock"
             />
-            {errors.variants?.[index]?.quantityInStock && (
-              <FormErrorMessage text={errors.variants[index].quantityInStock.message ?? ''} />
+            {currentVariantError?.quantityInStock && (
+              <FormErrorMessage text={currentVariantError.quantityInStock.message ?? ''} />
             )}
           </div>
 
@@ -180,8 +188,8 @@ export const ProductVariantCard = ({ attributes, variantId, index, onDelete }: P
                     control={control}
                     variantIndex={index}
                   />
-                  {errors.variants?.[index]?.attributes?.[indexField]?.valueId && (
-                    <FormErrorMessage text={errors.variants[index].attributes[indexField].valueId?.message ?? ''} />
+                  {currentVariantError?.attributes?.[indexField]?.valueId && (
+                    <FormErrorMessage text={currentVariantError.attributes[indexField].valueId?.message ?? ''} />
                   )}
                 </div>
               ))
