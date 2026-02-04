@@ -4,27 +4,32 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { DescriptionField } from '@/modules/products/components/description-field';
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
 import { Plus } from 'lucide-react';
-import { useFormContext, useWatch } from 'react-hook-form';
-import type { CreateProductForm } from '../../interfaces/ui/create-product-form.interface';
+import type { Path, UseFormRegister, UseFormReturn } from 'react-hook-form';
+import type { BaseProductFields } from '../../interfaces/ui/create-product-form.interface';
 import { CatalogSelectInput } from '../catalog-select-input';
 import { CategorySelectInput } from '../category-select-input';
+import { DescriptionField } from '../description-field';
 
-interface Props {
+interface Props<T extends BaseProductFields> {
   attributes: GetAttributesApiResponse;
+  attributesField?: { attributeId: number }[];
+  form: UseFormReturn<T>;
   onAdd: () => void;
 }
 
-export const ProductGeneralInfo = ({ attributes, onAdd }: Props) => {
+export const ProductGeneralInfoUI = <T extends BaseProductFields>({
+  attributes,
+  attributesField,
+  form,
+  onAdd
+}: Props<T>) => {
   const {
     register,
     control,
     formState: { errors }
-  } = useFormContext<CreateProductForm>();
-
-  const attributesField = useWatch({ control: control, name: `attributesId` });
+  } = form;
 
   return (
     <Card>
@@ -40,12 +45,12 @@ export const ProductGeneralInfo = ({ attributes, onAdd }: Props) => {
               </Label>
               <Input
                 id="name"
-                {...register('name')}
+                {...(register as unknown as UseFormRegister<BaseProductFields>)('name')}
                 placeholder="Nombre del producto"
                 className="bg-background"
                 autoComplete="off"
               />
-              {errors.name?.message && <FormErrorMessage text={errors.name.message} />}
+              {errors.name?.message && <FormErrorMessage text={String(errors.name.message)} />}
             </div>
 
             <div className="space-y-2">
@@ -54,22 +59,22 @@ export const ProductGeneralInfo = ({ attributes, onAdd }: Props) => {
               </Label>
               <Input
                 id="slug"
-                {...register('slug')}
+                {...(register as unknown as UseFormRegister<BaseProductFields>)('slug')}
                 placeholder="Slug del producto"
                 className="bg-background"
                 autoComplete="off"
               />
-              {errors.slug?.message && <FormErrorMessage text={errors.slug.message} />}
+              {errors.slug?.message && <FormErrorMessage text={String(errors.slug.message)} />}
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <CategorySelectInput<CreateProductForm> control={control} name="categoryId" errors={errors} />
+              <CategorySelectInput<T> control={control} name={'categoryId' as Path<T>} errors={errors} />
             </div>
 
             <div className="space-y-2">
-              <CatalogSelectInput<CreateProductForm> control={control} name="catalogId" errors={errors} />
+              <CatalogSelectInput<T> control={control} name={'catalogId' as Path<T>} errors={errors} />
             </div>
           </div>
 

@@ -5,12 +5,11 @@ import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
+import { ProductCreateGeneralInfo, ProductCreateVariantsSection } from '.';
 import { ProductCreateProvider } from '../../context/product-create-context';
 import type { CreateProductForm } from '../../interfaces/ui/create-product-form.interface';
 import { createProductSchema } from '../../validators/product.validators';
 import { ProductAddAttributesDialog } from './product-add-attributes-dialog';
-import { ProductGeneralInfo } from './product-general-info';
-import { ProductVariantsSection } from './product-variants-section';
 
 export const ProductCreate = () => {
   const [isAttributesModalOpen, setIsAttributesModalOpen] = useState(false);
@@ -60,9 +59,9 @@ export const ProductCreate = () => {
       <ProductCreateProvider>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 gap-6 my-6">
-            <ProductGeneralInfo attributes={attributes ?? []} onAdd={() => setIsAttributesModalOpen(true)} />
+            <ProductCreateGeneralInfo attributes={attributes ?? []} onAdd={() => setIsAttributesModalOpen(true)} />
 
-            <ProductVariantsSection attributes={attributes ?? []} />
+            <ProductCreateVariantsSection attributes={attributes ?? []} />
 
             <Button type="submit" disabled={mutateProduct.isPending} className="w-fit justify-self-end">
               Crear producto
