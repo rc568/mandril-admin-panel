@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TableCell, TableRow } from '@/components/ui/table';
+import { formatCurrency, formatPercentage } from '@/lib/currency';
 import { cn } from '@/lib/utils';
 import { Edit, Trash2 } from 'lucide-react';
 import { Link } from 'react-router';
@@ -41,9 +42,9 @@ export const ProductListItem = ({ product }: Props) => {
           <Link to={`editar/${product.slug}`}>{product.name}</Link>
         </TableCell>
         <TableCell>{variant.quantityInStock}</TableCell>
-        <TableCell>{variant.purchasePrice}</TableCell>
-        <TableCell>{variant.profitPercentage}</TableCell>
-        <TableCell className="font-medium">{variant.price}</TableCell>
+        <TableCell>{formatCurrency(variant.purchasePrice)}</TableCell>
+        <TableCell>{formatPercentage(variant.profitPercentage)}</TableCell>
+        <TableCell className="font-medium">{formatCurrency(variant.price)}</TableCell>
         <TableCell>{getStatusBadge(variant.isActive)}</TableCell>
         <TableCell>{getStockStatusBadge(variant.stockStatus)}</TableCell>
         <TableCell className="flex gap-2 justify-end items-center">
@@ -84,9 +85,9 @@ export const ProductListItem = ({ product }: Props) => {
             ))}
           </TableCell>
           <TableCell>{variant.quantityInStock}</TableCell>
-          <TableCell>{variant.purchasePrice}</TableCell>
-          <TableCell>{variant.profitPercentage}</TableCell>
-          <TableCell className="font-medium">{variant.price}</TableCell>
+          <TableCell>{formatCurrency(variant.purchasePrice)}</TableCell>
+          <TableCell>{formatPercentage(variant.profitPercentage)}</TableCell>
+          <TableCell className="font-medium">{formatCurrency(variant.price)}</TableCell>
           <TableCell>{getStatusBadge(variant.isActive)}</TableCell>
           <TableCell>{getStockStatusBadge(variant.stockStatus)}</TableCell>
           <TableCell className={`flex gap-2 justify-end items-center`}>

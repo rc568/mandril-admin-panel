@@ -1,10 +1,11 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { formatCurrency } from '@/lib/currency';
+import { formatDate } from '@/lib/date-utils';
 import { cn } from '@/lib/utils';
 import { Calendar, FileText, Package, SquareUser } from 'lucide-react';
-
-import type { OrderMapped } from '../interfaces/get-orders-mapped.interface';
-import type { OrderStatus } from '../interfaces/order.interface';
+import type { OrderMapped } from '../interfaces/api/get-orders-mapped.interface';
+import type { OrderStatus } from '../interfaces/api/order.interface';
 
 interface Props {
   order: OrderMapped;
@@ -68,7 +69,7 @@ export const OrderListItem = ({ order }: Props) => {
           </div>
           <p className="text-lg font-bold">
             <span className="text-sm text-muted-foreground font-normal align-text-bottom pr-2">Total de Venta:</span>
-            {order.totalSale}
+            {formatCurrency(order.totalSale)}
           </p>
         </div>
       </div>
@@ -90,10 +91,10 @@ export const OrderListItem = ({ order }: Props) => {
                   )}
                 </span>
                 <span className="text-muted-foreground ml-2">
-                  - {product.quantity} unidad(es) × {product.price}
+                  - {product.quantity} unidad(es) × {formatCurrency(product.price)}
                 </span>
               </div>
-              <span className="font-medium">{product.subTotal}</span>
+              <span className="font-medium">{formatCurrency(product.subTotal)}</span>
             </div>
           ))}
         </div>
@@ -102,7 +103,7 @@ export const OrderListItem = ({ order }: Props) => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
         <div className="flex items-center gap-2">
           <Calendar className="w-4 h-4 text-muted-foreground" />
-          <span>{order.createdAt}</span>
+          <span>{formatDate(order.createdAt)}</span>
         </div>
         <div className="flex items-center gap-2">
           <FileText className="w-4 h-4 text-muted-foreground" />
