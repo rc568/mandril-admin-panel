@@ -11,6 +11,7 @@ export interface Catalog {
 }
 
 export interface Attribute {
+  id: number;
   name: string;
   description: string | null;
 }
