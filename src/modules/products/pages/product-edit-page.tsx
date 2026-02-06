@@ -20,6 +20,8 @@ export const ProductEditPage = () => {
     retry: false
   });
 
+  console.log(product);
+
   if (isPending) return <h1>Cargando ... </h1>;
 
   if (isError) return <h1>Ocurrió un error inesperado... vuelva a intentar</h1>;

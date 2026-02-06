@@ -29,6 +29,7 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
   form,
   index,
   id,
+  code,
   watchPrice,
   watchPurchasePrice,
   onDelete
@@ -47,7 +48,7 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
       <CardHeader className="border-b">
         <CardTitle>
           <div className="flex justify-between items-center">
-            <span>Variante {index + 1}</span>
+            {code ? <span>{code}</span> : <span>Variante {index + 1}</span>}
             {index > 1 && attributesField.length >= 0 && (
               <Button size={'icon'} variant={'ghost'} type="button" onClick={() => onDelete(index)}>
                 <Trash2 className="size-5" />

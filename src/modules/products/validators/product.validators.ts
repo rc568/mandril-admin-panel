@@ -46,6 +46,7 @@ export const createProductSchema = baseProductSchema.extend({
 export const editProductSchema = baseProductSchema
   .extend({
     // isActive: z.boolean().optional(),
+    attributesId: productAttributeSchema.optional(),
     variants: z
       .array(
         productVariantSchema.partial().extend({
