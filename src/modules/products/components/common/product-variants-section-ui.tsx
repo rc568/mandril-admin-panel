@@ -26,7 +26,7 @@ export const ProductVariantsSectionUI = ({
   VariantCard
 }: Props) => {
   return (
-    <>
+    <div className="flex flex-col gap-6">
       <div className="flex justify-between">
         <h2 className="text-xl font-semibold">Variantes del producto</h2>
         <Button type="button" disabled={attributesSelectedCount <= 0} onClick={onAppend}>
@@ -45,6 +45,6 @@ export const ProductVariantsSectionUI = ({
           onDelete={onRemove}
         />
       ))}
-    </>
+    </div>
   );
 };

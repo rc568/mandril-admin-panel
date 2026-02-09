@@ -58,12 +58,12 @@ export const ProductCreate = () => {
     <FormProvider {...form}>
       <ProductCreateProvider>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 gap-6 my-6">
+          <div className="flex flex-col gap-6 my-6">
             <ProductCreateGeneralInfo attributes={attributes ?? []} onAdd={() => setIsAttributesModalOpen(true)} />
 
             <ProductCreateVariantsSection attributes={attributes ?? []} />
 
-            <Button type="submit" disabled={mutateProduct.isPending} className="w-fit justify-self-end">
+            <Button type="submit" disabled={mutateProduct.isPending} className="w-fit ml-auto">
               Crear producto
             </Button>
 
