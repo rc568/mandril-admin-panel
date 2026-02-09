@@ -33,9 +33,11 @@ export const ProductEdit = ({ productForm, productUI }: Props) => {
 
             <ProductEditStatsCard createdAt={productUI.createdAt} createdBy={productUI.createdBy} />
 
-            <ProductEditVariantsSection attributes={attributes ?? []} />
+            <div className="cols-span-1 lg:col-span-2">
+              <ProductEditVariantsSection attributes={attributes ?? []} />
+            </div>
 
-            <Button type="submit" className="w-fit justify-self-end">
+            <Button type="submit" className="w-fit cols-span-1 lg:col-start-2 ml-auto">
               Guardar cambios
             </Button>
           </div>

@@ -58,7 +58,7 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className=" grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           <div className="space-y-1">
             <Label htmlFor={`${domId}-purchase-price`} className="text-sm font-medium text-foreground">
               Precio de Compra
@@ -136,7 +136,7 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
                     <Input className="bg-background" />
                   </div> */}
 
-          <div className="space-y-1 col-start-3 row-start-1 col-span-2 row-span-2">
+          <div className="space-y-1 min-h-36 row-start-2 col-span-full lg:col-start-3 lg:row-start-1 lg:col-span-2 lg:row-span-2">
             <span className="text-sm font-medium text-foreground flex items-center gap-2">
               Imágenes de productos
               <Info className="h-3 w-3 text-muted-foreground" />
