@@ -4,7 +4,6 @@ import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import { toast } from 'sonner';
 import { ProductCreateGeneralInfo, ProductCreateVariantsSection } from '.';
 import { ProductCreateProvider } from '../../context/product-create-context';
 import type { CreateProductForm } from '../../interfaces/ui/create-product-form.interface';
@@ -22,34 +21,12 @@ export const ProductCreate = () => {
 
   const { data: attributes } = useAttributes();
 
-  const { mutation: mutateProduct } = useProduct();
+  const { createProduct } = useProduct();
 
   const onSubmit = async (newProduct: CreateProductForm) => {
-    await mutateProduct.mutateAsync(newProduct, {
+    await createProduct.mutateAsync(newProduct, {
       onSuccess: (res) => {
-        toast.success('Producto creado exitosamente.');
         navigate(`/productos/editar/${res.slug}`);
-      },
-      onError: (error) => {
-        const apiError = error.response?.data;
-
-        if (apiError?.validationErrors && apiError?.validationErrors.length > 0) {
-          toast.error('Errores de validación:', {
-            description: (
-              <ul>
-                {apiError.validationErrors.map((val) => (
-                  <li key={val.field}>
-                    <span className="capitalize font-bold">{val.field}: </span>
-                    {val.message}
-                  </li>
-                ))}
-              </ul>
-            )
-          });
-          return;
-        }
-
-        toast.error(apiError?.message ?? 'Ocurrió un error inesperado.');
       }
     });
   };
@@ -63,7 +40,7 @@ export const ProductCreate = () => {
 
             <ProductCreateVariantsSection attributes={attributes ?? []} />
 
-            <Button type="submit" disabled={mutateProduct.isPending} className="w-fit ml-auto">
+            <Button type="submit" disabled={createProduct.isPending} className="w-fit ml-auto">
               Crear producto
             </Button>
 
