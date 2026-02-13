@@ -1,6 +1,6 @@
 import { getAllCatalogs } from '@/services/catalog/get-all-catalogs.action';
 import { useQuery } from '@tanstack/react-query';
-import { catalogsKeys } from './categories.keys';
+import { catalogsKeys } from './catalogs.keys';
 
 export const useCatalogs = () => {
   return useQuery({
