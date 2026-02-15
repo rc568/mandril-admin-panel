@@ -1,9 +1,7 @@
 import { CustomPagination } from '@/components/common/custom-pagination';
-import { Title } from '@/components/common/title';
-import { useQuery } from '@tanstack/react-query';
-
 import { SearchBar } from '@/components/common/search-bar';
-import { getProductsByPage } from '../actions/get-products-by-page.action';
+import { Title } from '@/components/common/title';
+import { useProducts } from '@/hooks/query';
 import { ProductList } from '../components/product-list';
 import { ProductListFilters } from '../components/product-list-filters';
 import { ProductListOrderBy } from '../components/product-list-order-by';
@@ -14,11 +12,7 @@ import { useProductsParams } from '../hooks/use-products-params';
 export const ProductListPage = () => {
   const { filters, setFilters, setLimit, setPage, setOrderBy, setSearch } = useProductsParams();
 
-  const { data, isFetching, isLoading } = useQuery({
-    queryKey: ['products', filters],
-    queryFn: () => getProductsByPage(filters),
-    staleTime: 1000 * 60 * 5
-  });
+  const { isLoading, isFetching, data } = useProducts({ filters });
 
   if (isLoading) return <h1>Cargando página ...</h1>;
 

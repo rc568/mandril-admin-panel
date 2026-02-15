@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { useAttributes, useProduct } from '@/hooks/query';
+import { useAttributes, useProductMutation } from '@/hooks/query';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -21,7 +21,7 @@ export const ProductCreate = () => {
 
   const { data: attributes } = useAttributes();
 
-  const { createProduct } = useProduct();
+  const { createProduct } = useProductMutation();
 
   const onSubmit = async (newProduct: CreateProductForm) => {
     await createProduct.mutateAsync(newProduct, {
