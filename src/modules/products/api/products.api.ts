@@ -23,7 +23,7 @@ export const createProduct = async (body: CreateProductForm) => {
   return response.data;
 };
 
-export const editProduct = async (id: number, body: EditProductForm) => {
+export const editProduct = async (id: string, body: EditProductForm) => {
   const response = await baseApi.patch<EditProduct>(`/products/${id}`, body);
   return response.data;
 };
