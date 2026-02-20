@@ -20,8 +20,7 @@ export const useProductMutation = () => {
   const editMutation = useApiMutation<ProductMapped, { id: string; body: EditProductForm }>({
     mutationFn: editProductAction,
     successMessage: messages.PRODUCT_UPDATED,
-    onSuccess: (data: ProductMapped) =>
-      queryClient.invalidateQueries({ queryKey: [productKeys.detail(data.id.toString())] })
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: productKeys.lists() })
   });
 
   return {
