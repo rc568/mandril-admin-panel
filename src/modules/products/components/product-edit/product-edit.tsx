@@ -6,6 +6,7 @@ import { productKeys } from '@/hooks/query/product/products.keys';
 import { isEmptyPlainObject } from '@/lib/object-utils';
 import { filterChangedFormFields } from '@/lib/react-hook-form/utils';
 import { queryClient } from '@/lib/tanstack-query/query-client';
+import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { messages } from '../../constants/products.messages';
@@ -13,6 +14,7 @@ import { ProductEditProvider } from '../../context/product-edit-context';
 import type { ProductMapped } from '../../interfaces/api/get-products-mapped.interface';
 import type { EditProductForm } from '../../interfaces/ui/create-product-form.interface';
 import type { ProductEditFormMapper } from '../../interfaces/ui/product-edit-form.interface';
+import { editProductSchema } from '../../validators/product.validators';
 import { ProductEditGeneralInfo } from './product-edit-general-info';
 import { ProductEditStatsCard } from './product-edit-stats-card';
 import { ProductEditVariantsSection } from './product-edit-variants-section';
@@ -28,6 +30,7 @@ export const ProductEdit = ({ productForm, productUI }: Props) => {
   const { open: openTooltip, show: showToolTip } = useHandleTooltip();
 
   const form = useForm<EditProductForm>({
+    resolver: standardSchemaResolver(editProductSchema),
     defaultValues: productForm
   });
 

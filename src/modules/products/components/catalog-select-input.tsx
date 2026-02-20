@@ -41,7 +41,7 @@ export const CatalogSelectInput = <T extends FieldValues>({ control, name, error
         Catálogo
       </Label>
 
-      <Select value={field.value?.toString()} onValueChange={(v) => field.onChange(v)}>
+      <Select value={field.value?.toString()} onValueChange={(v) => field.onChange(Number(v))}>
         <SelectTrigger id="catalog" className="bg-background w-full" disabled={isPending}>
           <SelectValue
             placeholder={isPending ? 'Cargando ...' : 'Seleccionar Catálogo'}
