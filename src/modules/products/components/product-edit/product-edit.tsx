@@ -1,20 +1,14 @@
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useHandleTooltip } from '@/hooks/common/useHandleTooltip';
-import { useAttributes, useProductMutation } from '@/hooks/query';
-import { productKeys } from '@/hooks/query/product/products.keys';
-import { isEmptyPlainObject } from '@/lib/object-utils';
-import { filterChangedFormFields } from '@/lib/react-hook-form/utils';
-import { queryClient } from '@/lib/tanstack-query/query-client';
-import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useAttributes } from '@/hooks/query';
+import { FormProvider } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { messages } from '../../constants/products.messages';
 import { ProductEditProvider } from '../../context/product-edit-context';
+import { useProductEditSubmit } from '../../hooks/use-product-edit-submit';
 import type { ProductMapped } from '../../interfaces/api/get-products-mapped.interface';
-import type { EditProductForm } from '../../interfaces/ui/create-product-form.interface';
 import type { ProductEditFormMapper } from '../../interfaces/ui/product-edit-form.interface';
-import { editProductSchema } from '../../validators/product.validators';
 import { ProductEditGeneralInfo } from './product-edit-general-info';
 import { ProductEditStatsCard } from './product-edit-stats-card';
 import { ProductEditVariantsSection } from './product-edit-variants-section';
@@ -29,42 +23,21 @@ export const ProductEdit = ({ productForm, productUI }: Props) => {
 
   const { open: openTooltip, show: showToolTip } = useHandleTooltip();
 
-  const form = useForm<EditProductForm>({
-    resolver: standardSchemaResolver(editProductSchema),
-    defaultValues: productForm
-  });
-
-  const {
-    formState: { dirtyFields },
-    handleSubmit
-  } = form;
-
   const { data: attributes } = useAttributes();
-  const { editMutation } = useProductMutation();
   const variantsCode = productUI.productVariant.map((v) => ({ variantId: v.id, code: v.code }));
 
-  const onSubmit = async (data: EditProductForm) => {
-    const filterData = filterChangedFormFields(dirtyFields, data);
-    if (!filterData || isEmptyPlainObject(filterData)) {
-      showToolTip();
-      return;
-    }
-
-    await editMutation.mutateAsync(
-      { id: productUI.id.toString(), body: filterData },
-      {
-        onSuccess: (res) => {
-          navigate(`/productos/editar/${res.slug}`);
-          queryClient.invalidateQueries({ queryKey: [productKeys.detail(productUI.slug)] });
-        }
-      }
-    );
-  };
+  const { form, isPending, onSubmit } = useProductEditSubmit({
+    productId: productUI.id.toString(),
+    previousSlug: productUI.slug,
+    productForm: productForm,
+    onNoChanges: showToolTip,
+    onEditSuccess: (res) => navigate(`/productos/editar/${res.slug}`)
+  });
 
   return (
     <FormProvider {...form}>
       <ProductEditProvider variantsCode={variantsCode}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={onSubmit}>
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.5fr] gap-6 my-6">
             <ProductEditGeneralInfo attributes={attributes ?? []} onAdd={() => {}} />
 
@@ -76,11 +49,7 @@ export const ProductEdit = ({ productForm, productUI }: Props) => {
 
             <Tooltip open={openTooltip}>
               <TooltipTrigger asChild>
-                <Button
-                  type="submit"
-                  className="w-fit cols-span-1 lg:col-start-2 ml-auto"
-                  disabled={editMutation.isPending}
-                >
+                <Button type="submit" className="w-fit col-span-1 lg:col-start-2 ml-auto" disabled={isPending}>
                   Guardar cambios
                 </Button>
               </TooltipTrigger>
