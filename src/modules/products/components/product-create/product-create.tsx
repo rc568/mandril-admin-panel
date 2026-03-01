@@ -41,7 +41,7 @@ export const ProductCreate = () => {
             <ProductCreateVariantsSection attributes={attributes ?? []} />
 
             <Button type="submit" disabled={createProduct.isPending} className="w-fit ml-auto">
-              Crear producto
+              {createProduct.isPending ? 'Creando...' : 'Crear producto'}
             </Button>
 
             <ProductAddAttributesDialog

@@ -4,5 +4,5 @@ export const TextEditor = () => {
   const { editor } = useCurrentEditor();
   if (!editor) return null;
 
-  return <EditorContent editor={editor}></EditorContent>;
+  return <EditorContent editor={editor} className="max-h-[512px] overflow-y-scroll"></EditorContent>;
 };

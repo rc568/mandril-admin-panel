@@ -50,7 +50,7 @@ export const ProductEdit = ({ productForm, productUI }: Props) => {
             <Tooltip open={openTooltip}>
               <TooltipTrigger asChild>
                 <Button type="submit" className="w-fit col-span-1 lg:col-start-2 ml-auto" disabled={isPending}>
-                  Guardar cambios
+                  {isPending ? 'Guardando...' : 'Guardar cambios'}
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="top" variant="outline" size="md">
