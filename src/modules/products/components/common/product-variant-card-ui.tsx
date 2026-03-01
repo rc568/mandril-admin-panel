@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { CURRENCY_SYMBOL } from '@/constants/unit';
 import { productProfit } from '@/lib/pricing-calculations';
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
 import { ImageIcon, Info, Trash2 } from 'lucide-react';
@@ -67,8 +68,10 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
               id={`${domId}-purchase-price`}
               {...register(`variants.${index}.purchasePrice` as Path<T>)}
               type="number"
+              step={'any'}
               className="bg-background"
               placeholder="Precio de Compra"
+              startAdornment={CURRENCY_SYMBOL}
             />
             {currentVariantError?.purchasePrice && (
               <FormErrorMessage text={currentVariantError.purchasePrice.message ?? ''} />
@@ -89,8 +92,10 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
               id={`${domId}-price`}
               {...register(`variants.${index}.price` as Path<T>)}
               type="number"
+              step={'any'}
               className="bg-background"
               placeholder="Precio de Venta"
+              startAdornment={CURRENCY_SYMBOL}
             />
             {currentVariantError?.price && <FormErrorMessage text={currentVariantError.price.message ?? ''} />}
           </div>
