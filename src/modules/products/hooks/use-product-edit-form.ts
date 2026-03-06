@@ -2,7 +2,10 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import type { EditProductForm } from '../interfaces/ui/create-product-form.interface';
 
 export const useProductEditForm = () => {
-  const { getValues, setValue } = useFormContext<EditProductForm>();
+  const {
+    getValues,
+    formState: { defaultValues }
+  } = useFormContext<EditProductForm>();
 
   const variantsFA = useFieldArray<EditProductForm, 'variants'>({
     name: 'variants'
@@ -14,41 +17,60 @@ export const useProductEditForm = () => {
 
   const selectedAttributesId = attributesFA.fields.map((attr) => attr.attributeId);
 
-  // const checkedAttributeId = (attributeId: number) => {
-  //   const attributes = getValues('attributesId') ?? [];
-  //   const variants = getValues('variants') ?? [];
+  const checkedAttributeId = (attributeId: number) => {
+    const attributes = getValues('attributesId') ?? [];
+    const variants = getValues('variants') ?? [];
 
-  //   const index = attributes.findIndex((attrField) => attrField.attributeId === attributeId);
-  //   const newAttributesLength = index >= 0 ? attributes.length - 1 : attributes.length + 1;
+    const index = attributes.findIndex((attr) => attr.attributeId === attributeId);
 
-  //   if (index >= 0) {
-  //     attributesFA.remove(index);
-  //   } else {
-  //     attributesFA.append({ attributeId: attributeId });
-  //   }
+    if (index >= 0) {
+      attributesFA.remove(index);
 
-  //   if (newAttributesLength > 0 && variants.length === 1) {
-  //     return variantsFA.append({ price: 0, purchasePrice: 0, quantityInStock: 0, attributes: [] });
-  //   }
+      variants.forEach((_, variantIndex) => {
+        const currentVariant = getValues(`variants.${variantIndex}`);
+        const defaultVariantsAttr = defaultValues?.variants?.[variantIndex]?.attributes as NonNullable<
+          EditProductForm['variants']
+        >[number]['attributes'];
 
-  //   if (newAttributesLength <= 0 && variants.length > 1) {
-  //     variantsFA.remove(variants.map((_, index) => index).slice(1));
-  //     setValue(`variants.${0}.attributes`, []);
-  //   }
-  // };
+        variantsFA.update(variantIndex, {
+          ...currentVariant,
+          attributes: defaultVariantsAttr ?? [],
+          variantId: currentVariant?.variantId!
+        });
+      });
 
-  // const clearAttributes = () => {
-  //   const variants = getValues('variants');
-  //   variantsFA.remove(variants.map((_, index) => index).slice(1));
-  //   setValue(`variants.${0}.attributes`, []);
-  //   attributesFA.remove();
-  // };
+      return;
+    }
+
+    attributesFA.append({ attributeId: attributeId });
+  };
+
+  const clearAttributes = () => {
+    const defaultAttributes = defaultValues?.attributesId as EditProductForm['attributesId'];
+    attributesFA.replace(defaultAttributes ?? []);
+
+    variantsFA.fields.forEach((_, variantIndex) => {
+      const currentVariant = getValues(`variants.${variantIndex}`);
+      const defaultVariantsAttr = defaultValues?.variants?.[variantIndex]?.attributes as NonNullable<
+        EditProductForm['variants']
+      >[number]['attributes'];
+
+      variantsFA.update(variantIndex, {
+        ...currentVariant,
+        attributes: defaultVariantsAttr ?? [],
+        variantId: currentVariant?.variantId!
+      });
+    });
+  };
 
   return {
     variantsFA,
     attributesFA,
-    selectedAttributesId
-    // checkedAttributeId,
-    // clearAttributes
+    selectedAttributesId,
+    checkedAttributeId,
+    clearAttributes,
+    defaultAttributesId: defaultValues?.attributesId
+      ?.map((attr) => attr?.attributeId)
+      .filter((attr) => attr !== undefined)
   };
 };

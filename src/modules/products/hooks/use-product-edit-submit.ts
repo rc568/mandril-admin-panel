@@ -14,17 +14,17 @@ import { editProductSchema } from '../validators/product.validators';
 interface Props {
   productId: string;
   previousSlug: string;
-  productForm: ProductEditFormMapper;
+  defaultValues: ProductEditFormMapper;
   onNoChanges: () => void;
   onEditSuccess: (data: ProductMapped) => void;
 }
 
-export const useProductEditSubmit = ({ productId, previousSlug, productForm, onNoChanges, onEditSuccess }: Props) => {
+export const useProductEditSubmit = ({ productId, previousSlug, defaultValues, onNoChanges, onEditSuccess }: Props) => {
   const { editMutation } = useProductMutation();
 
   const form = useForm<EditProductForm>({
     resolver: standardSchemaResolver(editProductSchema),
-    defaultValues: productForm
+    defaultValues: defaultValues
   });
 
   const {
@@ -43,19 +43,35 @@ export const useProductEditSubmit = ({ productId, previousSlug, productForm, onN
             variants: variants.map((v) => {
               const { attributes, ...rest } = v;
 
+              const attributesWithId = attributes?.map((attr) => {
+                const { attributeId: _attributeId, ...attrRest } = attr;
+                const attrHasChanges = Object.values(attrRest).some((v) => v === true);
+
+                if (!attrHasChanges) return undefined;
+
+                return {
+                  ...attrRest,
+                  attributeId: true
+                };
+              });
+
+              const variantHasChanges =
+                Object.values(rest).filter((v) => v === true).length > 0 || attributesWithId?.length;
+
+              if (!variantHasChanges) return undefined;
+
               return {
                 ...rest,
                 variantId: true,
-                ...(attributes?.length
-                  ? { attributes: attributes.map((atrr) => ({ ...atrr, attributeId: true })) }
-                  : {})
+                ...(attributesWithId?.length ? { attributes: attributesWithId } : {})
               };
             })
           }
         : {})
     };
 
-    const filterData = filterChangedFormFields(dirty, data, ['variantId', 'attributeId']);
+    const filterData = filterChangedFormFields(dirty, data);
+
     if (!filterData || isEmptyPlainObject(filterData)) {
       onNoChanges();
       return;
