@@ -1,5 +1,5 @@
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
-import { useProductCreateContext } from '../../hooks/use-product-create-context';
+import { useProductEditContext } from '../../hooks/use-product-edit-context';
 import { ProductAddAttributesDialogUI } from '../common/product-add-attributes-dialog-ui';
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const ProductAddAttributesDialog = ({ open, onOpenChange, attributes }: Props) => {
-  const { checkedAttributeId, clearAttributes, selectedAttributesId } = useProductCreateContext();
+  const { checkedAttributeId, clearAttributes, selectedAttributesId, defaultAttributesId } = useProductEditContext();
 
   return (
     <ProductAddAttributesDialogUI
@@ -19,6 +19,7 @@ export const ProductAddAttributesDialog = ({ open, onOpenChange, attributes }: P
       onChecked={checkedAttributeId}
       onClear={clearAttributes}
       selectedIds={selectedAttributesId}
+      defaultIds={defaultAttributesId}
     />
   );
 };

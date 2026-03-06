@@ -2,43 +2,42 @@ import { isEmptyPlainObject, isPlainObject } from '../object-utils';
 
 export const filterChangedFormFields = <T extends Record<string, any>>(
   dirtyFields: Partial<Record<keyof T, any>>,
-  data: T,
-  keysToOmit?: string[]
+  data: T
 ): Partial<Record<keyof T, any>> | undefined => {
-  const keys = Object.keys(dirtyFields) as (keyof T)[];
   const filterData: Partial<Record<keyof T, any>> = {};
 
-  if (isEmptyPlainObject(keys)) return;
+  for (const key in dirtyFields) {
+    const dirtyValue = dirtyFields[key];
+    const dataValue = data[key];
 
-  keys.forEach((key) => {
-    if (keysToOmit?.includes(key as string) && dirtyFields[key] === true) {
-      filterData[key] = data[key];
-      return;
-    }
+    if (Array.isArray(dirtyValue)) {
+      if (dirtyValue.length === 0) continue;
 
-    if (Array.isArray(dirtyFields[key])) {
-      filterData[key] = dirtyFields[key]
+      const filterArray = dirtyValue
         .map((subdata, index) => {
           if (!subdata) return;
-          if (subdata === true) return data[key][index];
-          return filterChangedFormFields(subdata, data[key][index], keysToOmit);
+          if (subdata === true) return dataValue[index];
+          return filterChangedFormFields(subdata, dataValue[index]);
         })
         .filter(Boolean);
-      return;
+
+      if (filterArray.length === 0) continue;
+      filterData[key] = filterArray;
+      continue;
     }
 
-    if (isPlainObject(dirtyFields[key])) {
-      const result = filterChangedFormFields(dirtyFields[key], data[key], keysToOmit);
-      if (!result || isEmptyPlainObject(result)) return;
+    if (isPlainObject(dirtyValue)) {
+      const result = filterChangedFormFields(dirtyValue, dataValue);
+      if (!result || isEmptyPlainObject(result)) continue;
       filterData[key] = result;
-      return;
+      continue;
     }
 
-    if (dirtyFields[key] === true) {
-      filterData[key] = data[key];
-      return;
+    if (dirtyValue === true) {
+      filterData[key] = dataValue;
     }
-  });
+  }
 
+  if (isEmptyPlainObject(filterData)) return;
   return filterData;
 };

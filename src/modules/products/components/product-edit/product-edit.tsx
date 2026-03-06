@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useHandleTooltip } from '@/hooks/common/useHandleTooltip';
 import { useAttributes } from '@/hooks/query';
+import { useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { messages } from '../../constants/products.messages';
@@ -9,6 +10,7 @@ import { ProductEditProvider } from '../../context/product-edit-context';
 import { useProductEditSubmit } from '../../hooks/use-product-edit-submit';
 import type { ProductMapped } from '../../interfaces/api/get-products-mapped.interface';
 import type { ProductEditFormMapper } from '../../interfaces/ui/product-edit-form.interface';
+import { ProductAddAttributesDialog } from './product-add-attributes-dialog';
 import { ProductEditGeneralInfo } from './product-edit-general-info';
 import { ProductEditStatsCard } from './product-edit-stats-card';
 import { ProductEditVariantsSection } from './product-edit-variants-section';
@@ -19,6 +21,7 @@ interface Props {
 }
 
 export const ProductEdit = ({ productForm, productUI }: Props) => {
+  const [isAttributesModalOpen, setIsAttributesModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const { open: openTooltip, show: showToolTip } = useHandleTooltip();
@@ -29,7 +32,7 @@ export const ProductEdit = ({ productForm, productUI }: Props) => {
   const { form, isPending, onSubmit } = useProductEditSubmit({
     productId: productUI.id.toString(),
     previousSlug: productUI.slug,
-    productForm: productForm,
+    defaultValues: productForm,
     onNoChanges: showToolTip,
     onEditSuccess: (res) => navigate(`/productos/editar/${res.slug}`)
   });
@@ -39,7 +42,7 @@ export const ProductEdit = ({ productForm, productUI }: Props) => {
       <ProductEditProvider variantsCode={variantsCode}>
         <form onSubmit={onSubmit}>
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.5fr] gap-6 my-6">
-            <ProductEditGeneralInfo attributes={attributes ?? []} onAdd={() => {}} />
+            <ProductEditGeneralInfo attributes={attributes ?? []} onAdd={() => setIsAttributesModalOpen(true)} />
 
             <ProductEditStatsCard createdAt={productUI.createdAt} createdBy={productUI.createdBy} />
 
@@ -57,6 +60,12 @@ export const ProductEdit = ({ productForm, productUI }: Props) => {
                 <p>{messages.PRODUCT_NOT_MODIFIED}</p>
               </TooltipContent>
             </Tooltip>
+
+            <ProductAddAttributesDialog
+              open={isAttributesModalOpen}
+              onOpenChange={setIsAttributesModalOpen}
+              attributes={attributes ?? []}
+            />
           </div>
         </form>
       </ProductEditProvider>
