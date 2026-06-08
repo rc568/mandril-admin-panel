@@ -9,6 +9,7 @@ import type { ProductMapped } from '../interfaces/api/get-products-mapped.interf
 import type { EditProductForm } from '../interfaces/ui/create-product-form.interface';
 import type { ProductEditFormMapper } from '../interfaces/ui/product-edit-form.interface';
 import { mapProductToEditForm } from '../mappers/product-to-edit-form.mapper';
+import { productEditPayload } from '../utils/product-edit-payload';
 import { editProductSchema } from '../validators/product.validators';
 
 interface Props {
@@ -34,51 +35,41 @@ export const useProductEditSubmit = ({ productId, previousSlug, defaultValues, o
   } = form;
 
   const onSubmit = async (data: EditProductForm) => {
-    const { variants, ...rest } = dirtyFields;
+    const { variants: _, attributesId: __, ...generalDirtyFields } = dirtyFields;
 
-    const dirty = {
-      ...rest,
-      ...(variants?.length
-        ? {
-            variants: variants.map((v) => {
-              const { attributes, ...rest } = v;
+    const filteredGeneralData = filterChangedFormFields(generalDirtyFields, data);
 
-              const attributesWithId = attributes?.map((attr) => {
-                const { attributeId: _attributeId, ...attrRest } = attr;
-                const attrHasChanges = Object.values(attrRest).some((v) => v === true);
+    const hasVariantChanges = dirtyFields.variants && dirtyFields.variants.some((v) => v !== undefined);
 
-                if (!attrHasChanges) return undefined;
-
-                return {
-                  ...attrRest,
-                  attributeId: true
-                };
-              });
-
-              const variantHasChanges =
-                Object.values(rest).filter((v) => v === true).length > 0 || attributesWithId?.length;
-
-              if (!variantHasChanges) return undefined;
-
-              return {
-                ...rest,
-                variantId: true,
-                ...(attributesWithId?.length ? { attributes: attributesWithId } : {})
-              };
-            })
-          }
-        : {})
+    const payload: EditProductForm = {
+      ...filteredGeneralData,
+      ...(hasVariantChanges && data.attributesId?.length !== 0 ? { attributesId: data.attributesId } : {}),
+      ...(hasVariantChanges ? { variants: data.variants } : {})
     };
 
-    const filterData = filterChangedFormFields(dirty, data);
+    console.log('data', data);
+    console.log('payload', payload);
 
-    if (!filterData || isEmptyPlainObject(filterData)) {
+    // Revisar esta función
+    // Pendiente agregar
+    const payload2 = productEditPayload(payload);
+
+    console.log('payload', payload2);
+
+    // const filterData = filterChangedFormFields(dirty, data);
+
+    // if (!filterData || isEmptyPlainObject(filterData)) {
+    //   onNoChanges();
+    //   return;
+    // }
+
+    if (isEmptyPlainObject(payload2)) {
       onNoChanges();
       return;
     }
 
     await editMutation.mutateAsync(
-      { id: productId, body: filterData },
+      { id: productId, body: payload },
       {
         onSuccess: (res) => {
           queryClient.invalidateQueries({ queryKey: productKeys.detail(previousSlug) });

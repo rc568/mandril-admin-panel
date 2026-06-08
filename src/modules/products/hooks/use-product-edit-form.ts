@@ -4,6 +4,7 @@ import type { EditProductForm } from '../interfaces/ui/create-product-form.inter
 export const useProductEditForm = () => {
   const {
     getValues,
+    watch,
     formState: { defaultValues }
   } = useFormContext<EditProductForm>();
 
@@ -21,10 +22,10 @@ export const useProductEditForm = () => {
     const attributes = getValues('attributesId') ?? [];
     const variants = getValues('variants') ?? [];
 
-    const index = attributes.findIndex((attr) => attr.attributeId === attributeId);
+    const attributeIndex = attributes.findIndex((attr) => attr.attributeId === attributeId);
 
-    if (index >= 0) {
-      attributesFA.remove(index);
+    if (attributeIndex >= 0) {
+      attributesFA.remove(attributeIndex);
 
       variants.forEach((_, variantIndex) => {
         const currentVariant = getValues(`variants.${variantIndex}`);
