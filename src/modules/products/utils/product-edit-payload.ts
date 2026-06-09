@@ -1,23 +1,34 @@
+import { filterChangedFormFields } from '@/lib/react-hook-form/utils';
+import type { FormState } from 'react-hook-form';
 import type { EditProductForm } from '../interfaces/ui/create-product-form.interface';
 
-export const productEditPayload = (data: EditProductForm): EditProductForm => {
-  const { attributesId, variants, ...rest } = data;
+export const getProductEditPayload = (
+  dataForm: EditProductForm,
+  dirtyFields: FormState<EditProductForm>['dirtyFields']
+): EditProductForm => {
+  const { variants: _, attributesId: __, ...generalDirtyFields } = dirtyFields;
+  const { attributesId: attributesIdForm, variants: variantsForm } = dataForm;
 
-  const onlyOneVariant = attributesId?.length === 0 && variants?.length === 1;
+  const generalDataPayload = filterChangedFormFields(generalDirtyFields, dataForm);
+
+  const hasOnlyOneVariant = attributesIdForm?.length === 0 && variantsForm?.length === 1;
+  const hasVariantFieldsChanges = dirtyFields.variants && dirtyFields.variants.some((v) => v !== undefined);
 
   const payload: EditProductForm = {
-    ...rest,
-    ...(onlyOneVariant ? {} : { attributesId: attributesId }),
-    ...(onlyOneVariant
-      ? {
-          variants: data.variants?.map((v) => {
-            const { attributes, ...variant } = v;
-            return { ...variant };
-          })
-        }
-      : {
-          variants
-        })
+    ...(generalDataPayload ?? {}),
+    ...(hasVariantFieldsChanges
+      ? hasOnlyOneVariant
+        ? {
+            variants: variantsForm?.map((v) => {
+              const { attributes, ...variant } = v;
+              return { ...variant };
+            })
+          }
+        : {
+            variants: variantsForm,
+            attributesId: attributesIdForm
+          }
+      : {})
   };
 
   return payload;
