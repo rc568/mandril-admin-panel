@@ -1,7 +1,6 @@
 import { useProductMutation } from '@/hooks/query';
 import { productKeys } from '@/hooks/query/product/products.keys';
 import { isEmptyPlainObject } from '@/lib/object-utils';
-import { filterChangedFormFields } from '@/lib/react-hook-form/utils';
 import { queryClient } from '@/lib/tanstack-query/query-client';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { useForm } from 'react-hook-form';
@@ -9,7 +8,7 @@ import type { ProductMapped } from '../interfaces/api/get-products-mapped.interf
 import type { EditProductForm } from '../interfaces/ui/create-product-form.interface';
 import type { ProductEditFormMapper } from '../interfaces/ui/product-edit-form.interface';
 import { mapProductToEditForm } from '../mappers/product-to-edit-form.mapper';
-import { productEditPayload } from '../utils/product-edit-payload';
+import { getProductEditPayload } from '../utils/product-edit-payload';
 import { editProductSchema } from '../validators/product.validators';
 
 interface Props {
@@ -35,35 +34,12 @@ export const useProductEditSubmit = ({ productId, previousSlug, defaultValues, o
   } = form;
 
   const onSubmit = async (data: EditProductForm) => {
-    const { variants: _, attributesId: __, ...generalDirtyFields } = dirtyFields;
-
-    const filteredGeneralData = filterChangedFormFields(generalDirtyFields, data);
-
-    const hasVariantChanges = dirtyFields.variants && dirtyFields.variants.some((v) => v !== undefined);
-
-    const payload: EditProductForm = {
-      ...filteredGeneralData,
-      ...(hasVariantChanges && data.attributesId?.length !== 0 ? { attributesId: data.attributesId } : {}),
-      ...(hasVariantChanges ? { variants: data.variants } : {})
-    };
+    const payload = getProductEditPayload(data, dirtyFields);
 
     console.log('data', data);
     console.log('payload', payload);
 
-    // Revisar esta función
-    // Pendiente agregar
-    const payload2 = productEditPayload(payload);
-
-    console.log('payload', payload2);
-
-    // const filterData = filterChangedFormFields(dirty, data);
-
-    // if (!filterData || isEmptyPlainObject(filterData)) {
-    //   onNoChanges();
-    //   return;
-    // }
-
-    if (isEmptyPlainObject(payload2)) {
+    if (isEmptyPlainObject(payload)) {
       onNoChanges();
       return;
     }

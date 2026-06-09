@@ -22,7 +22,7 @@ export const ProductEditVariantsSection = ({ attributes }: Props) => {
     <ProductVariantsSectionUI
       attributes={attributes}
       attributesSelectedCount={attributesFieldWatch.length}
-      // onAppend={() => append({ price: 0, purchasePrice: 0, quantityInStock: 0, attributes: [] })}
+      // onAppend={() => _append({ price: 0, purchasePrice: 0, quantityInStock: 0, attributes: [], variantId: undefined, isActive: true })}
       onAppend={() => {}}
       onRemove={removeVariant}
       variantsField={variantsField.map((v) => ({ id: v.id, variantId: v.variantId }))}
