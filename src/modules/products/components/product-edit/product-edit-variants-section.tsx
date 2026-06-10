@@ -11,21 +11,16 @@ interface Props {
 
 export const ProductEditVariantsSection = ({ attributes }: Props) => {
   const { control } = useFormContext<EditProductForm>();
-  const {
-    variantsFA: { append: _append, remove, fields: variantsField }
-  } = useProductEditContext();
+  const { variantsFields, appendVariant, removeVariant } = useProductEditContext();
   const attributesFieldWatch = useWatch({ control: control, name: 'attributesId' }) ?? [];
-
-  const removeVariant = (index: number) => remove(index);
 
   return (
     <ProductVariantsSectionUI
       attributes={attributes}
       attributesSelectedCount={attributesFieldWatch.length}
-      // onAppend={() => _append({ price: 0, purchasePrice: 0, quantityInStock: 0, attributes: [], variantId: undefined, isActive: true })}
-      onAppend={() => {}}
+      onAppend={appendVariant}
       onRemove={removeVariant}
-      variantsField={variantsField.map((v) => ({ id: v.id, variantId: v.variantId }))}
+      variantsField={variantsFields.map((v) => ({ id: v.id, variantId: v.variantId }))}
       VariantCard={ProductEditVariantCard}
     />
   );
