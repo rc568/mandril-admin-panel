@@ -50,7 +50,7 @@ export const editProductSchema = baseProductSchema
     variants: z
       .array(
         productVariantSchema.partial().extend({
-          variantId: z.int(),
+          variantId: z.int().optional(),
           isActive: z.boolean().optional(),
           attributes: variantAttributeValueMapSchema.optional()
         })
@@ -63,7 +63,9 @@ export const editProductSchema = baseProductSchema
       const uniqueVariants = new Set<number>();
 
       for (const variant of ctx.value.variants) {
-        uniqueVariants.add(variant.variantId);
+        if (variant.variantId !== undefined) {
+          uniqueVariants.add(variant.variantId);
+        }
         if (variant.attributes) {
           const uniqueAttribues = new Set(variant.attributes.map((attr) => attr.attributeId));
 
@@ -79,7 +81,9 @@ export const editProductSchema = baseProductSchema
         }
       }
 
-      if (ctx.value.variants.length !== uniqueVariants.size) {
+      const existingVariantsSize = ctx.value.variants.filter((v) => v.variantId !== undefined).length;
+
+      if (existingVariantsSize !== uniqueVariants.size) {
         ctx.issues.push({
           code: 'custom',
           input: ctx.value,

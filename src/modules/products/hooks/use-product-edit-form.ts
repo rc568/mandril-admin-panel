@@ -1,10 +1,18 @@
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import type { EditProductForm } from '../interfaces/ui/create-product-form.interface';
 
+const INITIAL_VARIANT_VALUE = {
+  price: 0,
+  purchasePrice: 0,
+  quantityInStock: 0,
+  attributes: [],
+  variantId: undefined,
+  isActive: true
+};
+
 export const useProductEditForm = () => {
   const {
     getValues,
-    watch,
     formState: { defaultValues }
   } = useFormContext<EditProductForm>();
 
@@ -17,6 +25,9 @@ export const useProductEditForm = () => {
   });
 
   const selectedAttributesId = attributesFA.fields.map((attr) => attr.attributeId);
+
+  const appendVariant = () => variantsFA.append(INITIAL_VARIANT_VALUE);
+  const removeVariant = (index: number) => variantsFA.remove(index);
 
   const checkedAttributeId = (attributeId: number) => {
     const attributes = getValues('attributesId') ?? [];
@@ -65,9 +76,11 @@ export const useProductEditForm = () => {
   };
 
   return {
-    variantsFA,
-    attributesFA,
+    variantsFields: variantsFA.fields,
+    attributesFields: attributesFA.fields,
     selectedAttributesId,
+    appendVariant,
+    removeVariant,
     checkedAttributeId,
     clearAttributes,
     defaultAttributesId: defaultValues?.attributesId
