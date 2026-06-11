@@ -28,10 +28,12 @@ export const useProductEditSubmit = ({ productId, previousSlug, defaultValues, o
   });
 
   const {
-    formState: { dirtyFields },
+    formState: { dirtyFields, errors },
     handleSubmit,
     reset
   } = form;
+
+  console.log(errors);
 
   const onSubmit = async (data: EditProductForm) => {
     const payload = getProductEditPayload(data, dirtyFields);

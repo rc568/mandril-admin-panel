@@ -30,49 +30,29 @@ export const useProductEditForm = () => {
   const removeVariant = (index: number) => variantsFA.remove(index);
 
   const checkedAttributeId = (attributeId: number) => {
-    const attributes = getValues('attributesId') ?? [];
+    const attributesId = getValues('attributesId') ?? [];
     const variants = getValues('variants') ?? [];
 
-    const attributeIndex = attributes.findIndex((attr) => attr.attributeId === attributeId);
+    const checkAttributeIndex = attributesId.findIndex((attr) => attr.attributeId === attributeId);
 
-    if (attributeIndex >= 0) {
-      attributesFA.remove(attributeIndex);
+    if (checkAttributeIndex >= 0) {
+      attributesFA.remove(checkAttributeIndex);
 
-      variants.forEach((_, variantIndex) => {
-        const currentVariant = getValues(`variants.${variantIndex}`);
-        const defaultVariantsAttr = defaultValues?.variants?.[variantIndex]?.attributes as NonNullable<
-          EditProductForm['variants']
-        >[number]['attributes'];
-
-        variantsFA.update(variantIndex, {
-          ...currentVariant,
-          attributes: defaultVariantsAttr ?? [],
-          variantId: currentVariant?.variantId!
-        });
-      });
-
+      if (attributesId.length - 1 === 0 && variants.length > 0) {
+        variantsFA.remove(variants.map((_, index) => index).slice(1));
+      }
       return;
     }
 
     attributesFA.append({ attributeId: attributeId });
+    if (variants.length === 1) {
+      appendVariant();
+    }
   };
 
   const clearAttributes = () => {
     const defaultAttributes = defaultValues?.attributesId as EditProductForm['attributesId'];
     attributesFA.replace(defaultAttributes ?? []);
-
-    variantsFA.fields.forEach((_, variantIndex) => {
-      const currentVariant = getValues(`variants.${variantIndex}`);
-      const defaultVariantsAttr = defaultValues?.variants?.[variantIndex]?.attributes as NonNullable<
-        EditProductForm['variants']
-      >[number]['attributes'];
-
-      variantsFA.update(variantIndex, {
-        ...currentVariant,
-        attributes: defaultVariantsAttr ?? [],
-        variantId: currentVariant?.variantId!
-      });
-    });
   };
 
   return {
