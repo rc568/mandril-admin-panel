@@ -57,16 +57,15 @@ export const ProductAddAttributesDialogUI = ({
           })}
         </div>
 
-        <DialogFooter>
-          <DialogClose asChild>
+        <DialogFooter className="justify-start">
+          <DialogClose asChild className="flex-1">
             <Button variant="outline" type="button">
-              Cancelar
+              Cerrar
             </Button>
           </DialogClose>
-          <Button onClick={onClear} variant={'outline'} type="button">
+          <Button onClick={onClear} variant={'outline'} type="button" className="flex-1">
             Borrar atributos
           </Button>
-          <Button type="button">Guardar cambios</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

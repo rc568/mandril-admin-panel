@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CURRENCY_SYMBOL } from '@/constants/unit';
 import { productProfit } from '@/lib/pricing-calculations';
+import { cn } from '@/lib/utils';
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
 import { ImageIcon, Info, Trash2 } from 'lucide-react';
 import type { Path, UseFormReturn } from 'react-hook-form';
@@ -51,7 +52,13 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
           <div className="flex justify-between items-center">
             {code ? <span>{code}</span> : <span>Variante {index + 1}</span>}
             {index > 1 && attributesField.length >= 0 && (
-              <Button size={'icon'} variant={'ghost'} type="button" onClick={() => onDelete(index)}>
+              <Button
+                size={'icon'}
+                variant={'ghost'}
+                type="button"
+                onClick={() => onDelete(index)}
+                className={cn({ hidden: code })}
+              >
                 <Trash2 className="size-5" />
               </Button>
             )}

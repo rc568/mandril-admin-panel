@@ -38,7 +38,7 @@ export const useProductEditForm = () => {
     if (checkAttributeIndex >= 0) {
       attributesFA.remove(checkAttributeIndex);
 
-      if (attributesId.length - 1 === 0 && variants.length > 0) {
+      if (attributesId.length - 1 === 0 && variants.length > 1) {
         variantsFA.remove(variants.map((_, index) => index).slice(1));
       }
       return;
@@ -51,8 +51,13 @@ export const useProductEditForm = () => {
   };
 
   const clearAttributes = () => {
-    const defaultAttributes = defaultValues?.attributesId as EditProductForm['attributesId'];
-    attributesFA.replace(defaultAttributes ?? []);
+    const defaultAttributes = (defaultValues?.attributesId as EditProductForm['attributesId']) ?? [];
+    attributesFA.replace(defaultAttributes);
+
+    if (defaultAttributes.length === 0) {
+      const variants = getValues('variants') ?? [];
+      variantsFA.remove(variants.map((_, index) => index).slice(1));
+    }
   };
 
   return {
