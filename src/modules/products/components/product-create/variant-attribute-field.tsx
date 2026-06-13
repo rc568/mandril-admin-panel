@@ -1,7 +1,8 @@
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Controller, type Control } from 'react-hook-form';
+import { Controller, useFormContext, type Control } from 'react-hook-form';
 import { useAttributeValuesQuery } from '../../hooks/use-attribute-values-query';
+import type { EditProductForm } from '../../interfaces/ui/create-product-form.interface';
 
 interface Props {
   attributeId: number;
@@ -9,10 +10,16 @@ interface Props {
   attributeName?: string;
   control: Control<any>;
   variantIndex: number;
+  isDisabled?: boolean;
 }
 
 export const VariantAttributeField = ({ attributeId, attributeIndex, attributeName, variantIndex, control }: Props) => {
   const { data: attributeValues, isLoading, isError } = useAttributeValuesQuery(attributeId);
+  const {
+    formState: { defaultValues }
+  } = useFormContext<EditProductForm>();
+
+  const defaultAttributeValue = defaultValues?.variants?.[variantIndex]?.attributes?.[attributeIndex]?.valueId;
 
   const label = `variant-${variantIndex + 1}-attribute-value-${attributeId}`;
 
@@ -33,7 +40,11 @@ export const VariantAttributeField = ({ attributeId, attributeIndex, attributeNa
             name={`variants.${variantIndex}.attributes.${attributeIndex}.valueId`}
             render={({ field }) => (
               <Select value={field.value?.toString()} onValueChange={(v) => field.onChange(Number(v))}>
-                <SelectTrigger aria-labelledby={label} className="bg-background">
+                <SelectTrigger
+                  aria-labelledby={label}
+                  className="bg-background disabled:border-none disabled:shadow-none disabled:opacity-100 disabled:text-muted-foreground disabled:[&_svg]:hidden disabled:cursor-auto"
+                  disabled={defaultAttributeValue !== undefined}
+                >
                   <SelectValue placeholder="Seleccionar Valor" />
                 </SelectTrigger>
                 <SelectContent className="max-h-80">
