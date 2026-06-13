@@ -65,8 +65,8 @@ export const ProductListItem = ({ product }: Props) => {
   return (
     <>
       <TableRow className="bg-muted/20 border-0">
-        <TableCell></TableCell>
-        <TableCell colSpan={8} className="font-medium">
+        <TableCell className="pb-0"></TableCell>
+        <TableCell colSpan={8} className="font-medium pb-0">
           <Link to={`editar/${product.slug}`}>{product.name}</Link>
         </TableCell>
       </TableRow>
@@ -77,12 +77,14 @@ export const ProductListItem = ({ product }: Props) => {
         >
           <TableCell>{variant.code}</TableCell>
           <TableCell>
-            {variant.variantAttributes.map((attr) => (
-              <div key={attr.attribute}>
-                <Badge className="bg-amber-200 text-primary">{attr.attribute}</Badge>
-                <span> : {attr.value}</span>
-              </div>
-            ))}
+            <div className="flex flex-col gap-2">
+              {variant.variantAttributes.map((attr) => (
+                <div key={attr.attribute}>
+                  <Badge className="bg-amber-200 text-primary">{attr.attribute}</Badge>
+                  <span> : {attr.value}</span>
+                </div>
+              ))}
+            </div>
           </TableCell>
           <TableCell>{variant.quantityInStock}</TableCell>
           <TableCell>{formatCurrency(variant.purchasePrice)}</TableCell>
@@ -90,16 +92,18 @@ export const ProductListItem = ({ product }: Props) => {
           <TableCell className="font-medium">{formatCurrency(variant.price)}</TableCell>
           <TableCell>{getStatusBadge(variant.isActive)}</TableCell>
           <TableCell>{getStockStatusBadge(variant.stockStatus)}</TableCell>
-          <TableCell className={`flex gap-2 justify-end items-center`}>
-            <Link
-              to={`editar/${product.slug}`}
-              className="inline-flex items-center justify-center border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5"
-            >
-              <Edit className="w-4 h-4" />
-            </Link>
-            <Button variant="outline" size="sm">
-              <Trash2 className="w-4 h-4" />
-            </Button>
+          <TableCell>
+            <div className="flex gap-2 justify-end items-center">
+              <Link
+                to={`editar/${product.slug}`}
+                className="inline-flex items-center justify-center border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5"
+              >
+                <Edit className="w-4 h-4" />
+              </Link>
+              <Button variant="outline" size="sm">
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
           </TableCell>
         </TableRow>
       ))}
