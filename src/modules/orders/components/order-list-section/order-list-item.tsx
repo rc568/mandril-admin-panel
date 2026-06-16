@@ -4,8 +4,8 @@ import { formatCurrency } from '@/lib/currency';
 import { formatDate } from '@/lib/date-utils';
 import { cn } from '@/lib/utils';
 import { Calendar, FileText, Package, SquareUser } from 'lucide-react';
-import type { OrderMapped } from '../interfaces/api/get-orders-mapped.interface';
-import type { OrderStatus } from '../interfaces/api/order.interface';
+import type { OrderMapped } from '../../interfaces/api/get-orders-mapped.interface';
+import type { OrderStatus } from '../../interfaces/api/order.interface';
 
 interface Props {
   order: OrderMapped;
