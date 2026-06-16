@@ -10,10 +10,10 @@ import { getAllSalesChannel } from '@/services/sales-channel/get-all-sales-chann
 import { useQuery } from '@tanstack/react-query';
 import { CalendarIcon, Filter, X } from 'lucide-react';
 import { useState } from 'react';
-import { INVOICE_TYPES_ARRAY, ORDER_STATUS_OPTIONS_WITH_ALL } from '../constants/order.constants';
+import { INVOICE_TYPES_ARRAY, ORDER_STATUS_OPTIONS_WITH_ALL } from '../../constants/order.constants';
 
-import type { GetOrdersFilters } from '../interfaces/ui/get-orders-filters.interface';
-import { getFilterDisplayValue } from '../utils/order-list-filters.utils';
+import type { GetOrdersFilters } from '../../interfaces/ui/get-orders-filters.interface';
+import { getFilterDisplayValue } from '../../utils/order-list-filters.utils';
 
 export type LocalOrderFilters = Pick<GetOrdersFilters, 'status' | 'channel' | 'startDate' | 'endDate' | 'invoiceType'>;
 
