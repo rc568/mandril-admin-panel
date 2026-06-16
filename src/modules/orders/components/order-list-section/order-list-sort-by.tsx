@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SortDesc } from 'lucide-react';
-import { ORDER_SORT_BY_ENTRIES, ORDER_SORT_BY_OPTIONS } from '../constants/order.constants';
+import { ORDER_SORT_BY_ENTRIES, ORDER_SORT_BY_OPTIONS } from '../../constants/order.constants';
 
 interface Props {
   sortBy?: string;
