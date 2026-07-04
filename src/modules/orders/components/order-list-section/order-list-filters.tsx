@@ -171,7 +171,7 @@ export const OrderListFilters = ({ initialFilters = {}, applyFilters }: Props) =
                   <SelectContent>
                     {ORDER_STATUS_OPTIONS_WITH_ALL.map((status) => (
                       <SelectItem key={status.key} value={status.key} className="cursor-pointer">
-                        {status.value}
+                        {status.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -209,9 +209,9 @@ export const OrderListFilters = ({ initialFilters = {}, applyFilters }: Props) =
                   <SelectValue placeholder="Seleccionar tipo de comprobante" />
                 </SelectTrigger>
                 <SelectContent>
-                  {INVOICE_TYPES_ARRAY.map(({ key, value }) => (
+                  {INVOICE_TYPES_ARRAY.map(({ key, label }) => (
                     <SelectItem key={key} value={key} className="cursor-pointer">
-                      {value}
+                      {label}
                     </SelectItem>
                   ))}
                 </SelectContent>
