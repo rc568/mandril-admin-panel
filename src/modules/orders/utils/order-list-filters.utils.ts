@@ -1,7 +1,7 @@
 import { formatShortDate } from '@/lib/date-utils';
 import type { SalesChannel } from '@/services/sales-channel/interfaces/sales-channel.interface';
-import type { LocalOrderFilters } from '../components/order-list-filters';
-import { INVOICE_TYPE, ORDER_STATUS_OPTIONS } from '../constants/order.constants';
+import type { LocalOrderFilters } from '../components/order-list-section/order-list-filters';
+import { INVOICE_TYPE_CONFIG, ORDER_STATUS_CONFIG } from '../constants/order.constants';
 
 const getChannelDisplayMap = (options: SalesChannel[] = []) => {
   if (!options) return {};
@@ -30,13 +30,13 @@ export const getFilterDisplayValue = (
 
   switch (key) {
     case 'status':
-      return ORDER_STATUS_OPTIONS[stringValue as keyof typeof ORDER_STATUS_OPTIONS] || stringValue;
+      return ORDER_STATUS_CONFIG[stringValue as keyof typeof ORDER_STATUS_CONFIG].label || stringValue;
 
     case 'channel':
       return channelMap[stringValue] || stringValue;
 
     case 'invoiceType':
-      return INVOICE_TYPE[stringValue as keyof typeof INVOICE_TYPE] || stringValue;
+      return INVOICE_TYPE_CONFIG[stringValue as keyof typeof INVOICE_TYPE_CONFIG].label || stringValue;
 
     default:
       return stringValue;

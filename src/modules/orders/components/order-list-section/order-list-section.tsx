@@ -3,9 +3,12 @@ import { SearchBar } from '@/components/common/search-bar';
 import { ProductPerPageOptions } from '@/modules/products/components/product-per-page-options';
 import type { GetOrdersMapped, OrderMapped } from '../../interfaces/api/get-orders-mapped.interface';
 import type { GetOrdersFilters } from '../../interfaces/ui/get-orders-filters.interface';
-import { OrderList } from './order-list';
+
+import { useState } from 'react';
+import { OrderDetailsSheet } from './order-details-sheet';
 import { OrderListFilters } from './order-list-filters';
 import { OrderListSortBy } from './order-list-sort-by';
+import { OrderTable } from './order-table';
 
 interface Props {
   orders: OrderMapped[];
@@ -28,6 +31,9 @@ export const OrderListSection = ({
   setFilters,
   setSortBy
 }: Props) => {
+  const [selectedOrder, setSelectedOrder] = useState<OrderMapped | null>(null);
+  const setOrderDetailSheet = (order: OrderMapped | null) => setSelectedOrder(order);
+
   return (
     <>
       <SearchBar onSearch={setSearch} placeholder="Buscar por factura, cliente, razón social, ..." />
@@ -47,7 +53,7 @@ export const OrderListSection = ({
       </div>
 
       {orders.length > 0 ? (
-        <OrderList orders={orders}>
+        <OrderTable orders={orders} onRowClick={setOrderDetailSheet}>
           <ProductPerPageOptions
             limit={filters.limit}
             page={filters.page}
@@ -55,7 +61,7 @@ export const OrderListSection = ({
             totalItems={pagination.totalItems}
             handleValueChange={setLimit}
           />
-        </OrderList>
+        </OrderTable>
       ) : (
         <h2 className="text-center font-medium py-8">No se encontraron ventas.</h2>
       )}
@@ -66,6 +72,12 @@ export const OrderListSection = ({
         currentPage={filters.page}
         nextPage={pagination.nextPage}
         prevPage={pagination.prevPage}
+      />
+
+      <OrderDetailsSheet
+        open={!!selectedOrder}
+        onOpenChange={(open) => !open && setSelectedOrder(null)}
+        order={selectedOrder}
       />
     </>
   );
