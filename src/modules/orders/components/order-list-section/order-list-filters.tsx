@@ -6,12 +6,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { formatLongDate } from '@/lib/date-utils';
 import { cn } from '@/lib/utils';
-import { getAllSalesChannel } from '@/services/sales-channel/get-all-sales-channel.action';
-import { useQuery } from '@tanstack/react-query';
 import { CalendarIcon, Filter, X } from 'lucide-react';
 import { useState } from 'react';
 import { INVOICE_TYPES_ARRAY, ORDER_STATUS_OPTIONS_WITH_ALL } from '../../constants/order.constants';
 
+import { useSalesChannel } from '@/hooks/query/sales-channel';
 import type { GetOrdersFilters } from '../../interfaces/ui/get-orders-filters.interface';
 import { getFilterDisplayValue } from '../../utils/order-list-filters.utils';
 
@@ -25,11 +24,7 @@ export interface Props {
 export const OrderListFilters = ({ initialFilters = {}, applyFilters }: Props) => {
   const [localFilters, setLocalFilters] = useState<LocalOrderFilters>(initialFilters);
 
-  const { data: salesChannelOptions } = useQuery({
-    queryKey: ['sales-channel'],
-    queryFn: getAllSalesChannel,
-    staleTime: 1000 * 60 * 60
-  });
+  const { data: salesChannelOptions } = useSalesChannel();
 
   const updateLocalFilters = (newFilters: LocalOrderFilters) => {
     setLocalFilters((prev) => ({ ...prev, ...newFilters }));
