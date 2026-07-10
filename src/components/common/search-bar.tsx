@@ -28,7 +28,9 @@ export const SearchBar = ({ placeholder = 'Buscar...', onSearch }: SearchBarProp
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
         <Input ref={inputRef} placeholder={placeholder} className="pl-10" onKeyUp={handleEnter} />
       </div>
-      <Button onClick={handleSearchButton}>Buscar</Button>
+      <Button onClick={handleSearchButton} type="button">
+        Buscar
+      </Button>
     </div>
   );
 };
