@@ -2,11 +2,21 @@ import { baseApi } from '@/lib/axios/api';
 import type { CreateProduct, EditProduct } from '../interfaces/api/create-product.interface';
 import type { GetProductById } from '../interfaces/api/get-product.interface';
 import type { GetProductsApiResponse } from '../interfaces/api/get-products.interface';
+import type { GetSearchProductVariantsApiResponse } from '../interfaces/api/get-search-product-variants.interface';
 import type { CreateProductForm, EditProductForm } from '../interfaces/ui/create-product-form.interface';
 import type { GetProductsFilters } from '../interfaces/ui/get-products-filters.interface';
+import type { GetSearchProductVariantsFilters } from '../interfaces/ui/get-search-product-variants-filters.interface';
 
 export const getProducts = async (params: GetProductsFilters) => {
   const response = await baseApi.get<GetProductsApiResponse>('/products', {
+    params: params
+  });
+
+  return response.data;
+};
+
+export const getSearchProductVariants = async (params?: GetSearchProductVariantsFilters) => {
+  const response = await baseApi.get<GetSearchProductVariantsApiResponse>('/products/variants/search', {
     params: params
   });
 
