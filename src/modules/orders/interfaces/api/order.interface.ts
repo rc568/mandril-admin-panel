@@ -18,8 +18,7 @@ export interface OrderProduct {
   price: string;
   quantity: number;
   variantId: number;
-  attribute: string;
-  attributeValue: string;
+  variantAttributes: VariantAttribute[];
 }
 
 export interface Order {
@@ -35,4 +34,11 @@ export interface Order {
   client: Client;
   channel: string;
   products: OrderProduct[];
+}
+
+interface VariantAttribute {
+  value: string;
+  valueId: number;
+  attribute: string;
+  attributeId: number;
 }

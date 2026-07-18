@@ -106,17 +106,22 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
               {order.products.map((product) => (
                 <div key={product.code} className="flex justify-between items-center text-sm py-2">
                   <div>
-                    <span className="font-medium">
-                      {product.code} - {product.name}
-                      {product.attribute && (
-                        <Badge className="bg-amber-200 text-primary ml-2">
-                          {product.attribute}: {product.attributeValue}
-                        </Badge>
-                      )}
-                    </span>
-                    <span className="text-muted-foreground block">
-                      {product.quantity} unidad(es) × {formatCurrency(product.price)}
-                    </span>
+                    <div className="flex flex-col gap-1">
+                      <span className="font-medium">
+                        {product.code} - {product.name}
+                      </span>
+                      <div className="font-medium flex flex-wrap gap-1">
+                        {product.variantAttributes?.length > 0 &&
+                          product.variantAttributes.map((va) => (
+                            <Badge className="bg-amber-200 text-primary">
+                              {va.attribute}: {va.value}
+                            </Badge>
+                          ))}
+                      </div>
+                      <span className="text-muted-foreground block">
+                        {product.quantity} unidad(es) × {formatCurrency(product.price)}
+                      </span>
+                    </div>
                   </div>
                   <span className="font-medium">{formatCurrency(product.subTotal)}</span>
                 </div>
