@@ -3,10 +3,16 @@ import type { GetSearchProductVariantsFilters } from '@/modules/products/interfa
 import { useQuery } from '@tanstack/react-query';
 import { productKeys } from './products.keys';
 
-export const useSearchProductVariants = (filters?: GetSearchProductVariantsFilters) => {
+interface Props {
+  filters?: GetSearchProductVariantsFilters;
+  enabled?: boolean;
+}
+
+export const useSearchProductVariants = ({ filters, enabled = true }: Props) => {
   return useQuery({
     queryKey: productKeys.searchVariant(filters ?? {}),
     queryFn: () => getSearchProductVariantsAction(filters),
-    staleTime: 1000 * 60 * 5
+    staleTime: 1000 * 60 * 5,
+    enabled: enabled
   });
 };

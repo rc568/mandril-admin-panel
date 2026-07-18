@@ -13,7 +13,7 @@ export const ORDER_STATUS_CONFIG = {
 
 export const ORDER_STATUS = Object.keys(ORDER_STATUS_CONFIG) as OrderStatus[];
 
-const ORDER_STATUS_OPTIONS_ARRAY = Object.entries(ORDER_STATUS_CONFIG).map(([key, value]) => ({
+export const ORDER_STATUS_OPTIONS_ARRAY = Object.entries(ORDER_STATUS_CONFIG).map(([key, value]) => ({
   key,
   label: value.label
 }));
@@ -49,6 +49,7 @@ export const CLIENT_DOCUMENT_TYPE_CONFIG: Record<DocumentType, { label: string }
   RUC: { label: 'RUC' },
   OTRO: { label: 'Otro' }
 };
+export const CLIENT_DOCUMENT_TYPE_KEYS = Object.keys(CLIENT_DOCUMENT_TYPE_CONFIG) as DocumentType[];
 
 export const ORDER_SORT_BY_OPTIONS = {
   total_sale_asc: 'Menor monto',
@@ -59,3 +60,7 @@ export const ORDER_SORT_BY_OPTIONS = {
 
 export const ORDER_SORT_BY_ARRAY = Object.keys(ORDER_SORT_BY_OPTIONS);
 export const ORDER_SORT_BY_ENTRIES = Object.entries(ORDER_SORT_BY_OPTIONS).map(([key, value]) => ({ key, value }));
+
+export const RUC_REGEX = /^\d{11}$/;
+export const INVOICE_CODE_BOLETA_REGEX = /^EB01-\d{4}$/;
+export const INVOICE_CODE_FACTURA_REGEX = /^E001-\d{4}$/;
