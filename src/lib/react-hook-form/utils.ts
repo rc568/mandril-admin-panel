@@ -41,3 +41,43 @@ export const filterChangedFormFields = <T extends Record<string, any>>(
   if (isEmptyPlainObject(filterData)) return;
   return filterData;
 };
+
+export const filterNullishFields = <T extends Record<string, any>>(
+  data: T
+): Partial<Record<keyof T, any>> | undefined => {
+  const filterData: Partial<Record<keyof T, any>> = {};
+
+  for (const key in data) {
+    const value = data[key];
+
+    if (Array.isArray(value)) {
+      if (value.length === 0) continue;
+
+      const filterArray = value
+        .map((subdata: unknown) => {
+          if (subdata === undefined || subdata === null) return;
+          if (isPlainObject(subdata)) return filterNullishFields(subdata);
+          return subdata;
+        })
+        .filter(Boolean);
+
+      if (filterArray.length === 0) continue;
+      filterData[key] = filterArray;
+      continue;
+    }
+
+    if (isPlainObject(value)) {
+      const result = filterNullishFields(value);
+      if (!result || isEmptyPlainObject(result)) continue;
+      filterData[key] = result;
+      continue;
+    }
+
+    if (value !== undefined && value !== null) {
+      filterData[key] = value;
+    }
+  }
+
+  if (isEmptyPlainObject(filterData)) return;
+  return filterData;
+};
