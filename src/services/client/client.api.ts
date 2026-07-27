@@ -5,6 +5,6 @@ import type {
 } from './interfaces/get-search-clients.interface';
 
 export const getSearchClients = async (params?: GetSearchClientQueryParams) => {
-  const response = await baseApi.get<GetSearchClientsApiResponse>('/clients', { params: params });
-  return response.data.clients;
+  const response = await baseApi.get<GetSearchClientsApiResponse>('/clients/search', { params: params });
+  return response.data;
 };

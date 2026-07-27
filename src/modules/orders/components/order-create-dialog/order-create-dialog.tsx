@@ -26,6 +26,7 @@ import {
 import type { CreateOrderForm, CreateOrderPayload } from '../../interfaces/ui/create-order-form.interface';
 import { createOrderSchema } from '../../validators/order.validators';
 import { AddOrderProducts } from './add-order-products';
+import { ExistingClientsSearchBar } from './existing-clients-search-bar';
 import { SalesChannelSelectInput } from './sales-channel-select-input';
 
 interface Props {
@@ -94,6 +95,12 @@ export const OrderCreateDialog = ({ open, onOpenChange }: Props) => {
     });
   };
 
+  // const setClientInfoFromSearchBar = () => {
+  //   setValue('client.bussinessName', 'xd');
+  //   setValue('client.documentNumber', 'xd');
+  //   setValue('client.bussinessName', 'xd');
+  // };
+
   useEffect(() => {
     if (invoiceTypeWatch === 'FACTURA') {
       setValue('client.documentType', 'RUC');
@@ -149,6 +156,10 @@ export const OrderCreateDialog = ({ open, onOpenChange }: Props) => {
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4 text-muted-foreground" />
                 <h3 className="text-sm font-semibold">Datos del cliente</h3>
+              </div>
+
+              <div className="space-y-2 sm:col-span-2">
+                <ExistingClientsSearchBar />
               </div>
 
               <div className="space-y-2 sm:col-span-2">
