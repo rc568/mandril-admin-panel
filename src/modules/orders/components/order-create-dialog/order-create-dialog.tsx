@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { commonMessages } from '@/constants/messages';
 import { useOrderMutation } from '@/hooks/query/order';
 import { filterNullishFields } from '@/lib/react-hook-form/utils';
+import type { SearchClient } from '@/services/client/interfaces/client.interface';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { RemoveFormatting, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -95,11 +96,28 @@ export const OrderCreateDialog = ({ open, onOpenChange }: Props) => {
     });
   };
 
-  // const setClientInfoFromSearchBar = () => {
-  //   setValue('client.bussinessName', 'xd');
-  //   setValue('client.documentNumber', 'xd');
-  //   setValue('client.bussinessName', 'xd');
-  // };
+  const setClientInfoToForm = (client: SearchClient) => {
+    const { documentType } = client;
+
+    const contactName = client.contactName ?? '';
+    const email = client.email ?? '';
+    const phoneNumber1 = client.phoneNumber1 ?? '';
+
+    setValue('client.contactName', contactName);
+    setValue('client.email', email);
+    setValue('client.phoneNumber1', phoneNumber1);
+
+    setHasInvoice(() => {
+      const invoiceType = documentType === 'RUC' ? 'FACTURA' : 'BOLETA';
+
+      setValue('invoiceType', invoiceType);
+      setValue('client.documentType', client.documentType);
+      setValue('client.documentNumber', client.documentNumber);
+      setValue('client.bussinessName', client.bussinessName);
+
+      return true;
+    });
+  };
 
   useEffect(() => {
     if (invoiceTypeWatch === 'FACTURA') {
@@ -159,7 +177,7 @@ export const OrderCreateDialog = ({ open, onOpenChange }: Props) => {
               </div>
 
               <div className="space-y-2 sm:col-span-2">
-                <ExistingClientsSearchBar />
+                <ExistingClientsSearchBar setClientData={setClientInfoToForm} />
               </div>
 
               <div className="space-y-2 sm:col-span-2">

@@ -3,11 +3,19 @@ import { useSearchClients } from '@/hooks/query';
 import type { SearchClient } from '@/services/client/interfaces/client.interface';
 import { useState } from 'react';
 
-export const ExistingClientsSearchBar = () => {
+interface Props {
+  setClientData: (client: SearchClient) => void;
+}
+
+export const ExistingClientsSearchBar = ({ setClientData }: Props) => {
   const [search, setSearch] = useState<string>('');
   const [showClientList, setShowClientList] = useState(false);
 
-  const { data: searchClients } = useSearchClients({
+  const {
+    data: searchClients,
+    isPending,
+    isError
+  } = useSearchClients({
     params: { q: search },
     enabled: search.trim().length !== 0
   });
@@ -16,14 +24,19 @@ export const ExistingClientsSearchBar = () => {
 
   const onSearch = (query: string) => {
     const cleanQuery = query.trim();
-    if (cleanQuery === '') return;
+    if (cleanQuery === '') {
+      setSearch('');
+      setShowClientList(false);
+      return;
+    }
 
     setSearch(cleanQuery);
     setShowClientList(true);
   };
 
-  const setClientData = (client: SearchClient) => {
-    console.log(client);
+  const handleSelectClient = (client: SearchClient) => {
+    setClientData(client);
+    setShowClientList(false);
   };
 
   return (
@@ -39,18 +52,24 @@ export const ExistingClientsSearchBar = () => {
 
       {showClientList && (
         <div className="absolute left-0 right-0 top-[80%] border rounded-lg z-50 shadow-lg">
-          {clients?.length === 0 ? (
+          {isPending ? (
+            <div className="bg-background max-h-64 py-2 px-4 text-sm text-muted-foreground">Buscando...</div>
+          ) : isError ? (
+            <div className="bg-background max-h-64 py-2 px-4 text-sm text-destructive">
+              Ocurrió un error al consultar los clientes.
+            </div>
+          ) : clients?.length === 0 ? (
             <div className="bg-background max-h-64 py-2 px-4 text-sm text-muted-foreground">
               No se encontraron resultados.
             </div>
           ) : (
-            <ul className="max-h-60 overflow-y-auto bg-background divide-y">
+            <ul className="max-h-64 overflow-y-auto bg-background divide-y">
               {clients?.map((client) => (
                 <li key={client.clientId} className="py-2 px-4 hover:bg-accent transition-colors">
                   <button
                     type="button"
                     className="w-full cursor-pointer"
-                    onClick={() => setClientData(client)}
+                    onClick={() => handleSelectClient(client)}
                     onMouseDown={(e) => e.preventDefault()}
                   >
                     <div className="flex justify-between items-center">
