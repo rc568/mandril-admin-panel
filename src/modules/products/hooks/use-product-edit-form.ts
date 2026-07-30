@@ -1,5 +1,5 @@
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import type { EditProductForm } from '../interfaces/ui/create-product-form.interface';
+import type { EditProductForm } from '../interfaces/ui';
 
 const INITIAL_VARIANT_VALUE = {
   price: 0,

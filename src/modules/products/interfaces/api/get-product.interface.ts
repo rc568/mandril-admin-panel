@@ -1,3 +1,3 @@
 import type { Product } from './product.interface';
 
-export type GetProductById = Product;
+export type GetProductByIdApiResponse = Product;

@@ -5,7 +5,7 @@ import { formatCurrency, formatPercentage } from '@/lib/currency';
 import { cn } from '@/lib/utils';
 import { Edit, Trash2 } from 'lucide-react';
 import { Link } from 'react-router';
-import type { ProductMapped } from '../interfaces/api/get-products-mapped.interface';
+import type { ProductMapped } from '../interfaces/ui';
 
 interface Props {
   product: ProductMapped;

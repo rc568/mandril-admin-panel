@@ -8,15 +8,14 @@ import { useNavigate } from 'react-router';
 import { messages } from '../../constants/products.messages';
 import { ProductEditProvider } from '../../context/product-edit-context';
 import { useProductEditSubmit } from '../../hooks/use-product-edit-submit';
-import type { ProductMapped } from '../../interfaces/api/get-products-mapped.interface';
-import type { ProductEditFormMapper } from '../../interfaces/ui/product-edit-form.interface';
+import type { EditProductForm, ProductMapped } from '../../interfaces/ui';
 import { ProductAddAttributesDialog } from './product-add-attributes-dialog';
 import { ProductEditGeneralInfo } from './product-edit-general-info';
 import { ProductEditStatsCard } from './product-edit-stats-card';
 import { ProductEditVariantsSection } from './product-edit-variants-section';
 
 interface Props {
-  productForm: ProductEditFormMapper;
+  productForm: EditProductForm;
   productUI: ProductMapped;
 }
 

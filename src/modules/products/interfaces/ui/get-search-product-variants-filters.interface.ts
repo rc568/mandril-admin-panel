@@ -1,5 +1,3 @@
-export interface GetSearchProductVariantsFilters {
-  limit?: number;
-  offset?: number;
-  search?: string;
-}
+import type { GetSearchProductVariantsQueryParams } from '../api/get-search-product-variants.interface';
+
+export type GetSearchProductVariantsFilters = GetSearchProductVariantsQueryParams;

@@ -4,9 +4,7 @@ import { isEmptyPlainObject } from '@/lib/object-utils';
 import { queryClient } from '@/lib/tanstack-query/query-client';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { useForm } from 'react-hook-form';
-import type { ProductMapped } from '../interfaces/api/get-products-mapped.interface';
-import type { EditProductForm } from '../interfaces/ui/create-product-form.interface';
-import type { ProductEditFormMapper } from '../interfaces/ui/product-edit-form.interface';
+import type { EditProductForm, ProductMapped } from '../interfaces/ui';
 import { mapProductToEditForm } from '../mappers/product-to-edit-form.mapper';
 import { getProductEditPayload } from '../utils/product-edit-payload';
 import { editProductSchema } from '../validators/product.validators';
@@ -14,7 +12,7 @@ import { editProductSchema } from '../validators/product.validators';
 interface Props {
   productId: string;
   previousSlug: string;
-  defaultValues: ProductEditFormMapper;
+  defaultValues: EditProductForm;
   onNoChanges: () => void;
   onEditSuccess: (data: ProductMapped) => void;
 }
@@ -28,18 +26,13 @@ export const useProductEditSubmit = ({ productId, previousSlug, defaultValues, o
   });
 
   const {
-    formState: { dirtyFields, errors },
+    formState: { dirtyFields },
     handleSubmit,
     reset
   } = form;
 
-  console.log(errors);
-
   const onSubmit = async (data: EditProductForm) => {
     const payload = getProductEditPayload(data, dirtyFields);
-
-    console.log('data', data);
-    console.log('payload', payload);
 
     if (isEmptyPlainObject(payload)) {
       onNoChanges();

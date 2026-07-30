@@ -1,6 +1,6 @@
 import { filterChangedFormFields } from '@/lib/react-hook-form/utils';
 import type { FormState } from 'react-hook-form';
-import type { EditProductForm } from '../interfaces/ui/create-product-form.interface';
+import type { EditProductForm } from '../interfaces/ui';
 
 export const getProductEditPayload = (
   dataForm: EditProductForm,

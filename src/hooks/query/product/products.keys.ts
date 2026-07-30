@@ -1,5 +1,4 @@
-import type { GetProductsFilters } from '@/modules/products/interfaces/ui/get-products-filters.interface';
-import type { GetSearchProductVariantsFilters } from '@/modules/products/interfaces/ui/get-search-product-variants-filters.interface';
+import type { GetProductsFilters, GetSearchProductVariantsFilters } from '@/modules/products/interfaces/ui';
 
 export const productKeys = {
   all: ['products'] as const,

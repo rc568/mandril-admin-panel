@@ -3,11 +3,7 @@ import { queryClient } from '@/lib/tanstack-query/query-client';
 import { createProductAction } from '@/modules/products/actions/create-product.action';
 import { editProductAction } from '@/modules/products/actions/edit-product.action';
 import { messages } from '@/modules/products/constants/products.messages';
-import type { ProductMapped } from '@/modules/products/interfaces/api/get-products-mapped.interface';
-import type {
-  CreateProductForm,
-  EditProductForm
-} from '@/modules/products/interfaces/ui/create-product-form.interface';
+import type { CreateProductForm, EditProductForm, ProductMapped } from '@/modules/products/interfaces/ui';
 import { productKeys } from './products.keys';
 
 export const useProductMutation = () => {

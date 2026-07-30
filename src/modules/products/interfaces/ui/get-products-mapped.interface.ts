@@ -1,7 +1,7 @@
-import type { GetProductsApiResponse } from './get-products.interface';
-import type { Product, ProductVariant } from './product.interface';
+import type { GetProductsApiResponse } from '../api/get-products.interface';
+import type { Product, ProductVariant } from '../api/product.interface';
 
-export type StockStatus = 'Sin Stock' | 'Bajo Stock' | 'En Stock';
+type StockStatus = 'Sin Stock' | 'Bajo Stock' | 'En Stock';
 
 interface ProductVariantMapped extends ProductVariant {
   profitPercentage: string;
