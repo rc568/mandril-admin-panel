@@ -1,11 +1,2 @@
-export interface GetProductsFilters {
-  page: number;
-  limit: number;
-  catalogId?: string;
-  categoryId?: string;
-  isActive?: string;
-  minPrice?: string;
-  maxPrice?: string;
-  orderBy?: string;
-  search?: string;
-}
+import type { GetProductsQueryParams } from '../api/get-products.interface';
+export type GetProductsFilters = GetProductsQueryParams;

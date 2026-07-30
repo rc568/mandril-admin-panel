@@ -1,5 +1,5 @@
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import type { CreateProductForm } from '../interfaces/ui/create-product-form.interface';
+import type { CreateProductForm } from '../interfaces/ui';
 
 export const useProductCreateForm = () => {
   const { getValues, setValue } = useFormContext<CreateProductForm>();

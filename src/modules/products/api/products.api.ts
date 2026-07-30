@@ -1,13 +1,17 @@
 import { baseApi } from '@/lib/axios/api';
-import type { CreateProduct, EditProduct } from '../interfaces/api/create-product.interface';
-import type { GetProductById } from '../interfaces/api/get-product.interface';
-import type { GetProductsApiResponse } from '../interfaces/api/get-products.interface';
-import type { GetSearchProductVariantsApiResponse } from '../interfaces/api/get-search-product-variants.interface';
-import type { CreateProductForm, EditProductForm } from '../interfaces/ui/create-product-form.interface';
-import type { GetProductsFilters } from '../interfaces/ui/get-products-filters.interface';
-import type { GetSearchProductVariantsFilters } from '../interfaces/ui/get-search-product-variants-filters.interface';
+import type {
+  CreateProductPayload,
+  CreateProductResponse,
+  EditProductPayload,
+  EditProductResponse,
+  GetProductByIdApiResponse,
+  GetProductsApiResponse,
+  GetProductsQueryParams,
+  GetSearchProductVariantsApiResponse,
+  GetSearchProductVariantsQueryParams
+} from '../interfaces/api';
 
-export const getProducts = async (params: GetProductsFilters) => {
+export const getProducts = async (params: GetProductsQueryParams) => {
   const response = await baseApi.get<GetProductsApiResponse>('/products', {
     params: params
   });
@@ -15,7 +19,7 @@ export const getProducts = async (params: GetProductsFilters) => {
   return response.data;
 };
 
-export const getSearchProductVariants = async (params?: GetSearchProductVariantsFilters) => {
+export const getSearchProductVariants = async (params?: GetSearchProductVariantsQueryParams) => {
   const response = await baseApi.get<GetSearchProductVariantsApiResponse>('/products/variants/search', {
     params: params
   });
@@ -24,16 +28,16 @@ export const getSearchProductVariants = async (params?: GetSearchProductVariants
 };
 
 export const getProductById = async (id: string) => {
-  const response = await baseApi.get<GetProductById>(`/products/${id}`);
+  const response = await baseApi.get<GetProductByIdApiResponse>(`/products/${id}`);
   return response.data;
 };
 
-export const createProduct = async (body: CreateProductForm) => {
-  const response = await baseApi.post<CreateProduct>('/products', body);
+export const createProduct = async (body: CreateProductPayload) => {
+  const response = await baseApi.post<CreateProductResponse>('/products', body);
   return response.data;
 };
 
-export const editProduct = async (id: string, body: EditProductForm) => {
-  const response = await baseApi.patch<EditProduct>(`/products/${id}`, body);
+export const editProduct = async (id: string, body: EditProductPayload) => {
+  const response = await baseApi.patch<EditProductResponse>(`/products/${id}`, body);
   return response.data;
 };

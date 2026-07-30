@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router';
 import { PRODUCT_ORDER_BY_ARRAY } from '../constants/product.constants';
-import type { GetProductsFilters } from '../interfaces/ui/get-products-filters.interface';
+import type { GetProductsFilters } from '../interfaces/ui';
 
 interface UseTableFiltersConfig {
   defaultPage?: number;

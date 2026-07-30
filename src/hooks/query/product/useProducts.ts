@@ -1,5 +1,5 @@
 import { getProductsByPage } from '@/modules/products/actions/get-products-by-page.action';
-import type { GetProductsFilters } from '@/modules/products/interfaces/ui/get-products-filters.interface';
+import type { GetProductsFilters } from '@/modules/products/interfaces/ui';
 import { useQuery } from '@tanstack/react-query';
 import { productKeys } from './products.keys';
 

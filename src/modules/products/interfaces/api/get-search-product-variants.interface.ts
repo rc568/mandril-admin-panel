@@ -14,3 +14,9 @@ export interface GetSearchProductVariantsApiResponse {
   pagination: ScrollPagination;
   products: SearchProductVariant[];
 }
+
+export interface GetSearchProductVariantsQueryParams {
+  limit?: number;
+  offset?: number;
+  search?: string;
+}

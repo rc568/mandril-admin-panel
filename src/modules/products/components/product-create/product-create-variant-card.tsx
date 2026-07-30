@@ -1,6 +1,6 @@
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
 import { useFormContext, useWatch } from 'react-hook-form';
-import type { CreateProductForm } from '../../interfaces/ui/create-product-form.interface';
+import type { CreateProductForm } from '../../interfaces/ui';
 import { ProductVariantCardUI } from '../common/product-variant-card-ui';
 
 interface Props {

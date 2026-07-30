@@ -1,5 +1,5 @@
-import type { ProductMapped } from '../interfaces/api/get-products-mapped.interface';
-import type { Product } from '../interfaces/api/product.interface';
+import type { Product } from '../interfaces/api';
+import type { ProductMapped } from '../interfaces/ui';
 
 export const mapProductToDisplay = (product: Product): ProductMapped => {
   const { productVariant, ...rest } = product;

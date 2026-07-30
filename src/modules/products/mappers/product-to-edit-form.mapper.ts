@@ -1,7 +1,6 @@
-import type { ProductMapped } from '../interfaces/api/get-products-mapped.interface';
-import type { ProductEditFormMapper } from '../interfaces/ui/product-edit-form.interface';
+import type { EditProductForm, ProductMapped } from '../interfaces/ui';
 
-export const mapProductToEditForm = (product: ProductMapped): ProductEditFormMapper => {
+export const mapProductToEditForm = (product: ProductMapped): EditProductForm => {
   return {
     name: product.name,
     slug: product.slug,

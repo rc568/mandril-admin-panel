@@ -4,11 +4,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useCatalogs, useCategories } from '@/hooks/query';
 import { Filter, X } from 'lucide-react';
 import { useState } from 'react';
-
-import { useCatalogs, useCategories } from '@/hooks/query';
-import type { GetProductsFilters } from '../interfaces/ui/get-products-filters.interface';
+import type { GetProductsFilters } from '../interfaces/ui';
 import { getFilterDisplayValue } from '../utils/product-list-filters.utils';
 
 export type LocalProductsFilters = Pick<

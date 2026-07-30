@@ -2,7 +2,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Controller, useFormContext, type Control } from 'react-hook-form';
 import { useAttributeValuesQuery } from '../../hooks/use-attribute-values-query';
-import type { EditProductForm } from '../../interfaces/ui/create-product-form.interface';
+import type { EditProductForm } from '../../interfaces/ui';
 
 interface Props {
   attributeId: number;

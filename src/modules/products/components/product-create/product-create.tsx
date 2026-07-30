@@ -6,7 +6,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { ProductCreateGeneralInfo, ProductCreateVariantsSection } from '.';
 import { ProductCreateProvider } from '../../context/product-create-context';
-import type { CreateProductForm } from '../../interfaces/ui/create-product-form.interface';
+import type { CreateProductForm } from '../../interfaces/ui';
 import { createProductSchema } from '../../validators/product.validators';
 import { ProductAddAttributesDialog } from './product-add-attributes-dialog';
 

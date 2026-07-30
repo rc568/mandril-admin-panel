@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
 import { Plus } from 'lucide-react';
 import type { Path, UseFormRegister, UseFormReturn } from 'react-hook-form';
-import type { BaseProductFields } from '../../interfaces/ui/create-product-form.interface';
+import type { BaseProductFields } from '../../interfaces/ui';
 import { CatalogSelectInput } from '../catalog-select-input';
 import { CategorySelectInput } from '../category-select-input';
 import { DescriptionField } from '../description-field';
