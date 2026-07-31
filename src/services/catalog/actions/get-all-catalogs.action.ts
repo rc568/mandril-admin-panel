@@ -1,5 +1,5 @@
-import { getCatalogs } from './catalog.api';
-import type { Catalog } from './interfaces/catalog.interface';
+import { getCatalogs } from '../api/catalog.api';
+import type { Catalog } from '../interfaces/api';
 
 export const getAllCatalogs = async (): Promise<Catalog[]> => {
   const data = await getCatalogs();
