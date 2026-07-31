@@ -1,4 +1,4 @@
-import { getAllCatalogs } from '@/services/catalog/get-all-catalogs.action';
+import { getAllCatalogs } from '@/services/catalog/actions';
 import { useQuery } from '@tanstack/react-query';
 import { catalogsKeys } from './catalogs.keys';
 
