@@ -1,4 +1,4 @@
-import { getProductsByPage } from '@/modules/products/actions/get-products-by-page.action';
+import { getProductsByPage } from '@/modules/products/actions';
 import type { GetProductsFilters } from '@/modules/products/interfaces/ui';
 import { useQuery } from '@tanstack/react-query';
 import { productKeys } from './products.keys';
