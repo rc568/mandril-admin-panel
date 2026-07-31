@@ -35,14 +35,22 @@ export const AddOrderProducts = ({ products, control, addProduct, deleteProduct,
     setShowProductList(false);
   };
 
-  const { data: variants } = useSearchProductVariants({
+  const {
+    data: variants,
+    isLoading,
+    isError
+  } = useSearchProductVariants({
     filters: { search: search },
     enabled: search.trim().length !== 0
   });
 
   const onSearch = (query: string) => {
     const cleanQuery = query.trim();
-    if (cleanQuery === '') return;
+    if (cleanQuery === '') {
+      setSearch('');
+      setShowProductList(false);
+      return;
+    }
 
     setSearch(cleanQuery);
     setShowProductList(true);
@@ -65,7 +73,13 @@ export const AddOrderProducts = ({ products, control, addProduct, deleteProduct,
 
         {showProductList && (
           <div className="absolute left-0 right-0 top-[80%] border rounded-lg z-50 shadow-lg">
-            {variants?.products.length === 0 ? (
+            {isLoading ? (
+              <div className="bg-background max-h-64 py-2 px-4 text-sm text-muted-foreground">Buscando...</div>
+            ) : isError ? (
+              <div className="bg-background max-h-64 py-2 px-4 text-sm text-destructive">
+                Ocurrió un error al consultar los clientes.
+              </div>
+            ) : variants?.products.length === 0 ? (
               <div className="bg-background max-h-64 py-2 px-4 text-sm text-muted-foreground">Sin resultados</div>
             ) : (
               <ul className="max-h-60 overflow-y-auto bg-background divide-y">
@@ -139,47 +153,50 @@ export const AddOrderProducts = ({ products, control, addProduct, deleteProduct,
               </TableRow>
             </TableHeader>
             <TableBody>
-              {products.map((product, index) => (
-                <TableRow key={product.id}>
-                  <TableCell>{product.code}</TableCell>
-                  <TableCell>
-                    <div className="flex flex-col items-start text-sm gap-y-1">
-                      <span>{product.name}</span>
-                      {product.variantAttributes?.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
-                          {product.variantAttributes.map((va) => (
-                            <Badge className="bg-amber-200 text-primary" key={va.valueId}>
-                              {va.attribute}: {va.value}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
-                      {(productsWatch.find((p) => p.variantId === product.variantId)?.quantity ?? 1) >
-                        product.currentStock && (
-                        <span className="text-destructive italic">
-                          Stock disponible es de {product.currentStock} unidades
-                        </span>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Input
-                      {...register(`products.${index}.quantity`)}
-                      className="max-w-16 text-left"
-                      type="number"
-                      min={1}
-                      max={product.currentStock}
-                    />
-                  </TableCell>
-                  <TableCell>{formatCurrency(product.price)}</TableCell>
-                  <TableCell>{formatCurrency((productsWatch?.[index]?.quantity ?? 1) * product.price)}</TableCell>
-                  <TableCell>
-                    <Button variant="outline" size="sm" onClick={() => deleteProduct(index)}>
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {products.map((product, index) => {
+                const currentQuantitySelected = productsWatch.find((p) => p.variantId === product.variantId)?.quantity;
+
+                return (
+                  <TableRow key={product.id}>
+                    <TableCell>{product.code}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-col items-start text-sm gap-y-2">
+                        <span>{product.name}</span>
+                        {product.variantAttributes?.length > 0 && (
+                          <div className="flex flex-wrap gap-2">
+                            {product.variantAttributes.map((va) => (
+                              <Badge className="bg-amber-200 text-primary" key={va.valueId}>
+                                {va.attribute}: {va.value}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+                        {(currentQuantitySelected ?? 1) > product.currentStock && (
+                          <span className="text-destructive text-xs italic">
+                            Stock disponible es de {product.currentStock} unidades
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Input
+                        {...register(`products.${index}.quantity`)}
+                        className="max-w-16 text-left"
+                        type="number"
+                        min={1}
+                        max={product.currentStock}
+                      />
+                    </TableCell>
+                    <TableCell>{formatCurrency(product.price)}</TableCell>
+                    <TableCell>{formatCurrency((productsWatch?.[index]?.quantity ?? 1) * product.price)}</TableCell>
+                    <TableCell>
+                      <Button variant="outline" size="sm" onClick={() => deleteProduct(index)}>
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         )}
