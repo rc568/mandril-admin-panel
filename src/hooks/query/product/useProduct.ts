@@ -1,4 +1,4 @@
-import { getProductByIdAction } from '@/modules/products/actions/get-product-by-id.action';
+import { getProductByIdAction } from '@/modules/products/actions';
 import { useQuery } from '@tanstack/react-query';
 import { productKeys } from './products.keys';
 

@@ -1,4 +1,4 @@
-import { getSearchProductVariantsAction } from '@/modules/products/actions/get-search-product-variants.action';
+import { getSearchProductVariantsAction } from '@/modules/products/actions';
 import type { GetSearchProductVariantsFilters } from '@/modules/products/interfaces/ui';
 import { useQuery } from '@tanstack/react-query';
 import { productKeys } from './products.keys';
