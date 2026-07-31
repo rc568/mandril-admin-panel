@@ -1,4 +1,4 @@
-import { getAttributes } from '../api/attribute.api';
+import { getAttributes } from '../api';
 
 export const getAllAttributesAction = async () => {
   const data = await getAttributes();

@@ -1,6 +1,5 @@
 import { baseApi } from '@/lib/axios/api';
-import type { GetAttributesApiResponse } from '../interfaces/get-all-attributes.interface';
-import type { GetAttributeById } from '../interfaces/get-attribute-by-id.interface';
+import type { GetAttributeByIdApiResponse, GetAttributesApiResponse } from '../interfaces/api';
 
 export const getAttributes = async () => {
   const response = await baseApi.get<GetAttributesApiResponse>('/attributes');
@@ -8,6 +7,6 @@ export const getAttributes = async () => {
 };
 
 export const getAttributeById = async (id: number) => {
-  const response = await baseApi.get<GetAttributeById>(`/attributes/${id}`);
+  const response = await baseApi.get<GetAttributeByIdApiResponse>(`/attributes/${id}`);
   return response.data;
 };
