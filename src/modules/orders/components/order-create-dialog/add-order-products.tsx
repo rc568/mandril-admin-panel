@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useSearchProductVariants } from '@/hooks/query/product/useSeachProductVariants';
 import { formatCurrency } from '@/lib/currency';
+import { cn } from '@/lib/utils';
 import type { SearchProductVariant } from '@/modules/products/interfaces/api/get-search-product-variants.interface';
 import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
@@ -49,6 +50,7 @@ export const AddOrderProducts = ({ products, control, addProduct, deleteProduct,
 
   const productsWatch = useWatch({ control, name: 'products' });
   const totalSale = productsWatch.reduce((acc, curr) => curr.quantity * curr.price + acc, 0);
+  const currentProductVariantIds = productsWatch.map((pv) => pv.variantId);
 
   return (
     <>
@@ -67,35 +69,52 @@ export const AddOrderProducts = ({ products, control, addProduct, deleteProduct,
               <div className="bg-background max-h-64 py-2 px-4 text-sm text-muted-foreground">Sin resultados</div>
             ) : (
               <ul className="max-h-60 overflow-y-auto bg-background divide-y">
-                {variants?.products.map((pv) => (
-                  <li key={pv.variantId} className="py-2 px-4 hover:bg-accent transition-colors">
-                    <button
-                      type="button"
-                      className="w-full cursor-pointer"
-                      onClick={() => onClick(pv)}
-                      onMouseDown={(e) => e.preventDefault()}
-                    >
-                      <div className="flex justify-between items-center">
-                        <div className="flex flex-col items-start text-sm gap-y-1">
-                          <div className="flex flex-wrap gap-2">
-                            <span>{pv.name}</span>
-                            {pv.variantAttributes?.length > 0 &&
-                              pv.variantAttributes.map((va) => (
-                                <Badge className="bg-amber-200 text-primary">
-                                  {va.attribute}: {va.value}
-                                </Badge>
-                              ))}
-                          </div>
+                {variants?.products.map((pv) => {
+                  const isAlreadySelected = currentProductVariantIds.includes(pv.variantId);
+                  const isOutOfStock = pv.quantityInStock === 0;
 
-                          <span className="text-muted-foreground">
-                            {pv.code} - Stock: {pv.quantityInStock}
-                          </span>
+                  const isDisabled = isAlreadySelected || isOutOfStock;
+
+                  return (
+                    <li
+                      key={pv.variantId}
+                      className={cn('py-2 px-4 hover:bg-accent transition-colors', {
+                        'hover:bg-transparent': isDisabled
+                      })}
+                    >
+                      <button
+                        type="button"
+                        className={cn('w-full cursor-pointer', {
+                          'cursor-auto opacity-60 bg-muted/20': isDisabled
+                        })}
+                        onClick={() => {
+                          if (isDisabled) return;
+                          onClick(pv);
+                        }}
+                        onMouseDown={(e) => e.preventDefault()}
+                      >
+                        <div className="flex justify-between items-center">
+                          <div className="flex flex-col items-start text-sm gap-y-1">
+                            <div className="flex flex-wrap gap-2">
+                              <span>{pv.name}</span>
+                              {pv.variantAttributes?.length > 0 &&
+                                pv.variantAttributes.map((va) => (
+                                  <Badge key={`${va.attributeId}-${va.valueId}`} className="bg-amber-200 text-primary">
+                                    {va.attribute}: {va.value}
+                                  </Badge>
+                                ))}
+                            </div>
+
+                            <span className="text-muted-foreground">
+                              {pv.code} - Stock: {pv.quantityInStock}
+                            </span>
+                          </div>
+                          <span className="font-medium text-sm">{formatCurrency(pv.price)}</span>
                         </div>
-                        <span className="font-medium text-sm">{formatCurrency(pv.price)}</span>
-                      </div>
-                    </button>
-                  </li>
-                ))}
+                      </button>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>
@@ -135,6 +154,12 @@ export const AddOrderProducts = ({ products, control, addProduct, deleteProduct,
                           ))}
                         </div>
                       )}
+                      {(productsWatch.find((p) => p.variantId === product.variantId)?.quantity ?? 1) >
+                        product.currentStock && (
+                        <span className="text-destructive italic">
+                          Stock disponible es de {product.currentStock} unidades
+                        </span>
+                      )}
                     </div>
                   </TableCell>
                   <TableCell>
@@ -143,6 +168,7 @@ export const AddOrderProducts = ({ products, control, addProduct, deleteProduct,
                       className="max-w-16 text-left"
                       type="number"
                       min={1}
+                      max={product.currentStock}
                     />
                   </TableCell>
                   <TableCell>{formatCurrency(product.price)}</TableCell>
