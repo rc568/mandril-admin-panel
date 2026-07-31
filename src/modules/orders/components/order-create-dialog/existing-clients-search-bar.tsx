@@ -13,7 +13,7 @@ export const ExistingClientsSearchBar = ({ setClientData }: Props) => {
 
   const {
     data: searchClients,
-    isPending,
+    isLoading,
     isError
   } = useSearchClients({
     params: { q: search },
@@ -52,7 +52,7 @@ export const ExistingClientsSearchBar = ({ setClientData }: Props) => {
 
       {showClientList && (
         <div className="absolute left-0 right-0 top-[80%] border rounded-lg z-50 shadow-lg">
-          {isPending ? (
+          {isLoading ? (
             <div className="bg-background max-h-64 py-2 px-4 text-sm text-muted-foreground">Buscando...</div>
           ) : isError ? (
             <div className="bg-background max-h-64 py-2 px-4 text-sm text-destructive">
