@@ -1,4 +1,4 @@
-import { getAllCategories } from '@/services/category/get-all-categories.action';
+import { getAllCategories } from '@/services/category/actions';
 import { useQuery } from '@tanstack/react-query';
 import { categoriesKeys } from './categories.keys';
 
