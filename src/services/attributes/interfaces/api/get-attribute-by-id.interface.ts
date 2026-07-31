@@ -1,3 +1,3 @@
 import type { Attribute } from './attribute-value.interface';
 
-export type GetAttributeById = Attribute;
+export type GetAttributeByIdApiResponse = Attribute;

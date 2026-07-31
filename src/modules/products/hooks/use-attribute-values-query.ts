@@ -1,4 +1,4 @@
-import { getAttributeValuesAction } from '@/services/attributes/actions/get-attribute-values.action';
+import { getAttributeValuesAction } from '@/services/attributes/actions';
 import { useQuery } from '@tanstack/react-query';
 
 export const useAttributeValuesQuery = (id: number) => {
