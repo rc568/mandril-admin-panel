@@ -14,37 +14,37 @@ import { useSalesChannel } from '@/hooks/query/sales-channel';
 import type { GetOrdersFilters } from '../../interfaces/ui/get-orders-filters.interface';
 import { getFilterDisplayValue } from '../../utils/order-list-filters.utils';
 
-export type LocalOrderFilters = Pick<GetOrdersFilters, 'status' | 'channel' | 'startDate' | 'endDate' | 'invoiceType'>;
+export type LocalOrderFilters = Omit<GetOrdersFilters, 'sortBy' | 'limit' | 'page'>;
 
 export interface Props {
-  initialFilters?: LocalOrderFilters;
+  urlFilters?: LocalOrderFilters;
   applyFilters: (filters: Partial<GetOrdersFilters>) => void;
 }
 
-export const OrderListFilters = ({ initialFilters = {}, applyFilters }: Props) => {
-  const [localFilters, setLocalFilters] = useState<LocalOrderFilters>(initialFilters);
+export const OrderListFilters = ({ urlFilters = {}, applyFilters }: Props) => {
+  const [draftFilters, setDraftFilters] = useState<LocalOrderFilters>(urlFilters);
 
   const { data: salesChannelOptions } = useSalesChannel();
 
   const updateLocalFilters = (newFilters: LocalOrderFilters) => {
-    setLocalFilters((prev) => ({ ...prev, ...newFilters }));
+    setDraftFilters((prev) => ({ ...prev, ...newFilters }));
   };
 
   const clearFilters = () => {
-    setLocalFilters({});
+    setDraftFilters({});
     applyFilters({});
   };
 
   const deleteFilter = (keyToDelete: keyof LocalOrderFilters) => {
     applyFilters({
-      ...initialFilters,
+      ...urlFilters,
       [keyToDelete]: undefined
     });
   };
 
-  const localFiltersCount = Object.values(localFilters).filter(Boolean).length;
+  const draftFiltersCount = Object.values(draftFilters).filter(Boolean).length;
 
-  const activeFiltersEntries = Object.entries(initialFilters).filter(
+  const activeFiltersEntries = Object.entries(urlFilters).filter(
     ([key, value]) => Boolean(value) && key !== 'sortBy'
   ) as Array<[keyof LocalOrderFilters, string | Date]>;
 
@@ -80,7 +80,7 @@ export const OrderListFilters = ({ initialFilters = {}, applyFilters }: Props) =
               <Button
                 variant="ghost"
                 size="sm"
-                disabled={localFiltersCount <= 0}
+                disabled={draftFiltersCount <= 0}
                 onClick={clearFilters}
                 className="h-auto p-1 text-xs text-muted-foreground hover:text-foreground"
               >
@@ -96,22 +96,22 @@ export const OrderListFilters = ({ initialFilters = {}, applyFilters }: Props) =
                     variant="outline"
                     className={cn(
                       'w-full justify-start text-left font-normal',
-                      !localFilters.startDate && 'text-muted-foreground'
+                      !draftFilters.startDate && 'text-muted-foreground'
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {localFilters.startDate ? formatLongDate(localFilters.startDate) : <span>Seleccionar fecha</span>}
+                    {draftFilters.startDate ? formatLongDate(draftFilters.startDate) : <span>Seleccionar fecha</span>}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={localFilters.startDate}
-                    defaultMonth={localFilters.startDate}
+                    selected={draftFilters.startDate}
+                    defaultMonth={draftFilters.startDate}
                     captionLayout="dropdown"
                     startMonth={new Date(2021, 1)}
                     onSelect={(date) => updateLocalFilters({ startDate: date })}
-                    disabled={(date) => (localFilters.endDate ? date > localFilters.endDate : false)}
+                    disabled={(date) => (draftFilters.endDate ? date > draftFilters.endDate : false)}
                     className="pointer-events-auto"
                   />
                 </PopoverContent>
@@ -126,18 +126,18 @@ export const OrderListFilters = ({ initialFilters = {}, applyFilters }: Props) =
                     variant="outline"
                     className={cn(
                       'w-full justify-start text-left font-normal',
-                      !localFilters.endDate && 'text-muted-foreground'
+                      !draftFilters.endDate && 'text-muted-foreground'
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {localFilters.endDate ? formatLongDate(localFilters.endDate) : <span>Seleccionar fecha</span>}
+                    {draftFilters.endDate ? formatLongDate(draftFilters.endDate) : <span>Seleccionar fecha</span>}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={localFilters.endDate}
-                    defaultMonth={localFilters.endDate}
+                    selected={draftFilters.endDate}
+                    defaultMonth={draftFilters.endDate}
                     captionLayout="dropdown"
                     startMonth={new Date(2021, 1)}
                     onSelect={(date) => {
@@ -146,7 +146,7 @@ export const OrderListFilters = ({ initialFilters = {}, applyFilters }: Props) =
                       }
                       updateLocalFilters({ endDate: date });
                     }}
-                    disabled={(date) => (localFilters.startDate ? date < localFilters.startDate : false)}
+                    disabled={(date) => (draftFilters.startDate ? date < draftFilters.startDate : false)}
                     className="pointer-events-auto"
                   />
                 </PopoverContent>
@@ -157,7 +157,7 @@ export const OrderListFilters = ({ initialFilters = {}, applyFilters }: Props) =
               <div className="space-y-2 w-full">
                 <Label>Estado de la venta</Label>
                 <Select
-                  value={localFilters.status ?? ''}
+                  value={draftFilters.status ?? ''}
                   onValueChange={(value) => updateLocalFilters({ status: value })}
                 >
                   <SelectTrigger className="w-full cursor-pointer">
@@ -176,7 +176,7 @@ export const OrderListFilters = ({ initialFilters = {}, applyFilters }: Props) =
               <div className="space-y-2 w-full">
                 <Label>Medio de venta</Label>
                 <Select
-                  value={localFilters.channel ?? ''}
+                  value={draftFilters.channel ?? ''}
                   onValueChange={(value) => updateLocalFilters({ channel: value })}
                 >
                   <SelectTrigger className="w-full cursor-pointer">
@@ -197,7 +197,7 @@ export const OrderListFilters = ({ initialFilters = {}, applyFilters }: Props) =
             <div className="space-y-2 w-full">
               <Label>Tipo de comprobante</Label>
               <Select
-                value={localFilters.invoiceType ?? ''}
+                value={draftFilters.invoiceType ?? ''}
                 onValueChange={(value) => updateLocalFilters({ invoiceType: value })}
               >
                 <SelectTrigger className="w-full cursor-pointer">
@@ -213,7 +213,7 @@ export const OrderListFilters = ({ initialFilters = {}, applyFilters }: Props) =
               </Select>
             </div>
 
-            <Button className="w-full" onClick={() => applyFilters(localFilters)}>
+            <Button className="w-full" onClick={() => applyFilters(draftFilters)}>
               Aplicar filtros
             </Button>
           </div>

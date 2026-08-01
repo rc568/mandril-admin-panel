@@ -40,12 +40,13 @@ export const OrderListSection = ({
 
       <div className="flex gap-2 pb-4">
         <OrderListFilters
-          initialFilters={{
+          urlFilters={{
             status: filters.status,
             channel: filters.channel,
             invoiceType: filters.invoiceType,
             startDate: filters.startDate,
-            endDate: filters.endDate
+            endDate: filters.endDate,
+            search: filters.search
           }}
           applyFilters={setFilters}
         />
