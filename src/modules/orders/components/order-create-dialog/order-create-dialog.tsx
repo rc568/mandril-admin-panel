@@ -92,7 +92,10 @@ export const OrderCreateDialog = ({ open, onOpenChange }: Props) => {
     }
 
     await createOrder.mutateAsync(payload, {
-      onSuccess: () => navigate(`/ventas`)
+      onSuccess: () => {
+        onOpenChange(false);
+        navigate(`/ventas`);
+      }
     });
   };
 
