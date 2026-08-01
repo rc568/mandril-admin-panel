@@ -97,7 +97,8 @@ export const useOrderParams = (config: UseTableFiltersConfig = {}) => {
         newFilters.endDate === filters.endDate &&
         newFilters.channel === filters.channel &&
         newFilters.invoiceType === filters.invoiceType &&
-        newFilters.sortBy === filters.sortBy
+        newFilters.sortBy === filters.sortBy &&
+        newFilters.search === filters.search
       ) {
         return prev;
       }
