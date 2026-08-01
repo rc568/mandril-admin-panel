@@ -2,7 +2,7 @@ import { TableCell, TableRow } from '@/components/ui/table';
 import { formatCurrency } from '@/lib/currency';
 import { formatDate } from '@/lib/date-utils';
 import { DEFAULT_BADGE_CLASSNAME, ORDER_STATUS_CONFIG, SALES_CHANNEL_CONFIG } from '../../constants/order.constants';
-import type { OrderMapped } from '../../interfaces/api/get-orders-mapped.interface';
+import type { OrderMapped } from '../../interfaces/ui';
 import { BaseBadge } from '../base-badge';
 
 interface Props {

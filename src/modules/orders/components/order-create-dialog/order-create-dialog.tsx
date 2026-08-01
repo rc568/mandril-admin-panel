@@ -24,7 +24,7 @@ import {
   INVOICE_TYPE_KEYS,
   ORDER_STATUS_OPTIONS_ARRAY
 } from '../../constants/order.constants';
-import type { CreateOrderForm, CreateOrderPayload } from '../../interfaces/ui/create-order-form.interface';
+import type { CreateOrderForm, CreateOrderPayload } from '../../interfaces/ui';
 import { createOrderSchema } from '../../validators/order.validators';
 import { AddOrderProducts } from './add-order-products';
 import { ExistingClientsSearchBar } from './existing-clients-search-bar';

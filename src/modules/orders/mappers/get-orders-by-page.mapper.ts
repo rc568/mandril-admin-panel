@@ -1,5 +1,5 @@
-import type { OrderMapped } from '../interfaces/api/get-orders-mapped.interface';
-import type { Order } from '../interfaces/api/order.interface';
+import type { Order } from '../interfaces/api';
+import type { OrderMapped } from '../interfaces/ui';
 
 export const mapOrderToDisplay = (order: Order): OrderMapped => {
   const { products, ...rest } = order;

@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { INVOICE_TYPES_ARRAY, ORDER_STATUS_OPTIONS_WITH_ALL } from '../../constants/order.constants';
 
 import { useSalesChannel } from '@/hooks/query/sales-channel';
-import type { GetOrdersFilters } from '../../interfaces/ui/get-orders-filters.interface';
+import type { GetOrdersFilters } from '../../interfaces/ui';
 import { getFilterDisplayValue } from '../../utils/order-list-filters.utils';
 
 export type LocalOrderFilters = Omit<GetOrdersFilters, 'sortBy' | 'limit' | 'page'>;

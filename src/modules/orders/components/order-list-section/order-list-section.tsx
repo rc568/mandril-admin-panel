@@ -1,8 +1,7 @@
 import { CustomPagination } from '@/components/common/custom-pagination';
 import { SearchBar } from '@/components/common/search-bar';
 import { ProductPerPageOptions } from '@/modules/products/components/product-per-page-options';
-import type { GetOrdersMapped, OrderMapped } from '../../interfaces/api/get-orders-mapped.interface';
-import type { GetOrdersFilters } from '../../interfaces/ui/get-orders-filters.interface';
+import type { GetOrdersFilters, GetOrdersMapped, OrderMapped } from '../../interfaces/ui';
 
 import { useState } from 'react';
 import { OrderDetailsSheet } from './order-details-sheet';

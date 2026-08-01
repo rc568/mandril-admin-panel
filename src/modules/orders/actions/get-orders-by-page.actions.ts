@@ -1,6 +1,5 @@
 import { getOrders } from '../api/orders.api';
-import type { GetOrdersMapped } from '../interfaces/api/get-orders-mapped.interface';
-import type { GetOrdersFilters } from '../interfaces/ui/get-orders-filters.interface';
+import type { GetOrdersFilters, GetOrdersMapped } from '../interfaces/ui';
 
 import { mapOrderToDisplay } from '../mappers/get-orders-by-page.mapper';
 import { orderFiltersToApiQuery } from '../mappers/order-filters-to-api-query.mapper';
