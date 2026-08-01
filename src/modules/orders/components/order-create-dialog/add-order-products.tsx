@@ -10,7 +10,7 @@ import type { SearchProductVariant } from '@/modules/products/interfaces/api/get
 import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useWatch, type Control, type UseFormRegister } from 'react-hook-form';
-import type { CreateOrderForm, OrderProductForm } from '../../interfaces/ui/create-order-form.interface';
+import type { CreateOrderForm, OrderProductForm } from '../../interfaces/ui';
 
 interface Props {
   products: (OrderProductForm & { id: string })[];

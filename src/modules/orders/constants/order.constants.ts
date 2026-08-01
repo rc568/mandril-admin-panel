@@ -1,4 +1,4 @@
-import type { DocumentType, InvoiceType, OrderStatus } from '../interfaces/api/order.interface';
+import type { DocumentType, InvoiceType, OrderStatus } from '../interfaces/api';
 
 export const NO_INFO = 'Sin información';
 export const ALL_ORDER_STATUS = 'ALL';

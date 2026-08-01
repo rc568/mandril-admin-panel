@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Package } from 'lucide-react';
 import type { PropsWithChildren } from 'react';
-import type { OrderMapped } from '../../interfaces/api/get-orders-mapped.interface';
+import type { OrderMapped } from '../../interfaces/ui';
 import { OrderTableRow } from './order-table-row';
 
 interface Props extends PropsWithChildren {

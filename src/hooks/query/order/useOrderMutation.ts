@@ -1,8 +1,8 @@
 import { useApiMutation } from '@/hooks/common/useApiMutation';
 import { queryClient } from '@/lib/tanstack-query/query-client';
-import { createOrderAction } from '@/modules/orders/actions/create-order.action';
-import type { CreateOrder } from '@/modules/orders/interfaces/api/create-order.interface';
-import type { CreateOrderPayload } from '@/modules/orders/interfaces/ui/create-order-form.interface';
+import { createOrderAction } from '@/modules/orders/actions';
+import type { CreateOrder } from '@/modules/orders/interfaces/api';
+import type { CreateOrderPayload } from '@/modules/orders/interfaces/ui';
 
 import { messages } from '@/modules/orders/constants/order.messages';
 import { ordersKeys } from './orders.keys';

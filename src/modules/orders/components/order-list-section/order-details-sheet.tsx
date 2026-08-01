@@ -8,7 +8,7 @@ import {
   NO_INFO,
   ORDER_STATUS_CONFIG
 } from '../../constants/order.constants';
-import type { OrderMapped } from '../../interfaces/api/get-orders-mapped.interface';
+import type { OrderMapped } from '../../interfaces/ui';
 
 interface Props {
   order: OrderMapped | null;

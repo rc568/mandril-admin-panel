@@ -1,4 +1,4 @@
-import type { GetOrdersFilters } from '@/modules/orders/interfaces/ui/get-orders-filters.interface';
+import type { GetOrdersFilters } from '@/modules/orders/interfaces/ui';
 
 export const ordersKeys = {
   all: ['orders'] as const,
