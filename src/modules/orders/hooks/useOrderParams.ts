@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router';
 import { INVOICE_TYPE_KEYS, ORDER_SORT_BY_ARRAY, ORDER_STATUS } from '../constants/order.constants';
-import type { GetOrdersFilters } from '../interfaces/ui/get-orders-filters.interface';
+import type { GetOrdersFilters } from '../interfaces/ui';
 
 interface UseTableFiltersConfig {
   defaultPage?: number;

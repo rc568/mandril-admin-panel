@@ -1,5 +1,5 @@
-import type { GetOrdersQueryParams } from '../interfaces/api/get-orders.interface';
-import type { GetOrdersFilters } from '../interfaces/ui/get-orders-filters.interface';
+import type { GetOrdersQueryParams } from '../interfaces/api';
+import type { GetOrdersFilters } from '../interfaces/ui';
 
 export const orderFiltersToApiQuery = (filters: GetOrdersFilters): GetOrdersQueryParams => ({
   page: filters.page,
