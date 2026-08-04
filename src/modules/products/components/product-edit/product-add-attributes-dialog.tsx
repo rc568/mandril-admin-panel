@@ -1,4 +1,4 @@
-import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
+import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/api';
 import { useProductEditContext } from '../../hooks/use-product-edit-context';
 import { ProductAddAttributesDialogUI } from '../common/product-add-attributes-dialog-ui';
 

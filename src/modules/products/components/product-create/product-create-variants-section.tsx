@@ -1,4 +1,4 @@
-import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
+import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/api';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useProductCreateContext } from '../../hooks/use-product-create-context';
 import type { CreateProductForm } from '../../interfaces/ui';

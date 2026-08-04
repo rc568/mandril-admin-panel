@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { CURRENCY_SYMBOL } from '@/constants/unit';
 import { productProfit } from '@/lib/pricing-calculations';
 import { cn } from '@/lib/utils';
-import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
+import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/api';
 import { ImageIcon, Info, Trash2 } from 'lucide-react';
 import type { Path, UseFormReturn } from 'react-hook-form';
 import type { BaseProductFields } from '../../interfaces/ui';

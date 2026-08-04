@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
+import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/api';
 import { Plus } from 'lucide-react';
 import type { Path, UseFormRegister, UseFormReturn } from 'react-hook-form';
 import type { BaseProductFields } from '../../interfaces/ui';

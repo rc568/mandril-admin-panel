@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
+import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/api';
 import { Plus } from 'lucide-react';
 
 interface Props {

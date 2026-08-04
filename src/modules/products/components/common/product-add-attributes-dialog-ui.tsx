@@ -10,7 +10,7 @@ import {
   DialogTitle
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/get-all-attributes.interface';
+import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/api';
 
 interface Props {
   open: boolean;
