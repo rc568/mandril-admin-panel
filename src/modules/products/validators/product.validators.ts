@@ -14,17 +14,17 @@ const variantAttributeValueMapSchema = z.array(
 );
 
 const productVariantSchema = z.object({
-  price: z.coerce.number().positive(),
-  purchasePrice: z.coerce.number().positive(),
-  quantityInStock: z.coerce.number().int().min(0)
+  price: z.number().positive(),
+  purchasePrice: z.number().positive(),
+  quantityInStock: z.number().int().min(0)
 });
 
 export const baseProductSchema = z.object({
   name: z.string().min(3).max(255),
   slug: z.string().min(3).max(255),
   description: z.string().optional(),
-  categoryId: z.coerce.number(),
-  catalogId: z.coerce.number(),
+  categoryId: z.number(),
+  catalogId: z.number(),
   variants: z.array(
     productVariantSchema.extend({
       attributes: variantAttributeValueMapSchema.optional()
