@@ -13,7 +13,7 @@ const boletaDocumentTypes = CLIENT_DOCUMENT_TYPE_KEYS.filter((type) => type !== 
 export const orderProductSchema = z.object({
   variantId: z.int(),
   price: z.number().min(0),
-  quantity: z.coerce.number().int().min(1)
+  quantity: z.number().int().min(1)
 });
 
 const baseClientSchema = z.object({
