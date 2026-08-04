@@ -86,7 +86,7 @@ export const OrderCreateDialog = ({ open, onOpenChange }: Props) => {
 
     try {
       payload = await createOrderSchema.parseAsync(filtered);
-    } catch (error) {
+    } catch {
       toast.error(commonMessages.UNEXPECTED_ERROR);
       return;
     }
@@ -130,7 +130,7 @@ export const OrderCreateDialog = ({ open, onOpenChange }: Props) => {
     if (documentTypeWatch === 'SIN DOCUMENTO') {
       resetField('client.documentNumber');
     }
-  }, [invoiceTypeWatch, documentTypeWatch, setValue]);
+  }, [invoiceTypeWatch, documentTypeWatch, setValue, resetField]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
