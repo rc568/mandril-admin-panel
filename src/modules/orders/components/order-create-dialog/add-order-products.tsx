@@ -180,7 +180,7 @@ export const AddOrderProducts = ({ products, control, addProduct, deleteProduct,
                     </TableCell>
                     <TableCell>
                       <Input
-                        {...register(`products.${index}.quantity`)}
+                        {...register(`products.${index}.quantity`, { valueAsNumber: true })}
                         className="max-w-16 text-left"
                         type="number"
                         min={1}
