@@ -1,47 +1,34 @@
 import { Button } from '@/components/ui/button';
-import { useAttributes, useProductMutation } from '@/hooks/query';
-import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
+import { useAttributes } from '@/hooks/query';
 import { useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { ProductCreateGeneralInfo, ProductCreateVariantsSection } from '.';
 import { ProductCreateProvider } from '../../context/product-create-context';
-import type { CreateProductForm } from '../../interfaces/ui';
-import { createProductSchema } from '../../validators/product.validators';
+import { useProductCreateSubmit } from '../../hooks/use-product-create-submit';
 import { ProductAddAttributesDialog } from './product-add-attributes-dialog';
 
 export const ProductCreate = () => {
   const [isAttributesModalOpen, setIsAttributesModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  const form = useForm<CreateProductForm>({
-    resolver: standardSchemaResolver(createProductSchema),
-    defaultValues: { variants: [{ attributes: [], price: 0, purchasePrice: 0, quantityInStock: 0 }] }
-  });
-
   const { data: attributes } = useAttributes();
 
-  const { createProduct } = useProductMutation();
-
-  const onSubmit = async (newProduct: CreateProductForm) => {
-    await createProduct.mutateAsync(newProduct, {
-      onSuccess: (res) => {
-        navigate(`/productos/editar/${res.slug}`);
-      }
-    });
-  };
+  const { form, onSubmit, isPending } = useProductCreateSubmit({
+    onCreateSuccess: (res) => navigate(`/productos/editar/${res.slug}`)
+  });
 
   return (
     <FormProvider {...form}>
       <ProductCreateProvider>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={onSubmit}>
           <div className="flex flex-col gap-6 my-6">
             <ProductCreateGeneralInfo attributes={attributes ?? []} onAdd={() => setIsAttributesModalOpen(true)} />
 
             <ProductCreateVariantsSection attributes={attributes ?? []} />
 
-            <Button type="submit" disabled={createProduct.isPending} className="w-fit ml-auto">
-              {createProduct.isPending ? 'Creando...' : 'Crear producto'}
+            <Button type="submit" disabled={isPending} className="w-fit ml-auto">
+              {isPending ? 'Creando...' : 'Crear producto'}
             </Button>
 
             <ProductAddAttributesDialog

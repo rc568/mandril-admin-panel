@@ -73,7 +73,7 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
             </Label>
             <Input
               id={`${domId}-purchase-price`}
-              {...register(`variants.${index}.purchasePrice` as Path<T>)}
+              {...register(`variants.${index}.purchasePrice` as Path<T>, { valueAsNumber: true })}
               type="number"
               step={'any'}
               className="bg-background"
@@ -97,7 +97,7 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
             </Label>
             <Input
               id={`${domId}-price`}
-              {...register(`variants.${index}.price` as Path<T>)}
+              {...register(`variants.${index}.price` as Path<T>, { valueAsNumber: true })}
               type="number"
               step={'any'}
               className="bg-background"
@@ -133,7 +133,7 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
             </Label>
             <Input
               id={`${domId}-stock`}
-              {...register(`variants.${index}.quantityInStock` as Path<T>)}
+              {...register(`variants.${index}.quantityInStock` as Path<T>, { valueAsNumber: true })}
               type="number"
               className="bg-background"
               placeholder="Stock"
