@@ -1,9 +1,8 @@
+import { InputField } from '@/components/common/form';
 import { FormErrorMessage } from '@/components/common/form-error-message';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/api';
 import { Plus } from 'lucide-react';
 import type { Path, UseFormReturn } from 'react-hook-form';
@@ -39,43 +38,33 @@ export const ProductGeneralInfoUI = <T extends BaseProductFields>({
       <CardContent>
         <div className="space-y-6">
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-sm font-medium text-foreground">
-                Nombre del Producto
-              </Label>
-              <Input
-                id="name"
-                {...register('name' as Path<T>)}
-                placeholder="Nombre del producto"
-                className="bg-background"
-                autoComplete="off"
-              />
-              {errors.name?.message && <FormErrorMessage text={String(errors.name.message)} />}
-            </div>
+            <InputField
+              label="Nombre"
+              placeholder="Nombre del producto"
+              error={errors?.name && String(errors.name.message)}
+              {...register('name' as Path<T>)}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="slug" className="text-sm font-medium text-foreground">
-                Slug
-              </Label>
-              <Input
-                id="slug"
-                {...register('slug' as Path<T>)}
-                placeholder="Slug del producto"
-                className="bg-background"
-                autoComplete="off"
-              />
-              {errors.slug?.message && <FormErrorMessage text={String(errors.slug.message)} />}
-            </div>
+            <InputField
+              label="Slug"
+              placeholder="Slug del producto"
+              error={errors?.slug && String(errors.slug.message)}
+              {...register('slug' as Path<T>)}
+            />
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <CategorySelectInput<T> control={control} name={'categoryId' as Path<T>} errors={errors} />
-            </div>
+            <CategorySelectInput<T>
+              control={control}
+              name={'categoryId' as Path<T>}
+              error={errors?.categoryId && String(errors.categoryId.message)}
+            />
 
-            <div className="space-y-2">
-              <CatalogSelectInput<T> control={control} name={'catalogId' as Path<T>} errors={errors} />
-            </div>
+            <CatalogSelectInput<T>
+              control={control}
+              name={'catalogId' as Path<T>}
+              error={errors?.catalogId && String(errors.catalogId.message)}
+            />
           </div>
 
           <div className="space-y-2">
