@@ -25,15 +25,10 @@ export const baseProductSchema = z.object({
   description: z.string().optional(),
   categoryId: z.number(),
   catalogId: z.number(),
-  variants: z.array(
-    productVariantSchema.extend({
-      attributes: variantAttributeValueMapSchema.optional()
-    })
-  )
+  attributesId: productAttributeSchema.optional()
 });
 
 export const createProductSchema = baseProductSchema.extend({
-  attributesId: productAttributeSchema.optional(),
   variants: z
     .array(
       productVariantSchema.extend({
@@ -46,7 +41,7 @@ export const createProductSchema = baseProductSchema.extend({
 export const editProductSchema = baseProductSchema
   .extend({
     // isActive: z.boolean().optional(),
-    attributesId: productAttributeSchema.optional(),
+
     variants: z
       .array(
         productVariantSchema.partial().extend({

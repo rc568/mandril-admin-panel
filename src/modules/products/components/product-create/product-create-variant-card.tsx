@@ -20,12 +20,15 @@ export const ProductCreateVariantCard = ({ attributes, id, index, onDelete }: Pr
     name: `variants.${index}`
   });
 
+  const variantError = form.formState.errors.variants?.[index];
+
   return (
     <ProductVariantCardUI
       attributes={attributes}
       attributesField={attributesField}
       form={form}
       index={index}
+      variantError={variantError}
       id={id}
       watchPrice={watchPrice}
       watchPurchasePrice={watchPurchasePrice}
