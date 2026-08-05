@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/api';
 import { ImageIcon, Info, Trash2 } from 'lucide-react';
 import type { Path, UseFormReturn } from 'react-hook-form';
-import type { BaseProductFields } from '../../interfaces/ui';
+import type { BaseProductFields, VariantFieldError } from '../../interfaces/ui';
 import { VariantAttributeField } from '../product-create/variant-attribute-field';
 import { ProfitPercentage } from '../profit-percentage';
 
@@ -17,6 +17,7 @@ interface Props<T extends BaseProductFields> {
   attributes: GetAttributesApiResponse;
   attributesField: { attributeId: number }[];
   form: UseFormReturn<T>;
+  variantError?: VariantFieldError;
   index: number;
   id: string;
   code?: string;
@@ -29,6 +30,7 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
   attributes,
   attributesField,
   form,
+  variantError,
   index,
   id,
   code,
@@ -36,13 +38,8 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
   watchPurchasePrice,
   onDelete
 }: Props<T>) => {
-  const {
-    control,
-    register,
-    formState: { errors }
-  } = form;
-  const variantErrors = errors.variants as any;
-  const currentVariantError = variantErrors?.[index];
+  const { control, register } = form;
+
   const domId = `variant-${id}`;
 
   return (
@@ -80,9 +77,7 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
               placeholder="Precio de Compra"
               startAdornment={CURRENCY_SYMBOL}
             />
-            {currentVariantError?.purchasePrice && (
-              <FormErrorMessage text={currentVariantError.purchasePrice.message ?? ''} />
-            )}
+            {variantError?.purchasePrice && <FormErrorMessage text={variantError.purchasePrice.message ?? ''} />}
           </div>
 
           <div className="space-y-1">
@@ -104,7 +99,7 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
               placeholder="Precio de Venta"
               startAdornment={CURRENCY_SYMBOL}
             />
-            {currentVariantError?.price && <FormErrorMessage text={currentVariantError.price.message ?? ''} />}
+            {variantError?.price && <FormErrorMessage text={variantError.price.message ?? ''} />}
           </div>
 
           {/* <div className="space-y-1">
@@ -138,9 +133,7 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
               className="bg-background"
               placeholder="Stock"
             />
-            {currentVariantError?.quantityInStock && (
-              <FormErrorMessage text={currentVariantError.quantityInStock.message ?? ''} />
-            )}
+            {variantError?.quantityInStock && <FormErrorMessage text={variantError.quantityInStock.message ?? ''} />}
           </div>
 
           {/* <div className="space-y-1">
@@ -194,6 +187,10 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
             {attributesField.length > 0 ? (
               attributesField.map((attrField, indexField) => (
                 <div key={attrField.attributeId}>
+                  {variantError?.attributes?.[indexField]?.attributeId && (
+                    <FormErrorMessage text={variantError?.attributes?.[indexField]?.attributeId.message ?? ''} />
+                  )}
+
                   <VariantAttributeField
                     attributeId={attrField.attributeId}
                     attributeIndex={indexField}
@@ -201,8 +198,8 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
                     control={control}
                     variantIndex={index}
                   />
-                  {currentVariantError?.attributes?.[indexField]?.valueId && (
-                    <FormErrorMessage text={currentVariantError.attributes[indexField].valueId?.message ?? ''} />
+                  {variantError?.attributes?.[indexField]?.valueId && (
+                    <FormErrorMessage text={variantError?.attributes?.[indexField]?.valueId.message ?? ''} />
                   )}
                 </div>
               ))

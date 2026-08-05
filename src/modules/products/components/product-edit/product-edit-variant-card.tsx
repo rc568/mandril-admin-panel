@@ -25,12 +25,14 @@ export const ProductEditVariantCard = ({ attributes, id, variantId, index, onDel
     }) ?? {};
 
   const variantCode = variantsCode.find((v) => v.variantId === variantId);
+  const variantError = form.formState.errors.variants?.[index];
 
   return (
     <ProductVariantCardUI
       attributes={attributes}
       attributesField={attributesField}
       form={form}
+      variantError={variantError}
       index={index}
       id={id}
       code={variantCode?.code}

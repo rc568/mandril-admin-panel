@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/api';
 import { Plus } from 'lucide-react';
-import type { Path, UseFormRegister, UseFormReturn } from 'react-hook-form';
+import type { Path, UseFormReturn } from 'react-hook-form';
 import type { BaseProductFields } from '../../interfaces/ui';
 import { CatalogSelectInput } from '../catalog-select-input';
 import { CategorySelectInput } from '../category-select-input';
@@ -45,7 +45,7 @@ export const ProductGeneralInfoUI = <T extends BaseProductFields>({
               </Label>
               <Input
                 id="name"
-                {...(register as unknown as UseFormRegister<BaseProductFields>)('name')}
+                {...register('name' as Path<T>)}
                 placeholder="Nombre del producto"
                 className="bg-background"
                 autoComplete="off"
@@ -59,7 +59,7 @@ export const ProductGeneralInfoUI = <T extends BaseProductFields>({
               </Label>
               <Input
                 id="slug"
-                {...(register as unknown as UseFormRegister<BaseProductFields>)('slug')}
+                {...register('slug' as Path<T>)}
                 placeholder="Slug del producto"
                 className="bg-background"
                 autoComplete="off"
@@ -84,6 +84,7 @@ export const ProductGeneralInfoUI = <T extends BaseProductFields>({
 
           <div className="space-y-2">
             <h3 className="text-sm font-medium text-foreground">Atributos de producto</h3>
+            {errors.attributesId && <FormErrorMessage text={String(errors.attributesId.message)} />}
             <div className="flex items-center gap-2">
               {attributesField && attributesField.length > 0 ? (
                 attributesField?.map((attrField) => (
