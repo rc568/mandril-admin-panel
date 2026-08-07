@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
+import { capitalizeFirstLetter } from '@/lib/format-string';
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/api';
 
 interface Props {
@@ -43,7 +44,7 @@ export const ProductAddAttributesDialogUI = ({
             return (
               <CheckboxField
                 key={attr.id}
-                label={attr.name}
+                label={capitalizeFirstLetter(attr.name)}
                 checked={selectedIds.includes(attr.id)}
                 onCheckedChange={() => onChecked(attr.id)}
                 disabled={defaultIds?.includes(attr.id)}
