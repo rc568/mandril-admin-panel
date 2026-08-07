@@ -41,6 +41,7 @@ export const ProductGeneralInfoUI = <T extends BaseProductFields>({
             <InputField
               label="Nombre"
               placeholder="Nombre del producto"
+              autoComplete="off"
               error={errors?.name && String(errors.name.message)}
               {...register('name' as Path<T>)}
             />
@@ -48,6 +49,7 @@ export const ProductGeneralInfoUI = <T extends BaseProductFields>({
             <InputField
               label="Slug"
               placeholder="Slug del producto"
+              autoComplete="off"
               error={errors?.slug && String(errors.slug.message)}
               {...register('slug' as Path<T>)}
             />
