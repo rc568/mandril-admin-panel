@@ -68,7 +68,7 @@ export const ProductGeneralInfoUI = <T extends BaseProductFields>({
           </div>
 
           <div className="space-y-2">
-            <DescriptionField defaultContent="*Descripción del producto...*" />
+            <DescriptionField defaultContent="Escribe una descripción..." />
           </div>
 
           <div className="space-y-2">
