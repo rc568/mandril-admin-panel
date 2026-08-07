@@ -18,7 +18,7 @@ export const CatalogSelectInput = <T extends FieldValues>({ control, name, error
       name={name}
       render={({ field }) => (
         <AsyncSelectField
-          label="Catálogos"
+          label="Catálogo"
           value={(field.value ?? '').toString()}
           onChange={(v) => field.onChange(Number(v))}
           error={error}
