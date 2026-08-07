@@ -1,7 +1,7 @@
+import { InputField } from '@/components/common/form';
 import { FormErrorMessage } from '@/components/common/form-error-message';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CURRENCY_SYMBOL } from '@/constants/unit';
 import { productProfit } from '@/lib/pricing-calculations';
@@ -19,7 +19,6 @@ interface Props<T extends BaseProductFields> {
   form: UseFormReturn<T>;
   variantError?: VariantFieldError;
   index: number;
-  id: string;
   code?: string;
   watchPrice: number;
   watchPurchasePrice: number;
@@ -32,7 +31,6 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
   form,
   variantError,
   index,
-  id,
   code,
   watchPrice,
   watchPurchasePrice,
@@ -40,7 +38,7 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
 }: Props<T>) => {
   const { control, register } = form;
 
-  const domId = `variant-${id}`;
+  const profit = productProfit(watchPrice, watchPurchasePrice);
 
   return (
     <Card>
@@ -64,43 +62,23 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-4 gap-4">
-          <div className="space-y-1">
-            <Label htmlFor={`${domId}-purchase-price`} className="text-sm font-medium text-foreground">
-              Precio de Compra
-            </Label>
-            <Input
-              id={`${domId}-purchase-price`}
-              {...register(`variants.${index}.purchasePrice` as Path<T>, { valueAsNumber: true })}
-              type="number"
-              step={'any'}
-              className="bg-background"
-              placeholder="Precio de Compra"
-              startAdornment={CURRENCY_SYMBOL}
-            />
-            {variantError?.purchasePrice && <FormErrorMessage text={variantError.purchasePrice.message ?? ''} />}
-          </div>
+          <InputField
+            label="Precio de Compra"
+            type="number"
+            step="any"
+            startAdornment={CURRENCY_SYMBOL}
+            {...register(`variants.${index}.purchasePrice` as Path<T>, { valueAsNumber: true })}
+            error={variantError?.purchasePrice && String(variantError.purchasePrice.message)}
+          />
 
-          <div className="space-y-1">
-            <Label
-              htmlFor={`${domId}-price`}
-              className="text-sm font-medium text-foreground flex justify-between flex-wrap"
-            >
-              Precio de Venta
-              <span className="text-success">
-                <ProfitPercentage num={productProfit(watchPrice, watchPurchasePrice)} />
-              </span>
-            </Label>
-            <Input
-              id={`${domId}-price`}
-              {...register(`variants.${index}.price` as Path<T>, { valueAsNumber: true })}
-              type="number"
-              step={'any'}
-              className="bg-background"
-              placeholder="Precio de Venta"
-              startAdornment={CURRENCY_SYMBOL}
-            />
-            {variantError?.price && <FormErrorMessage text={variantError.price.message ?? ''} />}
-          </div>
+          <InputField
+            label="Precio de Venta"
+            type="number"
+            step="any"
+            startAdornment={CURRENCY_SYMBOL}
+            {...register(`variants.${index}.price` as Path<T>, { valueAsNumber: true })}
+            error={variantError?.price && String(variantError.price.message)}
+          />
 
           {/* <div className="space-y-1">
                     <Label className="text-sm font-medium text-foreground shrink-0 grow">Precio Oferta</Label>
@@ -122,18 +100,20 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
                     />
                   </div> */}
 
-          <div className="space-y-1">
-            <Label htmlFor={`${domId}-stock`} className="text-sm font-medium text-foreground">
-              Stock
+          <InputField
+            label="Stock"
+            type="number"
+            {...register(`variants.${index}.quantityInStock` as Path<T>, { valueAsNumber: true })}
+            error={variantError?.quantityInStock && String(variantError.quantityInStock.message)}
+          />
+
+          <div className="space-y-2">
+            <Label asChild className="text-sm font-medium text-foreground">
+              <span>Ganancia</span>
             </Label>
-            <Input
-              id={`${domId}-stock`}
-              {...register(`variants.${index}.quantityInStock` as Path<T>, { valueAsNumber: true })}
-              type="number"
-              className="bg-background"
-              placeholder="Stock"
-            />
-            {variantError?.quantityInStock && <FormErrorMessage text={variantError.quantityInStock.message ?? ''} />}
+            <div className="flex items-center justify-end h-9">
+              <ProfitPercentage num={profit} />
+            </div>
           </div>
 
           {/* <div className="space-y-1">

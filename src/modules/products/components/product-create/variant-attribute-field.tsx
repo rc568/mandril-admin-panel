@@ -1,5 +1,5 @@
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AsyncSelectField } from '@/components/common/form';
+import { capitalizeFirstLetter } from '@/lib/format-string';
 import { Controller, useFormContext, type Control } from 'react-hook-form';
 import { useAttributeValuesQuery } from '../../hooks/use-attribute-values-query';
 import type { EditProductForm } from '../../interfaces/ui';
@@ -14,59 +14,42 @@ interface Props {
 }
 
 export const VariantAttributeField = ({ attributeId, attributeIndex, attributeName, variantIndex, control }: Props) => {
-  const { data: attributeValues, isLoading, isError } = useAttributeValuesQuery(attributeId);
+  const { data: attributeValues, isPending, isFetching, isError, refetch } = useAttributeValuesQuery(attributeId);
   const {
     formState: { defaultValues }
   } = useFormContext<EditProductForm>();
 
   const defaultAttributeValue = defaultValues?.variants?.[variantIndex]?.attributes?.[attributeIndex]?.valueId;
-
-  const label = `variant-${variantIndex + 1}-attribute-value-${attributeId}`;
+  const optionsMap = attributeValues?.values.map((v) => ({ id: v.id, label: v.value }));
 
   return (
-    <div className="flex gap-2">
-      <Label id={label} className="text-sm font-medium text-foreground capitalize">
-        {attributeName}:
-      </Label>
-
-      {isLoading && <div className="flex-1 text-sm text-muted-foreground">Cargando valores...</div>}
-
-      {isError && <div className="flex-1 text-sm text-destructive">Error al cargar valores</div>}
-
-      {!isLoading && !isError && attributeValues && (
-        <>
-          <Controller
-            control={control}
-            name={`variants.${variantIndex}.attributes.${attributeIndex}.valueId`}
-            render={({ field }) => (
-              <Select value={field.value?.toString()} onValueChange={(v) => field.onChange(Number(v))}>
-                <SelectTrigger
-                  aria-labelledby={label}
-                  className="bg-background disabled:border-none disabled:shadow-none disabled:opacity-100 disabled:text-muted-foreground disabled:[&_svg]:hidden disabled:cursor-auto"
-                  disabled={defaultAttributeValue !== undefined}
-                >
-                  <SelectValue placeholder="Seleccionar Valor" />
-                </SelectTrigger>
-                <SelectContent className="max-h-80">
-                  {attributeValues.values.map((value) => {
-                    return (
-                      <SelectItem key={value.id} value={value.id.toString()}>
-                        {value.value}
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-            )}
+    <div>
+      <Controller
+        control={control}
+        name={`variants.${variantIndex}.attributes.${attributeIndex}.valueId`}
+        render={({ field }) => (
+          <AsyncSelectField
+            label={capitalizeFirstLetter(attributeName ?? '')}
+            value={field.value?.toString()}
+            inline={true}
+            disabled={isPending || defaultAttributeValue !== undefined}
+            onChange={(v) => field.onChange(Number(v))}
+            options={optionsMap}
+            isPending={isPending}
+            isError={isError}
+            isFetching={isFetching}
+            onRetry={refetch}
           />
+        )}
+      />
 
-          <Controller
-            control={control}
-            name={`variants.${variantIndex}.attributes.${attributeIndex}.attributeId`}
-            defaultValue={attributeId}
-            render={({ field }) => <input type="hidden" {...field} value={attributeId} />}
-          />
-        </>
+      {optionsMap && optionsMap.length > 0 && (
+        <Controller
+          control={control}
+          name={`variants.${variantIndex}.attributes.${attributeIndex}.attributeId`}
+          defaultValue={attributeId}
+          render={({ field }) => <input type="hidden" {...field} value={attributeId} />}
+        />
       )}
     </div>
   );
