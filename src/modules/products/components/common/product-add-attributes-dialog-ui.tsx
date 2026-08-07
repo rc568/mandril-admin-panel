@@ -1,5 +1,5 @@
+import { CheckboxField } from '@/components/common/form';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogClose,
@@ -9,7 +9,6 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/api';
 
 interface Props {
@@ -39,20 +38,16 @@ export const ProductAddAttributesDialogUI = ({
           <DialogDescription>Escoja uno o más atributos para crear variantes de un mismo producto.</DialogDescription>
         </DialogHeader>
 
-        <div className="max-h-96 overflow-y-auto">
+        <div className="max-h-96 overflow-y-auto space-y-2">
           {attributes.map((attr) => {
             return (
-              <div key={attr.id} className="flex items-center gap-3 p-2 rounded hover:bg-muted/50 transition-colors">
-                <Checkbox
-                  id={attr.name}
-                  checked={selectedIds.includes(attr.id)}
-                  onCheckedChange={() => onChecked(attr.id)}
-                  disabled={defaultIds?.includes(attr.id)}
-                />
-                <Label htmlFor={attr.name} className="capitalize text-sm text-foreground cursor-pointer flex-1">
-                  {attr.name}
-                </Label>
-              </div>
+              <CheckboxField
+                key={attr.id}
+                label={attr.name}
+                checked={selectedIds.includes(attr.id)}
+                onCheckedChange={() => onChecked(attr.id)}
+                disabled={defaultIds?.includes(attr.id)}
+              />
             );
           })}
         </div>
