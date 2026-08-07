@@ -6,11 +6,10 @@ import { ProductVariantCardUI } from '../common/product-variant-card-ui';
 interface Props {
   attributes: GetAttributesApiResponse;
   index: number;
-  id: string;
   onDelete: (index: number) => void;
 }
 
-export const ProductCreateVariantCard = ({ attributes, id, index, onDelete }: Props) => {
+export const ProductCreateVariantCard = ({ attributes, index, onDelete }: Props) => {
   const form = useFormContext<CreateProductForm>();
 
   const attributesField = useWatch({ control: form.control, name: `attributesId` }) ?? [];
@@ -29,7 +28,6 @@ export const ProductCreateVariantCard = ({ attributes, id, index, onDelete }: Pr
       form={form}
       index={index}
       variantError={variantError}
-      id={id}
       watchPrice={watchPrice}
       watchPurchasePrice={watchPurchasePrice}
       onDelete={onDelete}

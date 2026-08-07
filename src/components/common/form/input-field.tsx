@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { useId, type ComponentProps } from 'react';
 import { FormErrorMessage } from '../form-error-message';
 
-interface Props extends ComponentProps<'input'> {
+interface Props extends ComponentProps<typeof Input> {
   label: string;
   error?: string;
 }
