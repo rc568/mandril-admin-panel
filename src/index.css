@@ -1,3 +1,4 @@
+@import './modules/products/styles/description-field.css';
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @plugin "@tailwindcss/typography";
