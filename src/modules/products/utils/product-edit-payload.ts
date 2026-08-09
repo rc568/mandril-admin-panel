@@ -20,7 +20,7 @@ export const getProductEditPayload = (
       ? hasOnlyOneVariant
         ? {
             variants: variantsForm?.map((v) => {
-              const { attributes, ...variant } = v;
+              const { attributes: _attributes, ...variant } = v;
               return { ...variant };
             })
           }
