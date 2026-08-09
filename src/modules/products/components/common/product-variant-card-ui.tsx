@@ -9,11 +9,11 @@ import { cn } from '@/lib/utils';
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/api';
 import { ImageIcon, Info, Trash2 } from 'lucide-react';
 import type { Path, UseFormReturn } from 'react-hook-form';
-import type { BaseProductFields, VariantFieldError } from '../../interfaces/ui';
+import type { BaseProduct, VariantFieldError } from '../../interfaces/ui';
 import { VariantAttributeField } from '../product-create/variant-attribute-field';
 import { ProfitPercentage } from '../profit-percentage';
 
-interface Props<T extends BaseProductFields> {
+interface Props<T extends BaseProduct> {
   attributes: GetAttributesApiResponse;
   attributesField: { attributeId: number }[];
   form: UseFormReturn<T>;
@@ -25,7 +25,7 @@ interface Props<T extends BaseProductFields> {
   onDelete: (index: number) => void;
 }
 
-export const ProductVariantCardUI = <T extends BaseProductFields>({
+export const ProductVariantCardUI = <T extends BaseProduct>({
   attributes,
   attributesField,
   form,
@@ -36,7 +36,7 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
   watchPurchasePrice,
   onDelete
 }: Props<T>) => {
-  const { control, register } = form;
+  const { register } = form;
 
   const profit = productProfit(watchPrice, watchPurchasePrice);
 
@@ -172,10 +172,10 @@ export const ProductVariantCardUI = <T extends BaseProductFields>({
                   )}
 
                   <VariantAttributeField
+                    form={form}
                     attributeId={attrField.attributeId}
                     attributeIndex={indexField}
                     attributeName={attributes.find((attr) => attr.id === attrField.attributeId)?.name}
-                    control={control}
                     variantIndex={index}
                   />
                   {variantError?.attributes?.[indexField]?.valueId && (
