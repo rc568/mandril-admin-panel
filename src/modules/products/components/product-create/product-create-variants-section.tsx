@@ -1,15 +1,10 @@
-import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/api';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useProductCreateContext } from '../../hooks/use-product-create-context';
 import type { CreateProductForm } from '../../interfaces/ui';
 import { ProductVariantsSectionUI } from '../common/product-variants-section-ui';
 import { ProductCreateVariantCard } from './product-create-variant-card';
 
-interface Props {
-  attributes: GetAttributesApiResponse;
-}
-
-export const ProductCreateVariantsSection = ({ attributes }: Props) => {
+export const ProductCreateVariantsSection = () => {
   const { control } = useFormContext<CreateProductForm>();
   const {
     variantsFA: { append, remove, fields: variantsField }
@@ -21,7 +16,6 @@ export const ProductCreateVariantsSection = ({ attributes }: Props) => {
   return (
     <>
       <ProductVariantsSectionUI
-        attributes={attributes}
         attributesSelectedCount={attributesFieldWatch.length}
         onAppend={() => append({ price: 0, purchasePrice: 0, quantityInStock: 0, attributes: [] })}
         onRemove={removeVariant}

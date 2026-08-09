@@ -1,9 +1,7 @@
 import { Button } from '@/components/ui/button';
-import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/api';
 import { Plus } from 'lucide-react';
 
 interface Props {
-  attributes: GetAttributesApiResponse;
   attributesSelectedCount: number;
   variantsField: { id: string; variantId?: number }[];
   onAppend: () => void;
@@ -12,13 +10,11 @@ interface Props {
     id: string;
     index: number;
     variantId?: number;
-    attributes: GetAttributesApiResponse;
     onDelete: (id: number) => void;
   }>;
 }
 
 export const ProductVariantsSectionUI = ({
-  attributes,
   attributesSelectedCount,
   variantsField,
   onAppend,
@@ -36,14 +32,7 @@ export const ProductVariantsSectionUI = ({
       </div>
 
       {variantsField.map((variant, index) => (
-        <VariantCard
-          key={variant.id}
-          id={variant.id}
-          index={index}
-          variantId={variant.variantId}
-          attributes={attributes}
-          onDelete={onRemove}
-        />
+        <VariantCard key={variant.id} id={variant.id} index={index} variantId={variant.variantId} onDelete={onRemove} />
       ))}
     </div>
   );

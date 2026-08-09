@@ -6,7 +6,8 @@ import { useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { messages } from '../../constants/products.messages';
-import { ProductEditProvider } from '../../context/product-edit-context';
+
+import { ProductEditProvider } from '../../context/product-edit-provider';
 import { useProductEditSubmit } from '../../hooks/use-product-edit-submit';
 import type { EditProductForm, ProductMapped } from '../../interfaces/ui';
 import { ProductAddAttributesDialog } from './product-add-attributes-dialog';
@@ -46,7 +47,7 @@ export const ProductEdit = ({ productForm, productUI }: Props) => {
             <ProductEditStatsCard createdAt={productUI.createdAt} createdBy={productUI.createdBy} />
 
             <div className="cols-span-1 lg:col-span-2">
-              <ProductEditVariantsSection attributes={attributes ?? []} />
+              <ProductEditVariantsSection />
             </div>
 
             <Tooltip open={openTooltip}>
