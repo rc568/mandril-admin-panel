@@ -1,16 +1,16 @@
-import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/api';
+import { useAttributes } from '@/hooks/query';
 import { useFormContext, useWatch } from 'react-hook-form';
 import type { CreateProductForm } from '../../interfaces/ui';
 import { ProductVariantCardUI } from '../common/product-variant-card-ui';
 
 interface Props {
-  attributes: GetAttributesApiResponse;
   index: number;
   onDelete: (index: number) => void;
 }
 
-export const ProductCreateVariantCard = ({ attributes, index, onDelete }: Props) => {
+export const ProductCreateVariantCard = ({ index, onDelete }: Props) => {
   const form = useFormContext<CreateProductForm>();
+  const { data: attributes } = useAttributes();
 
   const attributesField = useWatch({ control: form.control, name: `attributesId` }) ?? [];
 
@@ -23,7 +23,7 @@ export const ProductCreateVariantCard = ({ attributes, index, onDelete }: Props)
 
   return (
     <ProductVariantCardUI
-      attributes={attributes}
+      attributes={attributes ?? []}
       attributesField={attributesField}
       form={form}
       index={index}
