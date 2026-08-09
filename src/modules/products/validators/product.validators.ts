@@ -13,10 +13,11 @@ const variantAttributeValueMapSchema = z.array(
   })
 );
 
-const productVariantSchema = z.object({
+export const productVariantSchema = z.object({
   price: z.number().positive(),
   purchasePrice: z.number().positive(),
-  quantityInStock: z.number().int().min(0)
+  quantityInStock: z.number().int().min(0),
+  attributes: variantAttributeValueMapSchema.optional()
 });
 
 export const baseProductSchema = z.object({
@@ -29,13 +30,7 @@ export const baseProductSchema = z.object({
 });
 
 export const createProductSchema = baseProductSchema.extend({
-  variants: z
-    .array(
-      productVariantSchema.extend({
-        attributes: variantAttributeValueMapSchema.optional()
-      })
-    )
-    .nonempty()
+  variants: z.array(productVariantSchema).nonempty()
 });
 
 export const editProductSchema = baseProductSchema
@@ -44,10 +39,9 @@ export const editProductSchema = baseProductSchema
 
     variants: z
       .array(
-        productVariantSchema.partial().extend({
+        productVariantSchema.extend({
           variantId: z.int().optional(),
-          isActive: z.boolean().optional(),
-          attributes: variantAttributeValueMapSchema.optional()
+          isActive: z.boolean().optional()
         })
       )
       .optional()

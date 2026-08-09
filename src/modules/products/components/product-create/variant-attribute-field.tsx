@@ -1,23 +1,29 @@
 import { AsyncSelectField } from '@/components/common/form';
 import { capitalizeFirstLetter } from '@/lib/format-string';
-import { Controller, useFormContext, type Control } from 'react-hook-form';
+import { Controller, type Path, type PathValue, type UseFormReturn } from 'react-hook-form';
 import { useAttributeValuesQuery } from '../../hooks/use-attribute-values-query';
-import type { EditProductForm } from '../../interfaces/ui';
+import type { BaseVariantFields } from '../../interfaces/ui';
 
-interface Props {
+interface Props<T extends BaseVariantFields> {
+  form: UseFormReturn<T>;
   attributeId: number;
   attributeIndex: number;
   attributeName?: string;
-  control: Control<any>;
   variantIndex: number;
-  isDisabled?: boolean;
 }
 
-export const VariantAttributeField = ({ attributeId, attributeIndex, attributeName, variantIndex, control }: Props) => {
+export const VariantAttributeField = <T extends BaseVariantFields>({
+  form,
+  attributeId,
+  attributeIndex,
+  attributeName,
+  variantIndex
+}: Props<T>) => {
   const { data: attributeValues, isPending, isFetching, isError, refetch } = useAttributeValuesQuery(attributeId);
   const {
-    formState: { defaultValues }
-  } = useFormContext<EditProductForm>();
+    formState: { defaultValues },
+    control
+  } = form;
 
   const defaultAttributeValue = defaultValues?.variants?.[variantIndex]?.attributes?.[attributeIndex]?.valueId;
   const optionsMap = attributeValues?.values.map((v) => ({ id: v.id, label: v.value }));
@@ -26,7 +32,7 @@ export const VariantAttributeField = ({ attributeId, attributeIndex, attributeNa
     <div>
       <Controller
         control={control}
-        name={`variants.${variantIndex}.attributes.${attributeIndex}.valueId`}
+        name={`variants.${variantIndex}.attributes.${attributeIndex}.valueId` as Path<T>}
         render={({ field }) => (
           <AsyncSelectField
             label={capitalizeFirstLetter(attributeName ?? '')}
@@ -46,8 +52,8 @@ export const VariantAttributeField = ({ attributeId, attributeIndex, attributeNa
       {optionsMap && optionsMap.length > 0 && (
         <Controller
           control={control}
-          name={`variants.${variantIndex}.attributes.${attributeIndex}.attributeId`}
-          defaultValue={attributeId}
+          name={`variants.${variantIndex}.attributes.${attributeIndex}.attributeId` as Path<T>}
+          defaultValue={attributeId as PathValue<T, Path<T>>}
           render={({ field }) => <input type="hidden" {...field} value={attributeId} />}
         />
       )}
