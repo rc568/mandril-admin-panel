@@ -56,7 +56,7 @@ export const AddOrderProducts = ({ products, control, addProduct, deleteProduct,
     setShowProductList(true);
   };
 
-  const productsWatch = useWatch({ control, name: 'products' });
+  const productsWatch = useWatch({ control, name: 'products' }) ?? [];
   const totalSale = productsWatch.reduce((acc, curr) => curr.quantity * curr.price + acc, 0);
   const currentProductVariantIds = productsWatch.map((pv) => pv.variantId);
 
@@ -190,7 +190,13 @@ export const AddOrderProducts = ({ products, control, addProduct, deleteProduct,
                     <TableCell>{formatCurrency(product.price)}</TableCell>
                     <TableCell>{formatCurrency((productsWatch?.[index]?.quantity ?? 1) * product.price)}</TableCell>
                     <TableCell>
-                      <Button variant="outline" size="sm" onClick={() => deleteProduct(index)}>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => deleteProduct(index)}
+                        aria-label="Eliminar producto"
+                      >
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </TableCell>

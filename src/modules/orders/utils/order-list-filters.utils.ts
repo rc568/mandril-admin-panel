@@ -3,42 +3,31 @@ import type { SalesChannel } from '@/services/sales-channel/interfaces/sales-cha
 import type { LocalOrderFilters } from '../components/order-list-section/order-list-filters';
 import { INVOICE_TYPE_CONFIG, ORDER_STATUS_CONFIG } from '../constants/order.constants';
 
-const getChannelDisplayMap = (options: SalesChannel[] = []) => {
-  if (!options) return {};
-  return options.reduce(
-    (acc, curr) => {
-      acc[curr.id.toString()] = curr.channel;
-      return acc;
-    },
-    {} as Record<string, string>
-  );
-};
-
 export const getFilterDisplayValue = (
   key: keyof LocalOrderFilters,
-  value: string | Date | undefined,
-  salesChannel: SalesChannel[]
+  value: string | Date,
+  salesChannel?: SalesChannel[]
 ): string => {
-  if (!value) return '';
-
   if (value instanceof Date) {
-    return key === 'startDate' ? `Desde: ${formatShortDate(value)}` : `Hasta: ${formatShortDate(value)}`;
+    if (key === 'startDate') return `Desde: ${formatShortDate(value)}`;
+    return `Hasta: ${formatShortDate(value)}`;
   }
 
-  const stringValue = String(value);
-  const channelMap = getChannelDisplayMap(salesChannel);
+  if (key === 'channel' && !salesChannel) return 'Canal de venta no válido.';
 
   switch (key) {
     case 'status':
-      return ORDER_STATUS_CONFIG[stringValue as keyof typeof ORDER_STATUS_CONFIG].label || stringValue;
+      return ORDER_STATUS_CONFIG[value as keyof typeof ORDER_STATUS_CONFIG].label || value;
 
-    case 'channel':
-      return channelMap[stringValue] || stringValue;
+    case 'channel': {
+      const channelName = salesChannel?.find((sc) => sc.id.toString() === value);
+      return channelName?.channel ?? 'Canal de venta no válido.';
+    }
 
     case 'invoiceType':
-      return INVOICE_TYPE_CONFIG[stringValue as keyof typeof INVOICE_TYPE_CONFIG].label || stringValue;
+      return INVOICE_TYPE_CONFIG[value as keyof typeof INVOICE_TYPE_CONFIG].label || value;
 
     default:
-      return stringValue;
+      return value;
   }
 };
