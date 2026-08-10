@@ -2,6 +2,7 @@ import { formatShortDate } from '@/lib/date-utils';
 import type { SalesChannel } from '@/services/sales-channel/interfaces/sales-channel.interface';
 import type { LocalOrderFilters } from '../components/order-list-section/order-list-filters';
 import { INVOICE_TYPE_CONFIG, ORDER_STATUS_CONFIG } from '../constants/order.constants';
+import { isInvoiceType, isOrderStatus } from './type-guards.utils';
 
 export const getFilterDisplayValue = (
   key: keyof LocalOrderFilters,
@@ -17,7 +18,7 @@ export const getFilterDisplayValue = (
 
   switch (key) {
     case 'status':
-      return ORDER_STATUS_CONFIG[value as keyof typeof ORDER_STATUS_CONFIG].label || value;
+      return isOrderStatus(value) ? ORDER_STATUS_CONFIG[value].label : value;
 
     case 'channel': {
       const channelName = salesChannel?.find((sc) => sc.id.toString() === value);
@@ -25,7 +26,7 @@ export const getFilterDisplayValue = (
     }
 
     case 'invoiceType':
-      return INVOICE_TYPE_CONFIG[value as keyof typeof INVOICE_TYPE_CONFIG].label || value;
+      return isInvoiceType(value) ? INVOICE_TYPE_CONFIG[value].label : value;
 
     default:
       return value;

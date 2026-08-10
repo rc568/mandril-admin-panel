@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router';
-import { INVOICE_TYPE_KEYS, ORDER_SORT_BY_ARRAY, ORDER_STATUS } from '../constants/order.constants';
+import { ORDER_SORT_BY_ARRAY } from '../constants/order.constants';
 import type { GetOrdersFilters } from '../interfaces/ui';
+import { isInvoiceType, isOrderStatus } from '../utils/type-guards.utils';
 
 interface UseTableFiltersConfig {
   defaultPage?: number;
@@ -31,8 +32,8 @@ export const useOrderParams = (config: UseTableFiltersConfig = {}) => {
 
   const search = querySearch && querySearch.trim().length !== 0 ? querySearch : undefined;
   const channel = queryChannel && !Number.isNaN(Number(queryChannel)) ? queryChannel : undefined;
-  const status = queryStatus && ORDER_STATUS.includes(queryStatus) ? queryStatus : undefined;
-  const invoiceType = queryInvoiceType && INVOICE_TYPE_KEYS.includes(queryInvoiceType) ? queryInvoiceType : undefined;
+  const status = queryStatus && isOrderStatus(queryStatus) ? queryStatus : undefined;
+  const invoiceType = queryInvoiceType && isInvoiceType(queryInvoiceType) ? queryInvoiceType : undefined;
   const startDate = queryStartDate ? new Date(queryStartDate) : undefined;
   const endDate = queryEndDate ? new Date(queryEndDate) : undefined;
   const sortBy = querySortBy && ORDER_SORT_BY_ARRAY.includes(querySortBy) ? querySortBy : undefined;
