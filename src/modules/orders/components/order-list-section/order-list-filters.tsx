@@ -3,13 +3,13 @@ import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { formatLongDate } from '@/lib/date-utils';
 import { cn } from '@/lib/utils';
 import { CalendarIcon, Filter, X } from 'lucide-react';
 import { useState } from 'react';
-import { INVOICE_TYPES_ARRAY, ORDER_STATUS_OPTIONS_WITH_ALL } from '../../constants/order.constants';
+import { INVOICE_TYPE_CONFIG, INVOICE_TYPE_KEYS, ORDER_STATUS_OPTIONS_ARRAY } from '../../constants/order.constants';
 
+import { AsyncSelectField, SelectField } from '@/components/common/form';
 import { useSalesChannel } from '@/hooks/query/sales-channel';
 import type { GetOrdersFilters } from '../../interfaces/ui';
 import { getFilterDisplayValue } from '../../utils/order-list-filters.utils';
@@ -24,7 +24,7 @@ export interface Props {
 export const OrderListFilters = ({ urlFilters = {}, applyFilters }: Props) => {
   const [draftFilters, setDraftFilters] = useState<LocalOrderFilters>(urlFilters);
 
-  const { data: salesChannelOptions } = useSalesChannel();
+  const { data: salesChannelOptions, isError, isPending, isFetching, refetch } = useSalesChannel();
 
   const updateLocalFilters = (newFilters: LocalOrderFilters) => {
     setDraftFilters((prev) => ({ ...prev, ...newFilters }));
@@ -58,7 +58,7 @@ export const OrderListFilters = ({ urlFilters = {}, applyFilters }: Props) => {
             <span className="text-sm font-semibold">Filtros activos: </span>
             {activeFiltersEntries.map(([key, value]) => (
               <Badge variant={'outline'} className="text-sm font-normal bg-gray-100" key={value.toString()}>
-                {salesChannelOptions && getFilterDisplayValue(key, value, salesChannelOptions)}
+                {getFilterDisplayValue(key, value, salesChannelOptions)}
                 <Button variant={'ghost'} size={'icon-xs'} onClick={() => deleteFilter(key)}>
                   <X />
                 </Button>
@@ -154,64 +154,36 @@ export const OrderListFilters = ({ urlFilters = {}, applyFilters }: Props) => {
             </div>
 
             <div className="flex items-center justify-between gap-2">
-              <div className="space-y-2 w-full">
-                <Label>Estado de la venta</Label>
-                <Select
-                  value={draftFilters.status ?? ''}
-                  onValueChange={(value) => updateLocalFilters({ status: value })}
-                >
-                  <SelectTrigger className="w-full cursor-pointer">
-                    <SelectValue placeholder="Seleccionar estado" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ORDER_STATUS_OPTIONS_WITH_ALL.map((status) => (
-                      <SelectItem key={status.key} value={status.key} className="cursor-pointer">
-                        {status.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <SelectField
+                label="Estado"
+                value={draftFilters.status ?? ''}
+                onChange={(value) => updateLocalFilters({ status: value })}
+                options={ORDER_STATUS_OPTIONS_ARRAY.map((s) => ({ id: s.key, label: s.label }))}
+              />
 
-              <div className="space-y-2 w-full">
-                <Label>Medio de venta</Label>
-                <Select
+              <div>
+                <AsyncSelectField
+                  label="Canal de venta"
                   value={draftFilters.channel ?? ''}
-                  onValueChange={(value) => updateLocalFilters({ channel: value })}
-                >
-                  <SelectTrigger className="w-full cursor-pointer">
-                    <SelectValue placeholder="Seleccionar medio" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {salesChannelOptions &&
-                      salesChannelOptions.map((channel) => (
-                        <SelectItem key={channel.id} value={channel.id.toString()} className="cursor-pointer">
-                          {channel.channel}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
+                  onChange={(value) => updateLocalFilters({ channel: value })}
+                  options={salesChannelOptions?.map((sc) => ({ id: sc.id, label: sc.channel }))}
+                  isError={isError}
+                  isFetching={isFetching}
+                  isPending={isPending}
+                  onRetry={refetch}
+                />
               </div>
             </div>
 
-            <div className="space-y-2 w-full">
-              <Label>Tipo de comprobante</Label>
-              <Select
-                value={draftFilters.invoiceType ?? ''}
-                onValueChange={(value) => updateLocalFilters({ invoiceType: value })}
-              >
-                <SelectTrigger className="w-full cursor-pointer">
-                  <SelectValue placeholder="Seleccionar tipo de comprobante" />
-                </SelectTrigger>
-                <SelectContent>
-                  {INVOICE_TYPES_ARRAY.map(({ key, label }) => (
-                    <SelectItem key={key} value={key} className="cursor-pointer">
-                      {label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <SelectField
+              label="Tipo de comprobante"
+              value={draftFilters.invoiceType ?? ''}
+              onChange={(value) => updateLocalFilters({ invoiceType: value })}
+              options={INVOICE_TYPE_KEYS.map((invoice) => ({
+                id: invoice,
+                label: INVOICE_TYPE_CONFIG[invoice].label
+              }))}
+            />
 
             <Button className="w-full" onClick={() => applyFilters(draftFilters)}>
               Aplicar filtros

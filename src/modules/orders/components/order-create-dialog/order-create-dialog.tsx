@@ -9,7 +9,7 @@ import { useOrderMutation } from '@/hooks/query/order';
 import { filterNullishFields } from '@/lib/react-hook-form/utils';
 import type { SearchClient } from '@/services/client/interfaces/client.interface';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
-import { RemoveFormatting, User } from 'lucide-react';
+import { ReceiptText, ShoppingCart, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useController, useFieldArray, useForm, useWatch, type Path } from 'react-hook-form';
 import { useNavigate } from 'react-router';
@@ -199,7 +199,7 @@ export const OrderCreateDialog = ({ open, onOpenChange }: Props) => {
             <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="flex items-center gap-2 justify-between col-span-2">
                 <div className="flex items-center gap-2">
-                  <RemoveFormatting className="h-4 w-4 text-muted-foreground" />
+                  <ReceiptText className="h-4 w-4 text-muted-foreground" />
                   <h3 className="text-sm font-semibold">Datos de facturación</h3>
                 </div>
                 <CheckboxField
@@ -269,7 +269,7 @@ export const OrderCreateDialog = ({ open, onOpenChange }: Props) => {
 
             <section>
               <div className="flex items-center gap-2">
-                <User className="h-4 w-4 text-muted-foreground" />
+                <ShoppingCart className="h-4 w-4 text-muted-foreground" />
                 <Label htmlFor="order-products" className="text-sm font-semibold">
                   Productos
                 </Label>
