@@ -28,7 +28,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       const user = await checkAuthAction();
       set({ user: user, authStatus: 'authenticated' });
       return true;
-    } catch (error) {
+    } catch {
       set({ user: null, authStatus: 'non-authenticated' });
       return false;
     }
@@ -41,7 +41,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       });
       set({ user: data, authStatus: 'authenticated' });
       return true;
-    } catch (error) {
+    } catch {
       set({ user: null, authStatus: 'non-authenticated' });
       return false;
     }
@@ -50,7 +50,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     try {
       await logoutAction();
       set({ user: null, authStatus: 'non-authenticated' });
-    } catch (error) {
+    } catch {
       set({ user: null, authStatus: 'non-authenticated' });
     }
   }
