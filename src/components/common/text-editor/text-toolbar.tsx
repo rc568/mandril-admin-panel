@@ -15,29 +15,30 @@ import {
 
 export const TextToolbar = () => {
   const { editor } = useCurrentEditor();
-  if (!editor) return null;
 
   const editorState = useEditorState({
     editor,
     selector: (ctx) => {
       return {
-        isBold: ctx.editor.isActive('bold') ?? false,
-        canBold: ctx.editor.can().chain().toggleBold().run() ?? false,
-        isItalic: ctx.editor.isActive('italic') ?? false,
-        canItalic: ctx.editor.can().chain().toggleItalic().run() ?? false,
-        isUnderline: ctx.editor.isActive('underline') ?? false,
-        canUnderline: ctx.editor.can().chain().toggleUnderline().run() ?? false,
-        isStrike: ctx.editor.isActive('strike') ?? false,
-        canStrike: ctx.editor.can().chain().toggleStrike().run() ?? false,
-        isParagraph: ctx.editor.isActive('paragraph') ?? false,
-        isHeading1: ctx.editor.isActive('heading', { level: 1 }) ?? false,
-        isHeading2: ctx.editor.isActive('heading', { level: 2 }) ?? false,
-        isHeading3: ctx.editor.isActive('heading', { level: 3 }) ?? false,
-        isBulletList: ctx.editor.isActive('bulletList') ?? false,
-        isOrderedList: ctx.editor.isActive('orderedList') ?? false
+        isBold: ctx.editor?.isActive('bold') ?? false,
+        canBold: ctx.editor?.can().chain().toggleBold().run() ?? false,
+        isItalic: ctx.editor?.isActive('italic') ?? false,
+        canItalic: ctx.editor?.can().chain().toggleItalic().run() ?? false,
+        isUnderline: ctx.editor?.isActive('underline') ?? false,
+        canUnderline: ctx.editor?.can().chain().toggleUnderline().run() ?? false,
+        isStrike: ctx.editor?.isActive('strike') ?? false,
+        canStrike: ctx.editor?.can().chain().toggleStrike().run() ?? false,
+        isParagraph: ctx.editor?.isActive('paragraph') ?? false,
+        isHeading1: ctx.editor?.isActive('heading', { level: 1 }) ?? false,
+        isHeading2: ctx.editor?.isActive('heading', { level: 2 }) ?? false,
+        isHeading3: ctx.editor?.isActive('heading', { level: 3 }) ?? false,
+        isBulletList: ctx.editor?.isActive('bulletList') ?? false,
+        isOrderedList: ctx.editor?.isActive('orderedList') ?? false
       };
     }
   });
+
+  if (!editor || !editorState) return null;
 
   return (
     <div className="control-group">
