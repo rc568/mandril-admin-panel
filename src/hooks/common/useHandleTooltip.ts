@@ -6,8 +6,9 @@ export const useHandleTooltip = (delay = 3000) => {
 
   const show = () => {
     if (open) return;
+    if (timerRef.current) clearTimeout(timerRef.current);
     setOpen(true);
-    setTimeout(() => setOpen(false), delay);
+    timerRef.current = setTimeout(() => setOpen(false), delay);
   };
 
   useEffect(() => {
@@ -16,8 +17,5 @@ export const useHandleTooltip = (delay = 3000) => {
     };
   }, []);
 
-  return {
-    open,
-    show
-  };
+  return { open, show };
 };
