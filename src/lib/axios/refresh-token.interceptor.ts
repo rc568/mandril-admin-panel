@@ -1,12 +1,22 @@
 import { refreshToken } from '@/modules/auth/api/auth.api';
 import { useAuthStore } from '@/modules/auth/store/auth.store';
+import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { baseApi } from './api';
+
+interface RetryableRequestConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
+
+interface QueueItem {
+  resolve: (value?: unknown) => void;
+  reject: (reason?: unknown) => void;
+}
 
 let isRefreshing = false;
 let refreshFailed = false;
-let failedQueue: any[] = [];
+let failedQueue: QueueItem[] = [];
 
-const processQueue = (error: any, token: string | null = null) => {
+const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
@@ -20,8 +30,8 @@ const processQueue = (error: any, token: string | null = null) => {
 
 baseApi.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+  async (error: AxiosError) => {
+    const originalRequest = error.config as RetryableRequestConfig;
 
     if (refreshFailed) return Promise.reject(error);
 
