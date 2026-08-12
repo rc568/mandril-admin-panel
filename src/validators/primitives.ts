@@ -1,17 +1,40 @@
+import { validationMessages } from '@/constants/validation-messages';
 import { z } from '@/lib/zod';
 
-export const emailSchema = z.email({ error: 'Ingresa un email válido.' });
+export const optionalString = <T extends z.ZodType>(schema: T) =>
+  z.preprocess((val) => (val === '' ? undefined : val), schema.optional());
 
-export const priceSchema = z
-  .number({ error: 'El precio debe ser un número.' })
-  .positive({ error: 'El precio debe ser mayor a 0.' });
+export const integerId = z
+  .int({ error: validationMessages.invalidSelection })
+  .positive({ error: validationMessages.positiveNumber });
 
-export const quantitySchema = z.coerce
-  .number({ error: 'La cantidad debe ser un número.' })
-  .int({ error: 'La cantidad debe ser un número entero.' })
-  .min(0, { error: 'La cantidad no puede ser negativa.' });
+export const emailSchema = z.email({ error: validationMessages.invalidEmail });
 
-export const shortTextSchema = z
-  .string()
-  .min(3, { error: 'Este campo requiere al menos 3 caracteres.' })
-  .max(255, { error: 'Este campo puede tener como máximo 255 caracteres.' });
+// NUMBER
+export const nonNegativeNumber = z
+  .number({ error: validationMessages.invalidNumber })
+  .min(0, { error: validationMessages.minNum(0) });
+
+export const positiveNumber = nonNegativeNumber.positive({ error: validationMessages.positiveNumber });
+
+const integerNumber = z.int({ error: validationMessages.integerNumber });
+
+export const integerNonNegativeNumber = integerNumber.min(0, { error: validationMessages.minNum(0) });
+
+export const integerPositiveNumber = integerNumber.min(1, { error: validationMessages.minNum(1) });
+
+// STRING
+export const baseTextSchema = (minimum: number, maximum?: number) => {
+  const stringSchema = z
+    .string({ error: validationMessages.invalidType })
+    .trim()
+    .min(minimum, { error: validationMessages.minLength(minimum) });
+
+  if (maximum === undefined) return stringSchema;
+
+  return stringSchema.max(maximum, { error: validationMessages.maxLength(maximum) });
+};
+
+export const regexSchema = (regex: RegExp, errorMessage: string = validationMessages.invalidRegex) => {
+  return z.string().regex(regex, { error: errorMessage });
+};

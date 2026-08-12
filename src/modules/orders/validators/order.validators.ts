@@ -1,5 +1,13 @@
 import { z } from '@/lib/zod';
-import { baseStringSchema, optionalString } from '@/lib/zod/zod-helpers';
+import {
+  baseTextSchema,
+  emailSchema,
+  integerId,
+  integerPositiveNumber,
+  nonNegativeNumber,
+  optionalString,
+  regexSchema
+} from '@/validators/primitives';
 import {
   CLIENT_DOCUMENT_TYPE_KEYS,
   INVOICE_CODE_BOLETA_REGEX,
@@ -7,26 +15,27 @@ import {
   ORDER_STATUS,
   RUC_REGEX
 } from '../constants/order.constants';
+import { messages } from '../constants/order.messages';
 
 const boletaDocumentTypes = CLIENT_DOCUMENT_TYPE_KEYS.filter((type) => type !== 'RUC');
 
 export const orderProductSchema = z.object({
-  variantId: z.int(),
-  price: z.number().min(0),
-  quantity: z.number().int().min(1)
+  variantId: integerId,
+  price: nonNegativeNumber,
+  quantity: integerPositiveNumber
 });
 
 const baseClientSchema = z.object({
-  contactName: optionalString(baseStringSchema.max(255)),
-  email: optionalString(z.email().max(255)),
-  phoneNumber1: optionalString(baseStringSchema.max(25)),
-  phoneNumber2: optionalString(baseStringSchema.max(25))
+  contactName: optionalString(baseTextSchema(1, 255)),
+  email: optionalString(emailSchema),
+  phoneNumber1: optionalString(baseTextSchema(1, 25)),
+  phoneNumber2: optionalString(baseTextSchema(1, 25))
 });
 
 const baseOrderSchema = z.object({
-  salesChannelId: z.int().positive(),
+  salesChannelId: integerId,
   status: z.enum(ORDER_STATUS).default('PENDING'),
-  observation: optionalString(baseStringSchema),
+  observation: optionalString(baseTextSchema(1)),
   products: z.array(orderProductSchema).nonempty(),
   client: baseClientSchema
 });
@@ -40,20 +49,20 @@ export const invoiceSchema = z.discriminatedUnion('invoiceType', [
   }),
   z.object({
     invoiceType: z.literal('FACTURA'),
-    invoiceCode: z.string().regex(INVOICE_CODE_FACTURA_REGEX),
+    invoiceCode: regexSchema(INVOICE_CODE_FACTURA_REGEX, messages.FACTURA_REGEX),
     client: z.object({
       documentType: z.literal('RUC'),
-      documentNumber: z.string().regex(RUC_REGEX),
-      bussinessName: baseStringSchema.max(255).toUpperCase()
+      documentNumber: regexSchema(RUC_REGEX, messages.RUC_REGEX),
+      bussinessName: baseTextSchema(1, 255).toUpperCase()
     })
   }),
   z.object({
     invoiceType: z.literal('BOLETA'),
-    invoiceCode: z.string().regex(INVOICE_CODE_BOLETA_REGEX),
+    invoiceCode: regexSchema(INVOICE_CODE_BOLETA_REGEX, messages.BOLETA_REGEX),
     client: z.object({
       documentType: z.enum(boletaDocumentTypes),
-      documentNumber: optionalString(baseStringSchema.max(25).toUpperCase()),
-      bussinessName: baseStringSchema.max(255).toUpperCase()
+      documentNumber: optionalString(baseTextSchema(1, 25).toUpperCase()),
+      bussinessName: baseTextSchema(1, 255).toUpperCase()
     })
   })
 ]);
@@ -64,7 +73,7 @@ export const createOrderSchema = baseOrderSchema.and(invoiceSchema).check(({ iss
       issues.push({
         code: 'custom',
         input: value.client.documentNumber,
-        message: 'Debe definirse el número de documento.',
+        message: messages.MISSING_DOCUMENT_NUMBER,
         path: ['client', 'documentNumber']
       });
     }
@@ -75,7 +84,7 @@ export const createOrderSchema = baseOrderSchema.and(invoiceSchema).check(({ iss
       issues.push({
         code: 'custom',
         input: value.client.documentNumber,
-        message: 'No debe definirse un número de documento para esta opción.',
+        message: messages.DOCUMENT_NUMBER_NOT_REQUIRED,
         path: ['client', 'documentNumber']
       });
     }

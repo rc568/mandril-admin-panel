@@ -1,31 +1,40 @@
-import { z } from '../../../lib/zod';
+import { z } from '@/lib/zod';
+import {
+  baseTextSchema,
+  integerId,
+  integerNonNegativeNumber,
+  positiveNumber,
+  regexSchema
+} from '@/validators/primitives';
+import { SLUG_REGEX } from '../constants/product.constants';
+import { messages } from '../constants/products.messages';
 
 const productAttributeSchema = z.array(
   z.object({
-    attributeId: z.int()
+    attributeId: integerId
   })
 );
 
 const variantAttributeValueMapSchema = z.array(
   z.object({
-    attributeId: z.int(),
-    valueId: z.int()
+    attributeId: integerId,
+    valueId: integerId
   })
 );
 
 export const productVariantSchema = z.object({
-  price: z.number().positive(),
-  purchasePrice: z.number().positive(),
-  quantityInStock: z.number().int().min(0),
+  price: positiveNumber,
+  purchasePrice: positiveNumber,
+  quantityInStock: integerNonNegativeNumber,
   attributes: variantAttributeValueMapSchema.optional()
 });
 
 export const baseProductSchema = z.object({
-  name: z.string().min(3).max(255),
-  slug: z.string().min(3).max(255),
-  description: z.string().optional(),
-  categoryId: z.number(),
-  catalogId: z.number(),
+  name: baseTextSchema(3, 255),
+  slug: regexSchema(SLUG_REGEX, messages.PRODUCT_SLUG),
+  description: baseTextSchema(1).optional(),
+  categoryId: integerId,
+  catalogId: integerId,
   attributesId: productAttributeSchema.optional()
 });
 
@@ -40,7 +49,7 @@ export const editProductSchema = baseProductSchema
     variants: z
       .array(
         productVariantSchema.extend({
-          variantId: z.int().optional(),
+          variantId: integerId.optional(),
           isActive: z.boolean().optional()
         })
       )
@@ -62,8 +71,7 @@ export const editProductSchema = baseProductSchema
             ctx.issues.push({
               code: 'custom',
               input: ctx.value,
-              message: 'Los atributos de la variante no son consistentes o están duplicados.',
-              //   message: errorMessages.product.variantAttributesNotConsistent,
+              message: messages.DUPLICATED_VARIANT_ATTRIBUTES,
               path: ['variants', 'attributes']
             });
           }
@@ -76,8 +84,7 @@ export const editProductSchema = baseProductSchema
         ctx.issues.push({
           code: 'custom',
           input: ctx.value,
-          message: 'Existen variantes duplicadas en la petición.',
-          //   message: errorMessages.product.duplicatedVariants,
+          message: messages.DUPLICATED_VARIANTS,
           path: ['variants']
         });
       }

@@ -8,3 +8,5 @@ export const PRODUCT_ORDER_BY_ENTRIES = Object.entries(PRODUCT_ORDER_BY_OPTIONS)
   key,
   value
 }));
+
+export const SLUG_REGEX = /^[a-z0-9]{1}[a-z0-9]{2,255}$/;
