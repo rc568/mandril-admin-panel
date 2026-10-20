@@ -1,6 +1,6 @@
 import { formatCurrency } from '@/lib/currency';
-import type { Catalog } from '@/services/catalog/interfaces/catalog.interface';
-import type { Category } from '@/services/category/interfaces/category.interface';
+import type { Catalog } from '@/services/catalog/interfaces/api';
+import type { Category } from '@/services/category/interfaces/api';
 import type { LocalProductsFilters } from '../components/product-list-filters';
 
 const getCategoryDisplayMap = (options: Category[] = []) => {
