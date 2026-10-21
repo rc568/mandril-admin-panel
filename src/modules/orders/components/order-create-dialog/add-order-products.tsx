@@ -28,7 +28,7 @@ export const AddOrderProducts = ({ products, control, addProduct, deleteProduct,
     addProduct({
       ...variant,
       quantity: 1,
-      currentStock: variant.quantityInStock,
+      currentStock: variant.availableQuantity,
       price: parseFloat(variant.price),
       purchasePrice: parseFloat(variant.purchasePrice)
     });
@@ -85,7 +85,7 @@ export const AddOrderProducts = ({ products, control, addProduct, deleteProduct,
               <ul className="max-h-60 overflow-y-auto bg-background divide-y">
                 {variants?.products.map((pv) => {
                   const isAlreadySelected = currentProductVariantIds.includes(pv.variantId);
-                  const isOutOfStock = pv.quantityInStock === 0;
+                  const isOutOfStock = pv.availableQuantity === 0;
 
                   const isDisabled = isAlreadySelected || isOutOfStock;
 
@@ -120,7 +120,7 @@ export const AddOrderProducts = ({ products, control, addProduct, deleteProduct,
                             </div>
 
                             <span className="text-muted-foreground">
-                              {pv.code} - Stock: {pv.quantityInStock}
+                              {pv.code} - Stock: {pv.availableQuantity}
                             </span>
                           </div>
                           <span className="font-medium text-sm">{formatCurrency(pv.price)}</span>

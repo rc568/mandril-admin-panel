@@ -21,7 +21,20 @@ export interface ProductVariant {
   code: string;
   price: string;
   purchasePrice: string;
-  quantityInStock: number;
+  availableQuantity: number;
+  warrantyMonths: number | null;
+  lengthCm: string | null;
+  widthCm: string | null;
+  heightCm: string | null;
+  weightGrams: string | null;
+  packageLengthCm: string | null;
+  packageWidthCm: string | null;
+  packageHeightCm: string | null;
+  stockAlertThreshold: number | null;
+  offerPrice: string | null;
+  offerStartsAt: string | null;
+  offerEndsAt: string | null;
+  isOfferActive: boolean;
   isActive: boolean;
   images: Image[];
   variantAttributes: VariantAttribute[];
@@ -30,6 +43,8 @@ export interface ProductVariant {
 interface Image {
   id: string;
   imageUrl: string;
+  position: number;
+  isPrimary: boolean;
 }
 
 interface VariantAttribute {

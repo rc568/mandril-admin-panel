@@ -5,7 +5,19 @@ interface ScrollPagination {
   nextOffset: number;
 }
 
-export interface SearchProductVariant extends Omit<ProductVariant, 'id' | 'isActive' | 'images'> {
+export interface SearchProductVariant
+  extends Pick<
+    ProductVariant,
+    | 'code'
+    | 'availableQuantity'
+    | 'purchasePrice'
+    | 'price'
+    | 'offerPrice'
+    | 'offerEndsAt'
+    | 'offerStartsAt'
+    | 'isOfferActive'
+    | 'variantAttributes'
+  > {
   name: string;
   variantId: number;
 }

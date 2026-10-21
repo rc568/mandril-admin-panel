@@ -41,7 +41,7 @@ export const ProductListItem = ({ product }: Props) => {
         <TableCell className="font-medium">
           <Link to={`editar/${product.slug}`}>{product.name}</Link>
         </TableCell>
-        <TableCell>{variant.quantityInStock}</TableCell>
+        <TableCell>{variant.availableQuantity}</TableCell>
         <TableCell>{formatCurrency(variant.purchasePrice)}</TableCell>
         <TableCell>{formatPercentage(variant.profitPercentage)}</TableCell>
         <TableCell className="font-medium">{formatCurrency(variant.price)}</TableCell>
@@ -86,7 +86,7 @@ export const ProductListItem = ({ product }: Props) => {
               ))}
             </div>
           </TableCell>
-          <TableCell>{variant.quantityInStock}</TableCell>
+          <TableCell>{variant.availableQuantity}</TableCell>
           <TableCell>{formatCurrency(variant.purchasePrice)}</TableCell>
           <TableCell>{formatPercentage(variant.profitPercentage)}</TableCell>
           <TableCell className="font-medium">{formatCurrency(variant.price)}</TableCell>
