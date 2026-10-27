@@ -1,20 +1,23 @@
 import { filterChangedFormFields } from '@/lib/react-hook-form/utils';
 import type { FormState } from 'react-hook-form';
+import type { EditProductPayload } from '../interfaces/api';
 import type { EditProductForm } from '../interfaces/ui';
 
 export const getProductEditPayload = (
   dataForm: EditProductForm,
   dirtyFields: FormState<EditProductForm>['dirtyFields']
-): EditProductForm => {
+): EditProductPayload => {
   const { variants: _, attributesId: __, ...generalDirtyFields } = dirtyFields;
   const { attributesId: attributesIdForm, variants: variantsForm } = dataForm;
 
   const generalDataPayload = filterChangedFormFields(generalDirtyFields, dataForm);
 
   const hasOnlyOneVariant = attributesIdForm?.length === 0 && variantsForm?.length === 1;
-  const hasVariantFieldsChanges = dirtyFields.variants && dirtyFields.variants.some((v) => v !== undefined);
+  const hasAttributeChanges = dirtyFields.attributesId?.some((attribute) => attribute !== undefined) ?? false;
+  const hasVariantFieldsChanges =
+    hasAttributeChanges || (dirtyFields.variants?.some((variant) => variant !== undefined) ?? false);
 
-  const payload: EditProductForm = {
+  const payload: EditProductPayload = {
     ...(generalDataPayload ?? {}),
     ...(hasVariantFieldsChanges
       ? hasOnlyOneVariant

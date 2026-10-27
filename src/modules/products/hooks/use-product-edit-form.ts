@@ -12,6 +12,7 @@ const INITIAL_VARIANT_VALUE = {
 export const useProductEditForm = () => {
   const {
     getValues,
+    setValue,
     formState: { defaultValues }
   } = useFormContext<EditProductForm>();
 
@@ -36,6 +37,13 @@ export const useProductEditForm = () => {
 
     if (checkAttributeIndex >= 0) {
       attributesFA.remove(checkAttributeIndex);
+      variants.forEach((variant, variantIndex) => {
+        setValue(
+          `variants.${variantIndex}.attributes`,
+          variant.attributes?.filter((attribute) => attribute.attributeId !== attributeId) ?? [],
+          { shouldDirty: true, shouldValidate: true }
+        );
+      });
 
       if (attributesId.length - 1 === 0 && variants.length > 1) {
         variantsFA.remove(variants.map((_, index) => index).slice(1));
@@ -51,10 +59,19 @@ export const useProductEditForm = () => {
 
   const clearAttributes = () => {
     const defaultAttributes = (defaultValues?.attributesId as EditProductForm['attributesId']) ?? [];
+    const defaultAttributeIds = new Set(defaultAttributes.map((attribute) => attribute.attributeId));
+    const variants = getValues('variants') ?? [];
+
     attributesFA.replace(defaultAttributes);
+    variants.forEach((variant, variantIndex) => {
+      setValue(
+        `variants.${variantIndex}.attributes`,
+        variant.attributes?.filter((attribute) => defaultAttributeIds.has(attribute.attributeId)) ?? [],
+        { shouldDirty: true, shouldValidate: true }
+      );
+    });
 
     if (defaultAttributes.length === 0) {
-      const variants = getValues('variants') ?? [];
       variantsFA.remove(variants.map((_, index) => index).slice(1));
     }
   };
