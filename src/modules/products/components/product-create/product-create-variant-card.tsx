@@ -28,6 +28,7 @@ export const ProductCreateVariantCard = ({ index, onDelete }: Props) => {
       form={form}
       index={index}
       variantError={variantError}
+      availableQuantity={0}
       watchPrice={watchPrice}
       watchPurchasePrice={watchPurchasePrice}
       onDelete={onDelete}

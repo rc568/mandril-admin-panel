@@ -4,7 +4,6 @@ import type { EditProductForm } from '../interfaces/ui';
 const INITIAL_VARIANT_VALUE = {
   price: 0,
   purchasePrice: 0,
-  quantityInStock: 0,
   attributes: [],
   variantId: undefined,
   isActive: true

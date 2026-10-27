@@ -1,16 +1,16 @@
 import type { PropsWithChildren } from 'react';
 import { useProductEditForm } from '../hooks/use-product-edit-form';
-import { ProductEditContext, type VariantsCode } from './product-edit-context';
+import { ProductEditContext, type ProductVariantSummary } from './product-edit-context';
 
 interface Props extends PropsWithChildren {
-  variantsCode: VariantsCode[];
+  productVariants: ProductVariantSummary[];
 }
 
-export const ProductEditProvider = ({ variantsCode, children }: Props) => {
+export const ProductEditProvider = ({ productVariants, children }: Props) => {
   const editFormValues = useProductEditForm();
   const value = {
     ...editFormValues,
-    variantsCode
+    productVariants
   };
 
   return <ProductEditContext value={value}>{children}</ProductEditContext>;

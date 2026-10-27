@@ -17,7 +17,7 @@ export const ProductCreateVariantsSection = () => {
     <>
       <ProductVariantsSectionUI
         attributesSelectedCount={attributesFieldWatch.length}
-        onAppend={() => append({ price: 0, purchasePrice: 0, quantityInStock: 0, attributes: [] })}
+        onAppend={() => append({ price: 0, purchasePrice: 0, attributes: [] })}
         onRemove={removeVariant}
         variantsField={variantsField}
         VariantCard={ProductCreateVariantCard}

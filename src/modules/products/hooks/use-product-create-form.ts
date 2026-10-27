@@ -28,7 +28,7 @@ export const useProductCreateForm = () => {
     }
 
     if (newAttributesLength > 0 && variants.length === 1) {
-      return variantsFA.append({ price: 0, purchasePrice: 0, quantityInStock: 0, attributes: [] });
+      return variantsFA.append({ price: 0, purchasePrice: 0, attributes: [] });
     }
 
     if (newAttributesLength <= 0 && variants.length > 1) {

@@ -27,7 +27,11 @@ export const ProductEdit = ({ productForm, productUI }: Props) => {
   const { open: openTooltip, show: showToolTip } = useHandleTooltip();
 
   const { data: attributes } = useAttributes();
-  const variantsCode = productUI.productVariant.map((v) => ({ variantId: v.id, code: v.code }));
+  const productVariants = productUI.productVariant.map((v) => ({
+    variantId: v.id,
+    code: v.code,
+    availableQuantity: v.availableQuantity
+  }));
 
   const { form, isPending, onSubmit } = useProductEditSubmit({
     productId: productUI.id.toString(),
@@ -39,7 +43,7 @@ export const ProductEdit = ({ productForm, productUI }: Props) => {
 
   return (
     <FormProvider {...form}>
-      <ProductEditProvider variantsCode={variantsCode}>
+      <ProductEditProvider productVariants={productVariants}>
         <form onSubmit={onSubmit}>
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.5fr] gap-6 my-6">
             <ProductEditGeneralInfo attributes={attributes ?? []} onAdd={() => setIsAttributesModalOpen(true)} />
