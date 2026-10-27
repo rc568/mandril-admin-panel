@@ -12,7 +12,7 @@ interface Props {
 
 export const ProductEditVariantCard = ({ variantId, index, onDelete }: Props) => {
   const form = useFormContext<EditProductForm>();
-  const { variantsCode } = useProductEditContext();
+  const { productVariants } = useProductEditContext();
   const { data: attributes } = useAttributes();
 
   const attributesField = useWatch({ control: form.control, name: 'attributesId' }) ?? [];
@@ -23,7 +23,7 @@ export const ProductEditVariantCard = ({ variantId, index, onDelete }: Props) =>
       name: `variants.${index}`
     }) ?? {};
 
-  const variantCode = variantsCode.find((v) => v.variantId === variantId);
+  const variant = productVariants.find((v) => v.variantId === variantId);
   const variantError = form.formState.errors.variants?.[index];
 
   return (
@@ -33,7 +33,8 @@ export const ProductEditVariantCard = ({ variantId, index, onDelete }: Props) =>
       form={form}
       variantError={variantError}
       index={index}
-      code={variantCode?.code}
+      code={variant?.code}
+      availableQuantity={variant?.availableQuantity ?? 0}
       watchPrice={watchPrice}
       watchPurchasePrice={watchPurchasePrice}
       onDelete={onDelete}

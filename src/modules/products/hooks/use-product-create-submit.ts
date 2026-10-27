@@ -14,7 +14,7 @@ export const useProductCreateSubmit = ({ onCreateSuccess }: Props) => {
 
   const form = useForm<CreateProductForm>({
     resolver: standardSchemaResolver(createProductSchema),
-    defaultValues: { variants: [{ attributes: [], price: 0, purchasePrice: 0, quantityInStock: 0 }] }
+    defaultValues: { variants: [{ attributes: [], price: 0, purchasePrice: 0 }] }
   });
 
   const { handleSubmit } = form;

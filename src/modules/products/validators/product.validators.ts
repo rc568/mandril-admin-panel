@@ -16,7 +16,6 @@ const variantAttributeValueMapSchema = z.array(
 export const productVariantSchema = z.object({
   price: z.number().positive(),
   purchasePrice: z.number().positive(),
-  quantityInStock: z.number().int().min(0),
   attributes: variantAttributeValueMapSchema.optional()
 });
 

@@ -20,6 +20,7 @@ interface Props<T extends BaseProduct> {
   variantError?: VariantFieldError;
   index: number;
   code?: string;
+  availableQuantity: number;
   watchPrice: number;
   watchPurchasePrice: number;
   onDelete: (index: number) => void;
@@ -32,6 +33,7 @@ export const ProductVariantCardUI = <T extends BaseProduct>({
   variantError,
   index,
   code,
+  availableQuantity,
   watchPrice,
   watchPurchasePrice,
   onDelete
@@ -100,12 +102,7 @@ export const ProductVariantCardUI = <T extends BaseProduct>({
                     />
                   </div> */}
 
-          <InputField
-            label="Stock"
-            type="number"
-            {...register(`variants.${index}.quantityInStock` as Path<T>, { valueAsNumber: true })}
-            error={variantError?.quantityInStock && String(variantError.quantityInStock.message)}
-          />
+          <InputField label="Stock disponible" type="number" value={availableQuantity} readOnly />
 
           <div className="space-y-2">
             <Label asChild className="text-sm font-medium text-foreground">

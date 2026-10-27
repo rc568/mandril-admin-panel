@@ -14,7 +14,6 @@ export const mapProductToEditForm = (product: ProductMapped): EditProductForm =>
         isActive: pv.isActive,
         price: parseFloat(pv.price),
         purchasePrice: parseFloat(pv.purchasePrice),
-        quantityInStock: pv.availableQuantity,
         attributes: pv.variantAttributes.map((va) => ({ attributeId: va.attributeId, valueId: va.valueId }))
       };
     })
