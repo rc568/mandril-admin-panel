@@ -116,14 +116,25 @@ export const editProductSchema = baseProductSchema
     variants: z
       .array(
         productVariantSchema.extend({
-          variantId: z.int().optional(),
-          isActive: z.boolean().optional()
+          variantId: z.int().min(1).max(32767).optional(),
+          isActive: z.boolean()
         })
       )
       .optional()
   })
   .partial()
   .check((ctx) => {
+    const productAttributeIds = ctx.value.attributesId?.map((attribute) => attribute.attributeId) ?? [];
+
+    if (new Set(productAttributeIds).size !== productAttributeIds.length) {
+      ctx.issues.push({
+        code: 'custom',
+        input: ctx.value,
+        message: 'No puedes repetir atributos del producto.',
+        path: ['attributesId']
+      });
+    }
+
     if (ctx.value.variants && ctx.value.variants.length > 0) {
       const uniqueVariants = new Set<number>();
 
@@ -157,5 +168,67 @@ export const editProductSchema = baseProductSchema
           path: ['variants']
         });
       }
+
+      if (productAttributeIds.length === 0) {
+        if (
+          ctx.value.variants.length > 1 ||
+          ctx.value.variants.some((variant) => (variant.attributes?.length ?? 0) > 0)
+        ) {
+          ctx.issues.push({
+            code: 'custom',
+            input: ctx.value,
+            message: 'Selecciona atributos para registrar más de una variante.',
+            path: ['attributesId']
+          });
+        }
+        return;
+      }
+
+      if (ctx.value.variants.length === 1) {
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value,
+          message: 'Un producto con atributos debe tener al menos dos variantes.',
+          path: ['attributesId']
+        });
+      }
+
+      const variantCombinations = new Set<string>();
+
+      ctx.value.variants.forEach((variant) => {
+        const variantAttributes = variant.attributes ?? [];
+        const variantAttributeIds = variantAttributes.map(({ attributeId }) => attributeId);
+        const uniqueVariantAttributeIds = new Set(variantAttributeIds);
+        const hasExpectedAttributes =
+          variantAttributeIds.length === productAttributeIds.length &&
+          uniqueVariantAttributeIds.size === variantAttributeIds.length &&
+          productAttributeIds.every((attributeId) => uniqueVariantAttributeIds.has(attributeId));
+
+        if (!hasExpectedAttributes) {
+          ctx.issues.push({
+            code: 'custom',
+            input: ctx.value,
+            message: 'Completa un valor para cada atributo seleccionado en todas las variantes.',
+            path: ['attributesId']
+          });
+          return;
+        }
+
+        const combination = variantAttributes
+          .map(({ attributeId, valueId }) => `${attributeId}:${valueId}`)
+          .sort()
+          .join('|');
+
+        if (variantCombinations.has(combination)) {
+          ctx.issues.push({
+            code: 'custom',
+            input: ctx.value,
+            message: 'No puedes crear dos variantes con la misma combinación de atributos.',
+            path: ['attributesId']
+          });
+        }
+
+        variantCombinations.add(combination);
+      });
     }
   });
