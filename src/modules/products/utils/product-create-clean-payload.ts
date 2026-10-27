@@ -1,17 +1,19 @@
+import type { CreateProductPayload } from '../interfaces/api';
 import type { CreateProductForm } from '../interfaces/ui';
 
-export const productCreateCleanPayload = (product: CreateProductForm): CreateProductForm => {
-  const { attributesId, variants, ...rest } = product;
+export const productCreateCleanPayload = (product: CreateProductForm): CreateProductPayload => {
+  const { attributesId, description, variants, ...rest } = product;
 
-  const payload: CreateProductForm = {
+  const payload: CreateProductPayload = {
     ...rest,
-    ...(attributesId?.length === 0 ? {} : attributesId),
+    ...(description?.trim() ? { description: description.trim() } : {}),
+    ...(attributesId && attributesId.length > 0 ? { attributesId } : {}),
     variants: variants.map((variant) => {
-      const { attributes, ...rest } = variant;
+      const { attributes, ...variantFields } = variant;
 
       return {
-        ...rest,
-        ...(attributesId?.length === 0 ? {} : attributes)
+        ...variantFields,
+        ...(attributes && attributes.length > 0 ? { attributes } : {})
       };
     })
   };
