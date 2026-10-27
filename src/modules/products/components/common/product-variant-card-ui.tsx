@@ -64,14 +64,22 @@ export const ProductVariantCardUI = <T extends BaseProduct>({
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-4 gap-4">
-          <InputField
-            label="Precio de Compra"
-            type="number"
-            step="any"
-            startAdornment={CURRENCY_SYMBOL}
-            {...register(`variants.${index}.purchasePrice` as Path<T>, { valueAsNumber: true })}
-            error={variantError?.purchasePrice && String(variantError.purchasePrice.message)}
-          />
+          <div className="space-y-2">
+            <InputField
+              label={availableQuantity > 0 ? 'Costo promedio de compra' : 'Costo de referencia'}
+              type="number"
+              step="any"
+              startAdornment={CURRENCY_SYMBOL}
+              readOnly={availableQuantity > 0}
+              {...register(`variants.${index}.purchasePrice` as Path<T>, { valueAsNumber: true })}
+              error={variantError?.purchasePrice && String(variantError.purchasePrice.message)}
+            />
+            <p className="text-xs text-muted-foreground">
+              {availableQuantity > 0
+                ? 'Se actualiza al registrar compras al proveedor.'
+                : 'Valor referencial; el costo real se actualizará al registrar una compra.'}
+            </p>
+          </div>
 
           <InputField
             label="Precio de Venta"
@@ -102,7 +110,16 @@ export const ProductVariantCardUI = <T extends BaseProduct>({
                     />
                   </div> */}
 
-          <InputField label="Stock disponible" type="number" value={availableQuantity} readOnly />
+          <div className="space-y-2">
+            <InputField
+              label="Stock disponible"
+              type="number"
+              value={availableQuantity}
+              readOnly
+              className="text-muted-foreground shadow-none hover:shadow-none focus-visible:border-input focus-visible:ring-0"
+            />
+            <p className="text-xs text-muted-foreground">El inventario se ingresa al registrar compras al proveedor.</p>
+          </div>
 
           <div className="space-y-2">
             <Label asChild className="text-sm font-medium text-foreground">
