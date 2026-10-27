@@ -28,7 +28,7 @@ export const ProductList = ({ products, children }: Props) => {
               <TableHead>Código</TableHead>
               <TableHead>Producto</TableHead>
               <TableHead>Stock</TableHead>
-              <TableHead>Precio Compra</TableHead>
+              <TableHead>Costo de compra</TableHead>
               <TableHead>Ganancia (%)</TableHead>
               <TableHead>Precio Venta</TableHead>
               <TableHead>Visibilidad</TableHead>
