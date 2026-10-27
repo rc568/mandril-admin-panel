@@ -8,6 +8,7 @@ import { productProfit } from '@/lib/pricing-calculations';
 import { cn } from '@/lib/utils';
 import type { GetAttributesApiResponse } from '@/services/attributes/interfaces/api';
 import { ImageIcon, Info, Trash2 } from 'lucide-react';
+import type { ReactNode } from 'react';
 import type { Path, UseFormReturn } from 'react-hook-form';
 import type { BaseProduct, VariantFieldError } from '../../interfaces/ui';
 import { VariantAttributeField } from '../product-create/variant-attribute-field';
@@ -20,7 +21,8 @@ interface Props<T extends BaseProduct> {
   variantError?: VariantFieldError;
   index: number;
   code?: string;
-  availableQuantity: number;
+  purchasePriceEditable: boolean;
+  inventorySection: ReactNode;
   watchPrice: number;
   watchPurchasePrice: number;
   onDelete: (index: number) => void;
@@ -33,7 +35,8 @@ export const ProductVariantCardUI = <T extends BaseProduct>({
   variantError,
   index,
   code,
-  availableQuantity,
+  purchasePriceEditable,
+  inventorySection,
   watchPrice,
   watchPurchasePrice,
   onDelete
@@ -66,18 +69,18 @@ export const ProductVariantCardUI = <T extends BaseProduct>({
         <div className="grid grid-cols-4 gap-4">
           <div className="space-y-2">
             <InputField
-              label={availableQuantity > 0 ? 'Costo promedio de compra' : 'Costo de referencia'}
+              label={purchasePriceEditable ? 'Costo de referencia' : 'Costo de compra'}
               type="number"
               step="any"
               startAdornment={CURRENCY_SYMBOL}
-              readOnly={availableQuantity > 0}
+              readOnly={!purchasePriceEditable}
               {...register(`variants.${index}.purchasePrice` as Path<T>, { valueAsNumber: true })}
               error={variantError?.purchasePrice && String(variantError.purchasePrice.message)}
             />
             <p className="text-xs text-muted-foreground">
-              {availableQuantity > 0
-                ? 'Se actualiza al registrar compras al proveedor.'
-                : 'Valor referencial; el costo real se actualizará al registrar una compra.'}
+              {purchasePriceEditable
+                ? 'Valor referencial; el costo promedio se actualizará al registrar compras.'
+                : 'El costo promedio se actualiza al registrar compras al proveedor.'}
             </p>
           </div>
 
@@ -109,17 +112,6 @@ export const ProductVariantCardUI = <T extends BaseProduct>({
                       className="pointer-events-auto"
                     />
                   </div> */}
-
-          <div className="space-y-2">
-            <InputField
-              label="Stock disponible"
-              type="number"
-              value={availableQuantity}
-              readOnly
-              className="text-muted-foreground shadow-none hover:shadow-none focus-visible:border-input focus-visible:ring-0"
-            />
-            <p className="text-xs text-muted-foreground">El inventario se ingresa al registrar compras al proveedor.</p>
-          </div>
 
           <div className="space-y-2">
             <Label asChild className="text-sm font-medium text-foreground">
@@ -202,6 +194,7 @@ export const ProductVariantCardUI = <T extends BaseProduct>({
             )}
           </div>
         </div>
+        {inventorySection}
       </CardContent>
     </Card>
   );

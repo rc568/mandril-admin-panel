@@ -2,6 +2,7 @@ import { useAttributes } from '@/hooks/query';
 import { useFormContext, useWatch } from 'react-hook-form';
 import type { CreateProductForm } from '../../interfaces/ui';
 import { ProductVariantCardUI } from '../common/product-variant-card-ui';
+import { ProductVariantInventorySection } from '../common/product-variant-inventory-section';
 
 interface Props {
   index: number;
@@ -28,7 +29,13 @@ export const ProductCreateVariantCard = ({ index, onDelete }: Props) => {
       form={form}
       index={index}
       variantError={variantError}
-      availableQuantity={0}
+      purchasePriceEditable={true}
+      inventorySection={
+        <ProductVariantInventorySection
+          availableQuantity={0}
+          description="El stock se ingresa al registrar compras al proveedor."
+        />
+      }
       watchPrice={watchPrice}
       watchPurchasePrice={watchPurchasePrice}
       onDelete={onDelete}

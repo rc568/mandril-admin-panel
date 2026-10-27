@@ -3,6 +3,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { useProductEditContext } from '../../hooks/use-product-edit-context';
 import type { EditProductForm } from '../../interfaces/ui';
 import { ProductVariantCardUI } from '../common/product-variant-card-ui';
+import { ProductEditInventorySection } from './product-edit-inventory-section';
 
 interface Props {
   index: number;
@@ -34,7 +35,10 @@ export const ProductEditVariantCard = ({ variantId, index, onDelete }: Props) =>
       variantError={variantError}
       index={index}
       code={variant?.code}
-      availableQuantity={variant?.availableQuantity ?? 0}
+      purchasePriceEditable={!variantId}
+      inventorySection={
+        <ProductEditInventorySection availableQuantity={variant?.availableQuantity ?? 0} variantId={variantId} />
+      }
       watchPrice={watchPrice}
       watchPurchasePrice={watchPurchasePrice}
       onDelete={onDelete}
