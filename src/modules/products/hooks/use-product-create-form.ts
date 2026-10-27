@@ -23,6 +23,13 @@ export const useProductCreateForm = () => {
 
     if (index >= 0) {
       attributesFA.remove(index);
+      variants.forEach((variant, variantIndex) => {
+        setValue(
+          `variants.${variantIndex}.attributes`,
+          variant.attributes?.filter((attribute) => attribute.attributeId !== attributeId) ?? [],
+          { shouldDirty: true, shouldValidate: true }
+        );
+      });
     } else {
       attributesFA.append({ attributeId: attributeId });
     }
