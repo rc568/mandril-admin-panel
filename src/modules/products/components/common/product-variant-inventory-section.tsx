@@ -9,16 +9,13 @@ interface Props {
 
 export const ProductVariantInventorySection = ({ availableQuantity, action, description }: Props) => {
   return (
-    <section className="space-y-3 border-t pt-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="space-y-1">
-          <h3 className="text-sm font-medium text-foreground">Inventario</h3>
-          <p className="text-xs text-muted-foreground">{description}</p>
-        </div>
-        {action}
+    <section className="space-y-2">
+      <div className="space-y-2">
+        <h3 className="text-base font-medium text-foreground">Inventario</h3>
+        <p className="text-xs text-muted-foreground">{description}</p>
       </div>
 
-      <div className="max-w-xs">
+      <div className="flex items-end justify-between">
         <InputField
           label="Stock disponible"
           type="number"
@@ -26,6 +23,7 @@ export const ProductVariantInventorySection = ({ availableQuantity, action, desc
           readOnly
           className="text-muted-foreground shadow-none hover:shadow-none focus-visible:border-input focus-visible:ring-0"
         />
+        {action}
       </div>
     </section>
   );

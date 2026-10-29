@@ -66,7 +66,7 @@ export const ProductVariantCardUI = <T extends BaseProduct>({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-x-4 gap-y-6">
           <div className="space-y-2">
             <InputField
               label={purchasePriceEditable ? 'Costo de referencia' : 'Costo de compra'}
@@ -127,8 +127,8 @@ export const ProductVariantCardUI = <T extends BaseProduct>({
                     <Input className="bg-background" />
                   </div> */}
 
-          <div className="space-y-1 min-h-36 row-start-2 col-span-full lg:col-start-3 lg:row-start-1 lg:col-span-2 lg:row-span-2">
-            <span className="text-sm font-medium text-foreground flex items-center gap-2">
+          <div className="space-y-2 min-h-36 row-start-2 col-span-full lg:col-start-3 lg:row-start-1 lg:col-span-2 lg:row-span-2">
+            <span className="text-base font-medium text-foreground flex items-center gap-2">
               Imágenes de productos
               <Info className="h-3 w-3 text-muted-foreground" />
             </span>
@@ -168,8 +168,8 @@ export const ProductVariantCardUI = <T extends BaseProduct>({
                     <Input value={'500'} onChange={() => {}} className="bg-background" />
                   </div> */}
 
-          <div className="col-span-4 row-start-4 border-t flex flex-col gap-2">
-            <span className="text-sm font-medium text-foreground pt-4">Atributos</span>
+          <div className="col-span-4 row-start-4 flex flex-col gap-2">
+            <span className="text-base font-medium text-foreground">Atributos</span>
             {attributesField.length > 0 ? (
               attributesField.map((attrField, indexField) => (
                 <div key={attrField.attributeId}>
@@ -190,11 +190,12 @@ export const ProductVariantCardUI = <T extends BaseProduct>({
                 </div>
               ))
             ) : (
-              <span className="text-sm text-muted-foreground">Sin atributos</span>
+              <span className="text-xs text-muted-foreground">Sin atributos</span>
             )}
           </div>
+
+          <div className="col-span-4 row-start-5 flex flex-col gap-2">{inventorySection}</div>
         </div>
-        {inventorySection}
       </CardContent>
     </Card>
   );
