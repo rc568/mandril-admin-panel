@@ -1,8 +1,9 @@
 import { z } from '@/lib/zod';
+import { nonNegativeInt32, smallIntPositive } from '@/lib/zod/zod-helpers';
 
 export const adjustInventorySchema = z.strictObject({
-  productVariantId: z.int().min(1).max(32767),
+  productVariantId: smallIntPositive(),
   bucket: z.enum(['AVAILABLE', 'QUARANTINE', 'DEFECTIVE']),
-  countedQuantity: z.int().min(0).max(2147483647),
+  countedQuantity: nonNegativeInt32(),
   reason: z.string().trim().min(1).max(1000)
 });
