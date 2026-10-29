@@ -1,15 +1,17 @@
 import { z } from '../../../lib/zod';
+import { smallIntPositive } from '../../../lib/zod/zod-helpers';
+import { messages } from '../constants/products.messages';
 
 const productAttributeSchema = z.array(
   z.object({
-    attributeId: z.int().min(1).max(32767)
+    attributeId: smallIntPositive()
   })
 );
 
 const variantAttributeValueMapSchema = z.array(
   z.object({
-    attributeId: z.int().min(1).max(32767),
-    valueId: z.int().min(1).max(32767)
+    attributeId: smallIntPositive(),
+    valueId: smallIntPositive()
   })
 );
 
@@ -25,10 +27,10 @@ export const baseProductSchema = z.object({
     .string()
     .min(3)
     .max(50)
-    .regex(/^[0-9a-z-]+$/, 'El slug solo puede contener letras minúsculas, números y guiones.'),
+    .regex(/^[0-9a-z-]+$/, messages.VALIDATION.SLUG_FORMAT),
   description: z.string().optional(),
-  categoryId: z.int().min(1).max(32767),
-  catalogId: z.int().min(1).max(32767),
+  categoryId: smallIntPositive(),
+  catalogId: smallIntPositive(),
   attributesId: productAttributeSchema.optional()
 });
 
@@ -44,7 +46,7 @@ export const createProductSchema = baseProductSchema
       issues.push({
         code: 'custom',
         input: value,
-        message: 'No puedes repetir atributos del producto.',
+        message: messages.VALIDATION.DUPLICATE_PRODUCT_ATTRIBUTES,
         path: ['attributesId']
       });
     }
@@ -54,7 +56,7 @@ export const createProductSchema = baseProductSchema
         issues.push({
           code: 'custom',
           input: value,
-          message: 'Selecciona atributos para registrar más de una variante.',
+          message: messages.VALIDATION.ATTRIBUTES_REQUIRED_FOR_MULTIPLE_VARIANTS,
           path: ['attributesId']
         });
       }
@@ -65,7 +67,7 @@ export const createProductSchema = baseProductSchema
       issues.push({
         code: 'custom',
         input: value,
-        message: 'Un producto con atributos debe tener al menos dos variantes.',
+        message: messages.VALIDATION.MINIMUM_VARIANTS_WITH_ATTRIBUTES,
         path: ['attributesId']
       });
     }
@@ -85,7 +87,7 @@ export const createProductSchema = baseProductSchema
         issues.push({
           code: 'custom',
           input: value,
-          message: 'Completa un valor para cada atributo seleccionado en todas las variantes.',
+          message: messages.VALIDATION.ALL_VARIANT_ATTRIBUTES_REQUIRED,
           path: ['attributesId']
         });
         return;
@@ -100,7 +102,7 @@ export const createProductSchema = baseProductSchema
         issues.push({
           code: 'custom',
           input: value,
-          message: 'No puedes crear dos variantes con la misma combinación de atributos.',
+          message: messages.VALIDATION.DUPLICATE_VARIANT_COMBINATION,
           path: ['attributesId']
         });
       }
@@ -116,7 +118,7 @@ export const editProductSchema = baseProductSchema
     variants: z
       .array(
         productVariantSchema.extend({
-          variantId: z.int().min(1).max(32767).optional(),
+          variantId: smallIntPositive().optional(),
           isActive: z.boolean()
         })
       )
@@ -130,7 +132,7 @@ export const editProductSchema = baseProductSchema
       ctx.issues.push({
         code: 'custom',
         input: ctx.value,
-        message: 'No puedes repetir atributos del producto.',
+        message: messages.VALIDATION.DUPLICATE_PRODUCT_ATTRIBUTES,
         path: ['attributesId']
       });
     }
@@ -149,8 +151,7 @@ export const editProductSchema = baseProductSchema
             ctx.issues.push({
               code: 'custom',
               input: ctx.value,
-              message: 'Los atributos de la variante no son consistentes o están duplicados.',
-              //   message: errorMessages.product.variantAttributesNotConsistent,
+              message: messages.VALIDATION.INCONSISTENT_VARIANT_ATTRIBUTES,
               path: ['variants', 'attributes']
             });
           }
@@ -163,8 +164,7 @@ export const editProductSchema = baseProductSchema
         ctx.issues.push({
           code: 'custom',
           input: ctx.value,
-          message: 'Existen variantes duplicadas en la petición.',
-          //   message: errorMessages.product.duplicatedVariants,
+          message: messages.VALIDATION.DUPLICATE_VARIANTS,
           path: ['variants']
         });
       }
@@ -177,7 +177,7 @@ export const editProductSchema = baseProductSchema
           ctx.issues.push({
             code: 'custom',
             input: ctx.value,
-            message: 'Selecciona atributos para registrar más de una variante.',
+            message: messages.VALIDATION.ATTRIBUTES_REQUIRED_FOR_MULTIPLE_VARIANTS,
             path: ['attributesId']
           });
         }
@@ -188,7 +188,7 @@ export const editProductSchema = baseProductSchema
         ctx.issues.push({
           code: 'custom',
           input: ctx.value,
-          message: 'Un producto con atributos debe tener al menos dos variantes.',
+          message: messages.VALIDATION.MINIMUM_VARIANTS_WITH_ATTRIBUTES,
           path: ['attributesId']
         });
       }
@@ -208,7 +208,7 @@ export const editProductSchema = baseProductSchema
           ctx.issues.push({
             code: 'custom',
             input: ctx.value,
-            message: 'Completa un valor para cada atributo seleccionado en todas las variantes.',
+            message: messages.VALIDATION.ALL_VARIANT_ATTRIBUTES_REQUIRED,
             path: ['attributesId']
           });
           return;
@@ -223,7 +223,7 @@ export const editProductSchema = baseProductSchema
           ctx.issues.push({
             code: 'custom',
             input: ctx.value,
-            message: 'No puedes crear dos variantes con la misma combinación de atributos.',
+            message: messages.VALIDATION.DUPLICATE_VARIANT_COMBINATION,
             path: ['attributesId']
           });
         }

@@ -1,5 +1,6 @@
 import { z } from '@/lib/zod';
 import { baseStringSchema, optionalString } from '@/lib/zod/zod-helpers';
+import { messages } from '../constants/order.messages';
 import {
   CLIENT_DOCUMENT_TYPE_KEYS,
   INVOICE_CODE_BOLETA_REGEX,
@@ -64,7 +65,7 @@ export const createOrderSchema = baseOrderSchema.and(invoiceSchema).check(({ iss
       issues.push({
         code: 'custom',
         input: value.client.documentNumber,
-        message: 'Debe definirse el número de documento.',
+        message: messages.VALIDATION.CLIENT_DOCUMENT_NUMBER_REQUIRED,
         path: ['client', 'documentNumber']
       });
     }
@@ -75,7 +76,7 @@ export const createOrderSchema = baseOrderSchema.and(invoiceSchema).check(({ iss
       issues.push({
         code: 'custom',
         input: value.client.documentNumber,
-        message: 'No debe definirse un número de documento para esta opción.',
+        message: messages.VALIDATION.CLIENT_DOCUMENT_NUMBER_NOT_ALLOWED,
         path: ['client', 'documentNumber']
       });
     }
