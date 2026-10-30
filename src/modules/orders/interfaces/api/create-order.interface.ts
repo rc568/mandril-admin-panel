@@ -1,3 +1,3 @@
 import type { Order } from './order.interface';
 
-export type CreateOrder = Order;
+export type CreateOrderResponse = Order;
