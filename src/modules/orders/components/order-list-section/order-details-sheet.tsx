@@ -70,33 +70,41 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Datos de facturación</h2>
-            <div className="rounded-lg border bg-muted/30 p-4">
-              <dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
-                <div>
-                  <dt className="text-xs text-muted-foreground">Tipo de documento</dt>
-                  <dd className="text-foreground">{CLIENT_DOCUMENT_TYPE_CONFIG[order.client.documentType].label}</dd>
+          {order.billing.length > 0 && (
+            <div className="space-y-2">
+              <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Facturación</h2>
+              {order.billing.map((billing) => (
+                <div className="rounded-lg border bg-muted/30 p-4">
+                  <dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
+                    <div>
+                      <dt className="text-xs text-muted-foreground">Tipo de documento</dt>
+                      <dd className="text-foreground">
+                        {CLIENT_DOCUMENT_TYPE_CONFIG[billing.billingDocumentNumberType].label}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs text-muted-foreground">Número de documento</dt>
+                      <dd className="text-foreground">{billing.billingDocumentNumber ?? NO_INFO}</dd>
+                    </div>
+                    <div className="col-span-2">
+                      <dt className="text-xs text-muted-foreground">Razón Social</dt>
+                      <dd className="text-foreground">{billing.billingName ?? NO_INFO}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs text-muted-foreground">Tipo de comprobante</dt>
+                      <dd className="truncate text-foreground">
+                        {INVOICE_TYPE_CONFIG[billing.billingReceiptType].label}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs text-muted-foreground">Comprobante</dt>
+                      <dd className="truncate text-foreground">{billing.code ?? NO_INFO}</dd>
+                    </div>
+                  </dl>
                 </div>
-                <div>
-                  <dt className="text-xs text-muted-foreground">Número de documento</dt>
-                  <dd className="text-foreground">{order.client.documentNumber ?? NO_INFO}</dd>
-                </div>
-                <div className="col-span-2">
-                  <dt className="text-xs text-muted-foreground">Razón Social</dt>
-                  <dd className="text-foreground">{order.client.bussinessName ?? NO_INFO}</dd>
-                </div>
-                <div>
-                  <dt className="text-xs text-muted-foreground">Tipo de comprobante</dt>
-                  <dd className="truncate text-foreground">{INVOICE_TYPE_CONFIG[order.invoiceType].label}</dd>
-                </div>
-                <div>
-                  <dt className="text-xs text-muted-foreground">Comprobante</dt>
-                  <dd className="truncate text-foreground">{order.invoiceCode ?? NO_INFO}</dd>
-                </div>
-              </dl>
+              ))}
             </div>
-          </div>
+          )}
 
           <div className="space-y-2">
             <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">

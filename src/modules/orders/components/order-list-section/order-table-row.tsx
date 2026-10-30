@@ -1,7 +1,12 @@
 import { TableCell, TableRow } from '@/components/ui/table';
 import { formatCurrency } from '@/lib/currency';
 import { formatDate } from '@/lib/date-utils';
-import { DEFAULT_BADGE_CLASSNAME, ORDER_STATUS_CONFIG, SALES_CHANNEL_CONFIG } from '../../constants/order.constants';
+import {
+  DEFAULT_BADGE_CLASSNAME,
+  NO_INFO,
+  ORDER_STATUS_CONFIG,
+  SALES_CHANNEL_CONFIG
+} from '../../constants/order.constants';
 import type { OrderMapped } from '../../interfaces/ui';
 import { BaseBadge } from '../base-badge';
 
@@ -11,26 +16,28 @@ interface Props {
 }
 
 export const OrderTableRow = ({ order, onRowClick }: Props) => {
+  const { billing, client } = order;
+
   return (
     <TableRow key={order.id} onClick={() => onRowClick(order)} className="cursor-pointer">
       <TableCell>
-        {order.invoiceType === 'SIN COMPROBANTE' ? (
-          <div className="text-xs text-muted-foreground">SIN COMPROBANTE</div>
-        ) : (
+        {billing.length > 1 ? (
+          <div className="text-xs">Existe más de una factura</div>
+        ) : billing.length === 1 ? (
           <>
-            <div className="font-medium text-foreground">{order.invoiceCode}</div>
+            <div className="font-medium text-foreground">{billing[0].code}</div>
             <div className="text-xs text-muted-foreground">
-              {order.client.documentType} {order.client.documentNumber}
+              {billing[0].billingDocumentNumberType} {billing[0].billingDocumentNumber}
             </div>
           </>
+        ) : (
+          <div className="text-xs text-muted-foreground">Sin facturación</div>
         )}
       </TableCell>
       <TableCell>
         <div className="text-xs text-muted-foreground">
-          <span className="font-medium text-sm text-foreground block">
-            {order.client.bussinessName || 'Sin razón social'}
-          </span>
-          <span>Contacto: {order.client.contactName || 'Sin información'}</span>
+          <span className="block">Contacto: {client.contactName || NO_INFO}</span>
+          <span className="block">Celular: {client.phoneNumber1 || NO_INFO}</span>
         </div>
       </TableCell>
       <TableCell>

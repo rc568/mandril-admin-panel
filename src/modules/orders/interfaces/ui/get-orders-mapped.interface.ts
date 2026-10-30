@@ -1,6 +1,6 @@
-import type { GetOrdersApiResponse, Order, OrderProduct } from '../api';
+import type { GetOrdersApiResponse, Order, OrderProductResponse } from '../api';
 
-interface OrderProductMapped extends OrderProduct {
+interface OrderProductMapped extends OrderProductResponse {
   subTotal: string;
 }
 
