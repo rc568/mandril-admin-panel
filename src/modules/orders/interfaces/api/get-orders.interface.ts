@@ -25,3 +25,16 @@ export interface GetOrdersQueryParams {
   maxDate?: Date;
   sortBy?: string;
 }
+
+// export interface GetOrdersQueryParams {
+//   page?: number;
+//   limit?: number;
+//   search?: string;
+//   channel?: string;
+//   status?: string;
+//   billingStatus?: string;
+//   receiptType?: string;
+//   minDate?: Date;
+//   maxDate?: Date;
+//   sortBy?: string;
+// }
