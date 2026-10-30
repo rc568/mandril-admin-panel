@@ -1,4 +1,4 @@
-import type { DocumentType, InvoiceType, OrderStatus } from '../interfaces/api';
+import type { BillingStatus, DocumentType, InvoiceType, OrderStatus } from '../interfaces/api';
 
 export const NO_INFO = 'Sin información';
 export const ALL_ORDER_STATUS = 'ALL';
@@ -40,6 +40,13 @@ export const INVOICE_TYPES_ARRAY = Object.entries(INVOICE_TYPE_CONFIG).map(([key
   key,
   label: value.label
 }));
+
+export const BILLING_STATUS_CONFIG = {
+  PENDING: { label: 'Pendiente' },
+  ISSUED: { label: 'Emitido' },
+  VOIDED: { label: 'Anulado' }
+} as const satisfies Record<BillingStatus, { label: string }>;
+export const BILLING_STATUS = Object.keys(BILLING_STATUS_CONFIG) as BillingStatus[];
 
 export const CLIENT_DOCUMENT_TYPE_CONFIG: Record<DocumentType, { label: string }> = {
   'SIN DOCUMENTO': { label: 'Sin documento' },

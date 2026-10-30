@@ -42,7 +42,8 @@ export const OrderListSection = ({
           urlFilters={{
             status: filters.status,
             channel: filters.channel,
-            invoiceType: filters.invoiceType,
+            billingStatus: filters.billingStatus,
+            receiptType: filters.receiptType,
             startDate: filters.startDate,
             endDate: filters.endDate,
             search: filters.search

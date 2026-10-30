@@ -1,8 +1,8 @@
 import { formatShortDate } from '@/lib/date-utils';
 import type { SalesChannel } from '@/services/sales-channel/interfaces/sales-channel.interface';
 import type { LocalOrderFilters } from '../components/order-list-section/order-list-filters';
-import { INVOICE_TYPE_CONFIG, ORDER_STATUS_CONFIG } from '../constants/order.constants';
-import { isInvoiceType, isOrderStatus } from './type-guards.utils';
+import { BILLING_STATUS_CONFIG, INVOICE_TYPE_CONFIG, ORDER_STATUS_CONFIG } from '../constants/order.constants';
+import { isBillingStatus, isInvoiceType, isOrderStatus } from './type-guards.utils';
 
 export const getFilterDisplayValue = (
   key: keyof LocalOrderFilters,
@@ -18,14 +18,17 @@ export const getFilterDisplayValue = (
 
   switch (key) {
     case 'status':
-      return isOrderStatus(value) ? ORDER_STATUS_CONFIG[value].label : value;
+      return isOrderStatus(value) ? `Orden ${ORDER_STATUS_CONFIG[value].label.toLowerCase()}` : value;
+
+    case 'billingStatus':
+      return isBillingStatus(value) ? `Comprobante ${BILLING_STATUS_CONFIG[value].label.toLowerCase()}` : value;
 
     case 'channel': {
       const channelName = salesChannel?.find((sc) => sc.id.toString() === value);
       return channelName?.channel ?? 'Canal de venta no válido.';
     }
 
-    case 'invoiceType':
+    case 'receiptType':
       return isInvoiceType(value) ? INVOICE_TYPE_CONFIG[value].label : value;
 
     default:
