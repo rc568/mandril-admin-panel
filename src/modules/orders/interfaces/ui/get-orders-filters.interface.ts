@@ -4,7 +4,8 @@ export interface GetOrdersFilters {
   search?: string;
   channel?: string;
   status?: string;
-  invoiceType?: string;
+  billingStatus?: string;
+  receiptType?: string;
   startDate?: Date;
   endDate?: Date;
   sortBy?: string;

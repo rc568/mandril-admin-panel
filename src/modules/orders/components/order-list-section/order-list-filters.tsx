@@ -7,7 +7,13 @@ import { formatLongDate } from '@/lib/date-utils';
 import { cn } from '@/lib/utils';
 import { CalendarIcon, Filter, X } from 'lucide-react';
 import { useState } from 'react';
-import { INVOICE_TYPE_CONFIG, INVOICE_TYPE_KEYS, ORDER_STATUS_OPTIONS_ARRAY } from '../../constants/order.constants';
+import {
+  BILLING_STATUS,
+  BILLING_STATUS_CONFIG,
+  INVOICE_TYPE_CONFIG,
+  INVOICE_TYPE_KEYS,
+  ORDER_STATUS_OPTIONS_ARRAY
+} from '../../constants/order.constants';
 
 import { AsyncSelectField, SelectField } from '@/components/common/form';
 import { useSalesChannel } from '@/hooks/query/sales-channel';
@@ -177,11 +183,21 @@ export const OrderListFilters = ({ urlFilters = {}, applyFilters }: Props) => {
 
             <SelectField
               label="Tipo de comprobante"
-              value={draftFilters.invoiceType ?? ''}
-              onChange={(value) => updateLocalFilters({ invoiceType: value })}
+              value={draftFilters.receiptType ?? ''}
+              onChange={(value) => updateLocalFilters({ receiptType: value })}
               options={INVOICE_TYPE_KEYS.map((invoice) => ({
                 id: invoice,
                 label: INVOICE_TYPE_CONFIG[invoice].label
+              }))}
+            />
+
+            <SelectField
+              label="Estado de facturación"
+              value={draftFilters.billingStatus ?? ''}
+              onChange={(value) => updateLocalFilters({ billingStatus: value })}
+              options={BILLING_STATUS.map((billingStatus) => ({
+                id: billingStatus,
+                label: BILLING_STATUS_CONFIG[billingStatus].label
               }))}
             />
 

@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router';
 import { ORDER_SORT_BY_ARRAY } from '../constants/order.constants';
 import type { GetOrdersFilters } from '../interfaces/ui';
-import { isInvoiceType, isOrderStatus } from '../utils/type-guards.utils';
+import { isBillingStatus, isInvoiceType, isOrderStatus } from '../utils/type-guards.utils';
 
 interface UseTableFiltersConfig {
   defaultPage?: number;
@@ -19,7 +19,8 @@ export const useOrderParams = (config: UseTableFiltersConfig = {}) => {
   const querySearch = searchParams.get('search');
   const queryChannel = searchParams.get('channel');
   const queryStatus = searchParams.get('status');
-  const queryInvoiceType = searchParams.get('invoiceType');
+  const queryBillingStatus = searchParams.get('billingStatus');
+  const queryReceiptType = searchParams.get('receiptType');
   const queryStartDate = searchParams.get('startDate');
   const queryEndDate = searchParams.get('endDate');
   const querySortBy = searchParams.get('sortBy');
@@ -33,7 +34,8 @@ export const useOrderParams = (config: UseTableFiltersConfig = {}) => {
   const search = querySearch && querySearch.trim().length !== 0 ? querySearch : undefined;
   const channel = queryChannel && !Number.isNaN(Number(queryChannel)) ? queryChannel : undefined;
   const status = queryStatus && isOrderStatus(queryStatus) ? queryStatus : undefined;
-  const invoiceType = queryInvoiceType && isInvoiceType(queryInvoiceType) ? queryInvoiceType : undefined;
+  const billingStatus = queryBillingStatus && isBillingStatus(queryBillingStatus) ? queryBillingStatus : undefined;
+  const receiptType = queryReceiptType && isInvoiceType(queryReceiptType) ? queryReceiptType : undefined;
   const startDate = queryStartDate ? new Date(queryStartDate) : undefined;
   const endDate = queryEndDate ? new Date(queryEndDate) : undefined;
   const sortBy = querySortBy && ORDER_SORT_BY_ARRAY.includes(querySortBy) ? querySortBy : undefined;
@@ -44,7 +46,8 @@ export const useOrderParams = (config: UseTableFiltersConfig = {}) => {
     search,
     channel,
     status,
-    invoiceType,
+    billingStatus,
+    receiptType,
     startDate,
     endDate,
     sortBy
@@ -97,7 +100,8 @@ export const useOrderParams = (config: UseTableFiltersConfig = {}) => {
         newFilters.startDate === filters.startDate &&
         newFilters.endDate === filters.endDate &&
         newFilters.channel === filters.channel &&
-        newFilters.invoiceType === filters.invoiceType &&
+        newFilters.receiptType === filters.receiptType &&
+        newFilters.billingStatus === filters.billingStatus &&
         newFilters.sortBy === filters.sortBy &&
         newFilters.search === filters.search
       ) {

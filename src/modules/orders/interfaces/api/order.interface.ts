@@ -1,7 +1,7 @@
 export type DocumentType = 'SIN DOCUMENTO' | 'CARNE DE EXTRANJERIA' | 'PASAPORTE' | 'DNI' | 'RUC' | 'OTRO';
 type ClientDocumentType = 'CARNE DE EXTRANJERIA' | 'PASAPORTE' | 'DNI' | 'OTRO';
 
-type BillingStatus = 'PENDING' | 'ISSUED' | 'VOIDED';
+export type BillingStatus = 'PENDING' | 'ISSUED' | 'VOIDED';
 
 export type InvoiceType = 'FACTURA' | 'BOLETA' | 'SIN COMPROBANTE';
 export type OrderStatus = 'PENDING' | 'PAID' | 'COMPLETED' | 'CANCELLED';
