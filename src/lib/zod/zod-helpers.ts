@@ -1,7 +1,7 @@
 import { z } from '.';
 
-export const optionalString = (schema: z.ZodType) =>
-  z.preprocess((val) => (val === '' ? undefined : val), schema.optional());
+export const emptyToUndefined = <T extends z.ZodType>(schema: T) =>
+  z.preprocess((val) => (val === '' ? undefined : val), schema);
 
 export const baseStringSchema = z.string().trim().min(1);
 

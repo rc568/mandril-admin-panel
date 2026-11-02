@@ -1,84 +1,79 @@
 import { z } from '@/lib/zod';
-import { baseStringSchema, optionalString } from '@/lib/zod/zod-helpers';
+import { baseStringSchema, emptyToUndefined, smallIntPositive } from '@/lib/zod/zod-helpers';
+import { CLIENT_ONLY_DOCUMENT_TYPE_KEYS, ORDER_STATUS } from '../constants/order.constants';
 import { messages } from '../constants/order.messages';
-import {
-  CLIENT_DOCUMENT_TYPE_KEYS,
-  INVOICE_CODE_BOLETA_REGEX,
-  INVOICE_CODE_FACTURA_REGEX,
-  ORDER_STATUS,
-  RUC_REGEX
-} from '../constants/order.constants';
 
-const boletaDocumentTypes = CLIENT_DOCUMENT_TYPE_KEYS.filter((type) => type !== 'RUC');
+const ORDER_CREATE_STATUSES = ORDER_STATUS.filter((status) => status !== 'CANCELLED');
+const DEFAULT_ORDER_TYPE = 'SALE';
+const DEFAULT_ORDER_PRODUCT_TYPE = 'SALE';
 
 export const orderProductSchema = z.object({
-  variantId: z.int(),
+  variantId: smallIntPositive(),
   price: z.number().min(0),
-  quantity: z.number().int().min(1)
+  quantity: z.number().int().min(1),
+  type: z.literal(DEFAULT_ORDER_PRODUCT_TYPE).default(DEFAULT_ORDER_PRODUCT_TYPE)
 });
 
-const baseClientSchema = z.object({
-  contactName: optionalString(baseStringSchema.max(255)),
-  email: optionalString(z.email().max(255)),
-  phoneNumber1: optionalString(baseStringSchema.max(25)),
-  phoneNumber2: optionalString(baseStringSchema.max(25))
-});
-
-const baseOrderSchema = z.object({
-  salesChannelId: z.int().positive(),
-  status: z.enum(ORDER_STATUS).default('PENDING'),
-  observation: optionalString(baseStringSchema),
-  products: z.array(orderProductSchema).nonempty(),
-  client: baseClientSchema
-});
-
-export const invoiceSchema = z.discriminatedUnion('invoiceType', [
-  z.object({
-    invoiceType: z.literal('SIN COMPROBANTE'),
-    client: z.object({
-      documentType: z.literal('SIN DOCUMENTO')
-    })
-  }),
-  z.object({
-    invoiceType: z.literal('FACTURA'),
-    invoiceCode: z.string().regex(INVOICE_CODE_FACTURA_REGEX),
-    client: z.object({
-      documentType: z.literal('RUC'),
-      documentNumber: z.string().regex(RUC_REGEX),
-      bussinessName: baseStringSchema.max(255).toUpperCase()
-    })
-  }),
-  z.object({
-    invoiceType: z.literal('BOLETA'),
-    invoiceCode: z.string().regex(INVOICE_CODE_BOLETA_REGEX),
-    client: z.object({
-      documentType: z.enum(boletaDocumentTypes),
-      documentNumber: optionalString(baseStringSchema.max(25).toUpperCase()),
-      bussinessName: baseStringSchema.max(255).toUpperCase()
-    })
+export const clientSchema = z
+  .object({
+    contactName: emptyToUndefined(baseStringSchema.max(255).optional()),
+    email: emptyToUndefined(z.email().max(255).optional()),
+    phoneNumber1: emptyToUndefined(
+      z
+        .string()
+        .trim()
+        .max(16)
+        .regex(/^\+[1-9][0-9]{0,14}$/, messages.VALIDATION.PHONE_NUMBER_INVALID)
+        .optional()
+    ),
+    phoneNumber2: emptyToUndefined(
+      z
+        .string()
+        .trim()
+        .max(16)
+        .regex(/^\+[1-9][0-9]{0,14}$/, messages.VALIDATION.PHONE_NUMBER_INVALID)
+        .optional()
+    ),
+    documentNumberType: z.enum(CLIENT_ONLY_DOCUMENT_TYPE_KEYS).optional(),
+    documentNumber: emptyToUndefined(baseStringSchema.max(25).toUpperCase().optional())
   })
-]);
-
-export const createOrderSchema = baseOrderSchema.and(invoiceSchema).check(({ issues, value }) => {
-  if (value.invoiceType === 'BOLETA' && value.client.documentType !== 'SIN DOCUMENTO') {
-    if (!value.client.documentNumber) {
+  .check(({ value, issues }) => {
+    if (value.documentNumberType && !value.documentNumber) {
       issues.push({
         code: 'custom',
-        input: value.client.documentNumber,
+        input: value.documentNumber,
         message: messages.VALIDATION.CLIENT_DOCUMENT_NUMBER_REQUIRED,
-        path: ['client', 'documentNumber']
+        path: ['documentNumber']
       });
     }
-  }
 
-  if (value.invoiceType === 'BOLETA' && value.client.documentType === 'SIN DOCUMENTO') {
-    if (value.client.documentNumber) {
+    if (value.documentNumber && !value.documentNumberType) {
       issues.push({
         code: 'custom',
-        input: value.client.documentNumber,
-        message: messages.VALIDATION.CLIENT_DOCUMENT_NUMBER_NOT_ALLOWED,
-        path: ['client', 'documentNumber']
+        input: value.documentNumberType,
+        message: messages.VALIDATION.CLIENT_DOCUMENT_TYPE_REQUIRED,
+        path: ['documentNumberType']
       });
     }
-  }
-});
+  });
+
+export const createOrderSchema = z
+  .object({
+    type: z.literal(DEFAULT_ORDER_TYPE).default(DEFAULT_ORDER_TYPE),
+    salesChannelId: smallIntPositive(),
+    status: z.enum(ORDER_CREATE_STATUSES),
+    observation: emptyToUndefined(baseStringSchema.optional()),
+    products: z.array(orderProductSchema).nonempty(),
+    client: clientSchema
+  })
+  .check(({ value, issues }) => {
+    const variantIds = value.products.map((product) => product.variantId);
+    if (new Set(variantIds).size !== variantIds.length) {
+      issues.push({
+        code: 'custom',
+        input: value.products,
+        message: messages.VALIDATION.DUPLICATE_PRODUCT,
+        path: ['products']
+      });
+    }
+  });

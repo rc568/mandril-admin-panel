@@ -47,7 +47,7 @@ export const ExistingClientsSearchBar = ({ setClientData }: Props) => {
         onSearch={onSearch}
         onBlur={() => setShowClientList(false)}
         onFocus={() => setShowClientList(true)}
-        placeholder="Búsqueda por RUC, Razón Social, Nombre del cliente ..."
+        placeholder="Búsqueda por documento, nombre o contacto..."
       />
 
       {showClientList && (
@@ -74,15 +74,18 @@ export const ExistingClientsSearchBar = ({ setClientData }: Props) => {
                   >
                     <div className="flex justify-between items-center">
                       <div className="flex flex-col items-start text-sm gap-y-1">
-                        <span>{client.bussinessName}</span>
+                        <span>{client.contactName ?? 'Cliente registrado'}</span>
+                        {client.documentNumberType && client.documentNumber && (
+                          <span className="text-muted-foreground">
+                            {`${client.documentNumberType}: ${client.documentNumber}`}
+                          </span>
+                        )}
                         <span className="text-muted-foreground">
-                          {client.documentType === 'SIN DOCUMENTO'
-                            ? 'Sin documento'
-                            : `${client.documentType}: ${client.documentNumber}`}
+                          {client.phoneNumber1
+                            ? `Celular del contacto: ${client.phoneNumber1}`
+                            : 'Sin información de contacto'}
                         </span>
-                        <span className="text-muted-foreground">
-                          {client.contactName ? `Contacto: ${client.contactName}` : 'Sin información de contacto'}
-                        </span>
+                        {client.email && <span className="text-muted-foreground">{client.email}</span>}
                       </div>
                     </div>
                   </button>

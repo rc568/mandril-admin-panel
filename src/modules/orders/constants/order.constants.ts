@@ -57,6 +57,9 @@ export const CLIENT_DOCUMENT_TYPE_CONFIG: Record<DocumentType, { label: string }
   OTRO: { label: 'Otro' }
 };
 export const CLIENT_DOCUMENT_TYPE_KEYS = Object.keys(CLIENT_DOCUMENT_TYPE_CONFIG) as DocumentType[];
+export const CLIENT_ONLY_DOCUMENT_TYPE_KEYS = CLIENT_DOCUMENT_TYPE_KEYS.filter(
+  (document) => document !== 'RUC' && document !== 'SIN DOCUMENTO'
+);
 
 export const ORDER_SORT_BY_OPTIONS = {
   total_sale_asc: 'Menor monto',

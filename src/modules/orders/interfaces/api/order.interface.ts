@@ -1,9 +1,10 @@
 export type DocumentType = 'SIN DOCUMENTO' | 'CARNE DE EXTRANJERIA' | 'PASAPORTE' | 'DNI' | 'RUC' | 'OTRO';
-type ClientDocumentType = 'CARNE DE EXTRANJERIA' | 'PASAPORTE' | 'DNI' | 'OTRO';
+export type ClientDocumentType = 'CARNE DE EXTRANJERIA' | 'PASAPORTE' | 'DNI' | 'OTRO';
 
 export type BillingStatus = 'PENDING' | 'ISSUED' | 'VOIDED';
 
 export type InvoiceType = 'FACTURA' | 'BOLETA' | 'SIN COMPROBANTE';
+export type BillingReceiptType = Exclude<InvoiceType, 'SIN COMPROBANTE'>;
 export type OrderStatus = 'PENDING' | 'PAID' | 'COMPLETED' | 'CANCELLED';
 type OrderType = 'SALE' | 'EXCHANGE' | 'RETURN';
 type OrderProductType = 'SALE' | 'RETURN';
@@ -41,7 +42,7 @@ export interface OrderProductResponse {
   }[];
 }
 
-interface BillingResponse {
+export interface BillingResponse {
   id: string;
   code: string;
   amount: string;

@@ -11,12 +11,7 @@ export type OrderProductForm = z.infer<typeof orderProductSchema> & {
   variantAttributes: Pick<ProductVariant, 'variantAttributes'>['variantAttributes'];
 };
 
-export type CreateOrderForm = Omit<z.infer<typeof createOrderSchema>, 'invoiceCode' | 'products'> & {
-  invoiceCode?: string;
-  client: {
-    documentNumber?: string;
-    bussinessName?: string;
-  };
+export type CreateOrderForm = Omit<z.infer<typeof createOrderSchema>, 'products'> & {
   products: OrderProductForm[];
 };
 
