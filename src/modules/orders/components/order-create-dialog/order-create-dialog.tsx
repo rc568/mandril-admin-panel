@@ -1,4 +1,4 @@
-import { CheckboxField, InputField, SelectField, TextareaField } from '@/components/common/form';
+import { InputField, SelectField, TextareaField } from '@/components/common/form';
 import { FormErrorMessage } from '@/components/common/form-error-message';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -9,16 +9,14 @@ import { useOrderMutation } from '@/hooks/query/order';
 import { filterNullishFields } from '@/lib/react-hook-form/utils';
 import type { SearchClient } from '@/services/client/interfaces/client.interface';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
-import { ReceiptText, ShoppingCart, User } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { useController, useFieldArray, useForm, useWatch, type Path } from 'react-hook-form';
+import { ShoppingCart, User } from 'lucide-react';
+import { useEffect } from 'react';
+import { useController, useFieldArray, useForm, type Path } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import {
   CLIENT_DOCUMENT_TYPE_CONFIG,
-  CLIENT_DOCUMENT_TYPE_KEYS,
-  INVOICE_TYPE_CONFIG,
-  INVOICE_TYPE_KEYS,
+  CLIENT_ONLY_DOCUMENT_TYPE_KEYS,
   ORDER_STATUS_OPTIONS_ARRAY
 } from '../../constants/order.constants';
 import type { CreateOrderForm, CreateOrderPayload } from '../../interfaces/ui';
@@ -33,47 +31,40 @@ interface Props {
 }
 
 export const OrderCreateDialog = ({ open, onOpenChange }: Props) => {
-  const [hasInvoice, setHasInvoice] = useState(false);
   const navigate = useNavigate();
-
   const {
     register,
     control,
     formState: { errors },
     setValue,
     resetField,
-    handleSubmit
+    handleSubmit,
+    reset
   } = useForm<CreateOrderForm>({
     resolver: standardSchemaResolver(createOrderSchema),
     defaultValues: {
-      status: 'PENDING',
-      invoiceType: 'SIN COMPROBANTE',
-      client: { documentType: 'SIN DOCUMENTO' }
+      status: 'PENDING'
+      // client: {}
     }
   });
 
   const { fields: productFields, append, remove } = useFieldArray({ control, name: 'products' });
-
-  const { field: statusField } = useController({ name: 'status', control: control });
-  const { field: invoiceTypeField } = useController({ name: 'invoiceType', control: control });
-  const { field: documentType } = useController({ name: 'client.documentType', control: control });
-
-  const invoiceTypeWatch = useWatch({ control: control, name: 'invoiceType' });
-  const documentTypeWatch = useWatch({ control: control, name: 'client.documentType' });
-
+  const { field: statusField } = useController({ name: 'status', control });
+  const { field: documentTypeField } = useController({ name: 'client.documentNumberType', control });
   const { createOrder } = useOrderMutation();
 
-  const toggleInvoice = () => {
-    setHasInvoice((prev) => {
-      const newState = !prev;
-
-      if (!newState) {
-        resetField('invoiceType');
-        resetField('client.documentType');
-      }
-
-      return newState;
-    });
+  const setClientInfoToForm = (client: SearchClient) => {
+    setValue('client.contactName', client.contactName ?? '');
+    setValue('client.email', client.email ?? '');
+    setValue('client.phoneNumber1', client.phoneNumber1 ?? '');
+    setValue('client.phoneNumber2', client.phoneNumber2 ?? '');
+    if (client.documentNumberType && client.documentNumber) {
+      setValue('client.documentNumberType', client.documentNumberType);
+      setValue('client.documentNumber', client.documentNumber);
+    } else {
+      resetField('client.documentNumberType');
+      resetField('client.documentNumber');
+    }
   };
 
   const onSubmit = async (data: CreateOrderForm) => {
@@ -90,44 +81,17 @@ export const OrderCreateDialog = ({ open, onOpenChange }: Props) => {
 
     await createOrder.mutateAsync(payload, {
       onSuccess: () => {
+        reset();
         onOpenChange(false);
-        navigate(`/ventas`);
+        navigate('/ventas');
       }
     });
   };
 
-  const setClientInfoToForm = (client: SearchClient) => {
-    const { documentType } = client;
-
-    const contactName = client.contactName ?? '';
-    const email = client.email ?? '';
-    const phoneNumber1 = client.phoneNumber1 ?? '';
-
-    setValue('client.contactName', contactName);
-    setValue('client.email', email);
-    setValue('client.phoneNumber1', phoneNumber1);
-
-    setHasInvoice(() => {
-      const invoiceType = documentType === 'RUC' ? 'FACTURA' : 'BOLETA';
-
-      setValue('invoiceType', invoiceType);
-      setValue('client.documentType', client.documentType);
-      setValue('client.documentNumber', client.documentNumber);
-      setValue('client.bussinessName', client.bussinessName);
-
-      return true;
-    });
-  };
-
   useEffect(() => {
-    if (invoiceTypeWatch === 'FACTURA') {
-      setValue('client.documentType', 'RUC');
-    }
-
-    if (documentTypeWatch === 'SIN DOCUMENTO') {
-      resetField('client.documentNumber');
-    }
-  }, [invoiceTypeWatch, documentTypeWatch, setValue, resetField]);
+    if (documentTypeField.value) return;
+    resetField('client.documentNumber');
+  }, [documentTypeField.value, resetField]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -150,119 +114,87 @@ export const OrderCreateDialog = ({ open, onOpenChange }: Props) => {
                 label="Estado"
                 value={statusField.value}
                 onChange={statusField.onChange}
-                error={errors?.status?.message}
-                options={ORDER_STATUS_OPTIONS_ARRAY.map((s) => ({ id: s.key, label: s.label }))}
+                error={errors.status?.message}
+                options={ORDER_STATUS_OPTIONS_ARRAY.filter((status) => status.key !== 'CANCELLED').map((status) => ({
+                  id: status.key,
+                  label: status.label
+                }))}
               />
             </section>
 
             <Separator />
 
             <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 sm:col-span-2">
                 <User className="h-4 w-4 text-muted-foreground" />
                 <h3 className="text-sm font-semibold">Datos del cliente</h3>
               </div>
 
-              <div className=" sm:col-span-2">
+              <div className="sm:col-span-2">
                 <ExistingClientsSearchBar setClientData={setClientInfoToForm} />
               </div>
 
-              <div className="sm:col-span-2">
-                <InputField
-                  label={'Nombre de contacto'}
-                  {...register('client.contactName')}
-                  placeholder="Nombre completo"
-                  autoComplete="off"
-                  error={errors.client?.contactName?.message}
-                />
-              </div>
+              {errors.client?.message && <FormErrorMessage text={String(errors.client.message)} />}
 
               <InputField
-                label={'Celular'}
-                {...register('client.phoneNumber1')}
-                placeholder="+51 9XX XXX XXX"
+                label="Nombre de contacto"
+                {...register('client.contactName')}
+                placeholder="Nombre completo"
                 autoComplete="off"
-                error={errors.client?.phoneNumber1?.message}
+                error={errors.client?.contactName?.message}
               />
 
               <InputField
-                label={'Email'}
+                label="Email"
                 {...register('client.email')}
                 placeholder="ejemplo@correo.com"
                 autoComplete="off"
                 error={errors.client?.email?.message}
               />
-            </section>
 
-            <Separator />
+              <InputField
+                label="Celular"
+                {...register('client.phoneNumber1')}
+                placeholder="+51912345678"
+                autoComplete="off"
+                error={errors.client?.phoneNumber1?.message}
+              />
 
-            <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="flex items-center gap-2 justify-between col-span-2">
-                <div className="flex items-center gap-2">
-                  <ReceiptText className="h-4 w-4 text-muted-foreground" />
-                  <h3 className="text-sm font-semibold">Datos de facturación</h3>
-                </div>
-                <CheckboxField
-                  label="Cliente solicita comprobante"
-                  checked={hasInvoice}
-                  onCheckedChange={() => toggleInvoice()}
-                />
-              </div>
+              <InputField
+                label="Celular (adicional)"
+                {...register('client.phoneNumber2')}
+                placeholder="+51912345679"
+                autoComplete="off"
+                error={errors.client?.phoneNumber2?.message}
+              />
 
-              {hasInvoice ? (
-                <>
-                  <SelectField
-                    label="Tipo de comprobante"
-                    value={invoiceTypeField.value}
-                    onChange={invoiceTypeField.onChange}
-                    error={errors?.invoiceType?.message}
-                    options={INVOICE_TYPE_KEYS.filter((invoice) => invoice !== 'SIN COMPROBANTE').map((invoice) => ({
-                      id: invoice,
-                      label: INVOICE_TYPE_CONFIG[invoice].label
-                    }))}
-                  />
+              <SelectField
+                label="Tipo de documento del cliente"
+                value={documentTypeField.value ?? ''}
+                onChange={(value) => {
+                  documentTypeField.onChange(value === '__clear__' ? null : value);
+                }}
+                error={errors.client?.documentNumberType?.message}
+                options={[
+                  {
+                    id: '__clear__',
+                    label: 'Sin documento'
+                  },
+                  ...CLIENT_ONLY_DOCUMENT_TYPE_KEYS.map((documentType) => ({
+                    id: documentType,
+                    label: CLIENT_DOCUMENT_TYPE_CONFIG[documentType].label
+                  }))
+                ]}
+              />
 
-                  <InputField
-                    label={'Código de comprobante'}
-                    {...register('invoiceCode')}
-                    placeholder={invoiceTypeWatch === 'BOLETA' ? 'EB01-001' : 'E001-0001'}
-                    autoComplete="off"
-                    error={errors.invoiceCode?.message}
-                  />
-
-                  <SelectField
-                    label="Tipo de documento"
-                    value={documentType.value}
-                    onChange={documentType.onChange}
-                    error={errors?.client?.documentType?.message}
-                    options={CLIENT_DOCUMENT_TYPE_KEYS.filter((document) => {
-                      if (invoiceTypeWatch === 'BOLETA') return document !== 'RUC';
-                      if (invoiceTypeWatch === 'FACTURA') return document === 'RUC';
-                      return false;
-                    }).map((document) => ({ id: document, label: CLIENT_DOCUMENT_TYPE_CONFIG[document].label }))}
-                  />
-
-                  <InputField
-                    label={'Número de documento'}
-                    placeholder="12345678"
-                    {...register('client.documentNumber')}
-                    autoComplete="off"
-                    disabled={documentTypeWatch === 'SIN DOCUMENTO'}
-                    error={errors.client?.documentNumber?.message}
-                  />
-
-                  <InputField
-                    label={'Razón Social'}
-                    placeholder="EMPRESA S.A.C."
-                    className="uppercase"
-                    {...register('client.bussinessName')}
-                    autoComplete="off"
-                    error={errors.client?.bussinessName?.message}
-                  />
-                </>
-              ) : (
-                <span className="pl-2 text-sm text-muted-foreground">Esta venta se registra sin comprobante.</span>
-              )}
+              <InputField
+                label="Número de documento del cliente"
+                {...register('client.documentNumber')}
+                placeholder="Número de documento"
+                autoComplete="off"
+                disabled={!documentTypeField.value}
+                error={errors.client?.documentNumber?.message}
+              />
             </section>
 
             <Separator />
@@ -299,7 +231,9 @@ export const OrderCreateDialog = ({ open, onOpenChange }: Props) => {
             </section>
 
             <div className="text-right">
-              <Button type="submit">Agregar venta</Button>
+              <Button type="submit" disabled={createOrder.isPending}>
+                Agregar venta
+              </Button>
             </div>
           </div>
         </form>
