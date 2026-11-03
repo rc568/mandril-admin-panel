@@ -56,15 +56,35 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
               <dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
                 <div>
                   <dt className="text-xs text-muted-foreground">Nombre</dt>
-                  <dd className="text-foreground">{order.client.contactName ?? NO_INFO}</dd>
+                  {order.client.contactName ? (
+                    <dd className="text-foreground">{order.client.contactName}</dd>
+                  ) : (
+                    <dd className="italic text-muted-foreground">{NO_INFO}</dd>
+                  )}
                 </div>
                 <div>
-                  <dt className="text-xs text-muted-foreground">Email</dt>
-                  <dd className="truncate text-foreground">{order.client.email ?? NO_INFO}</dd>
+                  <dt className="text-xs text-muted-foreground">Celular</dt>
+                  {order.client.phoneNumber1 ? (
+                    <dd className="text-foreground">{order.client.phoneNumber1}</dd>
+                  ) : (
+                    <dd className="italic text-muted-foreground">{NO_INFO}</dd>
+                  )}
                 </div>
                 <div>
-                  <dt className="text-xs text-muted-foreground">Teléfono</dt>
-                  <dd className="text-foreground">{order.client.phoneNumber1 ?? NO_INFO}</dd>
+                  <dt className="text-xs text-muted-foreground">Tipo de documento</dt>
+                  {order.client.documentNumberType ? (
+                    <dd className="text-foreground">{order.client.documentNumberType}</dd>
+                  ) : (
+                    <dd className="italic text-muted-foreground">{NO_INFO}</dd>
+                  )}
+                </div>
+                <div>
+                  <dt className="text-xs text-muted-foreground">Número de documento</dt>
+                  {order.client.documentNumber ? (
+                    <dd className="text-foreground">{order.client.documentNumber}</dd>
+                  ) : (
+                    <dd className="italic text-muted-foreground">{NO_INFO}</dd>
+                  )}
                 </div>
               </dl>
             </div>
@@ -97,7 +117,7 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-xs text-muted-foreground">Comprobante</dt>
+                      <dt className="text-xs text-muted-foreground">Serie de comprobante</dt>
                       <dd className="truncate text-foreground">{billing.code ?? NO_INFO}</dd>
                     </div>
                   </dl>
