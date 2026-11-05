@@ -6,7 +6,7 @@ export type BillingStatus = 'PENDING' | 'ISSUED' | 'VOIDED';
 export type InvoiceType = 'FACTURA' | 'BOLETA' | 'SIN COMPROBANTE';
 export type BillingReceiptType = Exclude<InvoiceType, 'SIN COMPROBANTE'>;
 export type OrderStatus = 'PENDING' | 'PAID' | 'COMPLETED' | 'CANCELLED';
-type OrderType = 'SALE' | 'EXCHANGE' | 'RETURN';
+export type OrderType = 'SALE' | 'EXCHANGE' | 'RETURN';
 type OrderProductType = 'SALE' | 'RETURN';
 type ReturnCondition = 'AVAILABLE' | 'QUARANTINE' | 'DEFECTIVE';
 

@@ -27,14 +27,15 @@ export const OrderTable = ({ orders, onRowClick, children }: Props) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Comprobante</TableHead>
-              <TableHead>Razón Social / Contacto</TableHead>
+              <TableHead>Fecha</TableHead>
+              <TableHead>Cliente</TableHead>
+              <TableHead>Facturación</TableHead>
+              <TableHead>Tipo</TableHead>
               <TableHead>Canal</TableHead>
               <TableHead>Estado</TableHead>
               <TableHead>Productos</TableHead>
               <TableHead>Venta Total</TableHead>
-              <TableHead>Fecha</TableHead>
-              <TableHead>Creador por</TableHead>
+              <TableHead aria-label="Acciones"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
