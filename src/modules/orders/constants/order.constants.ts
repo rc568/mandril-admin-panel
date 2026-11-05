@@ -1,4 +1,4 @@
-import type { BillingStatus, DocumentType, InvoiceType, OrderStatus } from '../interfaces/api';
+import type { BillingStatus, DocumentType, InvoiceType, OrderStatus, OrderType } from '../interfaces/api';
 
 export const NO_INFO = 'Sin información';
 export const ALL_ORDER_STATUS = 'ALL';
@@ -19,6 +19,12 @@ export const ORDER_STATUS_OPTIONS_ARRAY = Object.entries(ORDER_STATUS_CONFIG).ma
 }));
 
 export const ORDER_STATUS_OPTIONS_WITH_ALL = [{ key: ALL_ORDER_STATUS, label: 'Todas' }, ...ORDER_STATUS_OPTIONS_ARRAY];
+
+export const ORDER_TYPE_CONFIG = {
+  SALE: { label: 'Venta', className: 'text-gray-700' },
+  RETURN: { label: 'Devolución', className: 'text-red-900' },
+  EXCHANGE: { label: 'Cambio', className: 'text-yellow-800' }
+} as const satisfies Record<OrderType, { label: string; className: string }>;
 
 export const SALES_CHANNEL_CONFIG: Record<string, { className: string }> = {
   WhatsApp: { className: 'bg-green-100 text-green-800' },
@@ -42,10 +48,10 @@ export const INVOICE_TYPES_ARRAY = Object.entries(INVOICE_TYPE_CONFIG).map(([key
 }));
 
 export const BILLING_STATUS_CONFIG = {
-  PENDING: { label: 'Pendiente' },
-  ISSUED: { label: 'Emitido' },
-  VOIDED: { label: 'Anulado' }
-} as const satisfies Record<BillingStatus, { label: string }>;
+  PENDING: { label: 'Pendiente', className: 'border-yellow-800 text-yellow-800' },
+  ISSUED: { label: 'Emitido', className: 'border-green-800 text-green-800' },
+  VOIDED: { label: 'Anulado', className: 'border-red-800 text-red-800' }
+} as const satisfies Record<BillingStatus, { label: string; className: string }>;
 export const BILLING_STATUS = Object.keys(BILLING_STATUS_CONFIG) as BillingStatus[];
 
 export const CLIENT_DOCUMENT_TYPE_CONFIG: Record<DocumentType, { label: string }> = {
