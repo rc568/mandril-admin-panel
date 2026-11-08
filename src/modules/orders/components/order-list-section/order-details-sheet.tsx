@@ -1,6 +1,8 @@
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { useOrderMutation } from '@/hooks/query/order';
 import { formatCurrency } from '@/lib/currency';
 import { formatDate } from '@/lib/date-utils';
 import { cn } from '@/lib/utils';
@@ -21,7 +23,13 @@ interface Props {
 }
 
 export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
+  const { updateOrder, cancelOrder, completeOrder } = useOrderMutation();
+
   if (!order) return;
+
+  const canUpdateStatus = order.type === 'SALE';
+  const canManageOrder = order.status === 'PENDING' || order.status === 'PAID';
+  const isMutationPending = updateOrder.isPending || cancelOrder.isPending || completeOrder.isPending;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -184,6 +192,56 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
               <div className="rounded-lg border bg-muted/30 p-4 text-sm">{order.observation}</div>
             ) : (
               <span className="text-sm italic text-muted-foreground">{NO_INFO}</span>
+            )}
+          </div>
+
+          <Separator />
+
+          <div className="space-y-2">
+            <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Actualizar Estado</h2>
+            {canManageOrder ? (
+              <div className="grid grid-cols-2 gap-2">
+                {canUpdateStatus && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    disabled={isMutationPending}
+                    onClick={() =>
+                      updateOrder.mutate({
+                        id: order.id,
+                        body: { status: order.status === 'PENDING' ? 'PAID' : 'PENDING' }
+                      })
+                    }
+                  >
+                    {order.status === 'PENDING' ? 'Marcar como pagada' : 'Volver a pendiente'}
+                  </Button>
+                )}
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full border-success/60 text-success/80 hover:text-success"
+                  disabled={isMutationPending}
+                  onClick={() => completeOrder.mutate({ id: order.id })}
+                >
+                  Completar
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full border-destructive/60 text-destructive/80 hover:text-destructive"
+                  disabled={isMutationPending}
+                  onClick={() => cancelOrder.mutate(order.id)}
+                >
+                  Cancelar
+                </Button>
+              </div>
+            ) : (
+              <p className="text-sm italic text-muted-foreground">
+                {order.status === 'CANCELLED'
+                  ? 'No es posible cambiar el estado de una orden cancelada.'
+                  : 'No es posible cambiar el estado de una orden completada.'}
+              </p>
             )}
           </div>
         </div>
