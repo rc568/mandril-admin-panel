@@ -7,8 +7,8 @@ export type InvoiceType = 'FACTURA' | 'BOLETA' | 'SIN COMPROBANTE';
 export type BillingReceiptType = Exclude<InvoiceType, 'SIN COMPROBANTE'>;
 export type OrderStatus = 'PENDING' | 'PAID' | 'COMPLETED' | 'CANCELLED';
 export type OrderType = 'SALE' | 'EXCHANGE' | 'RETURN';
-type OrderProductType = 'SALE' | 'RETURN';
-type ReturnCondition = 'AVAILABLE' | 'QUARANTINE' | 'DEFECTIVE';
+export type OrderProductType = 'SALE' | 'RETURN';
+export type ReturnCondition = 'AVAILABLE' | 'QUARANTINE' | 'DEFECTIVE';
 
 interface VariantAttribute {
   value: string;
