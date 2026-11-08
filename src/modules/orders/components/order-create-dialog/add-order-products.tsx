@@ -27,6 +27,7 @@ export const AddOrderProducts = ({ products, control, addProduct, deleteProduct,
   const onClick = (variant: SearchProductVariant) => {
     addProduct({
       ...variant,
+      type: 'SALE',
       quantity: 1,
       currentStock: variant.availableQuantity,
       price: parseFloat(variant.price),
