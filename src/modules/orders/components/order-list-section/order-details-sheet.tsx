@@ -40,8 +40,8 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-2xl overflow-y-auto">
-        <SheetHeader>
+      <SheetContent className="sm:max-w-2xl overflow-y-auto px-6">
+        <SheetHeader className="px-0">
           <SheetTitle>DETALLE DE ORDEN</SheetTitle>
           <SheetDescription asChild>
             <div className="text-right text-sm italic flex justify-between">
@@ -53,7 +53,7 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
             </div>
           </SheetDescription>
         </SheetHeader>
-        <div className="px-4 pb-8 space-y-4">
+        <div className="pb-8 space-y-4">
           <div className="space-y-2">
             <div className="rounded-lg border bg-muted/30 p-4">
               <dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
