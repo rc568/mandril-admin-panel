@@ -2,10 +2,12 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useOrderMutation } from '@/hooks/query/order';
 import { formatCurrency } from '@/lib/currency';
 import { formatDate } from '@/lib/date-utils';
 import { cn } from '@/lib/utils';
+import { Trash2 } from 'lucide-react';
 import {
   BILLING_STATUS_CONFIG,
   CLIENT_DOCUMENT_TYPE_CONFIG,
@@ -23,13 +25,18 @@ interface Props {
 }
 
 export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
-  const { updateOrder, cancelOrder, completeOrder } = useOrderMutation();
+  const { updateOrder, cancelOrder, completeOrder, softDeleteOrder } = useOrderMutation();
 
   if (!order) return;
 
   const canUpdateStatus = order.type === 'SALE';
   const canManageOrder = order.status === 'PENDING' || order.status === 'PAID';
-  const isMutationPending = updateOrder.isPending || cancelOrder.isPending || completeOrder.isPending;
+  const isMutationPending =
+    updateOrder.isPending || cancelOrder.isPending || completeOrder.isPending || softDeleteOrder.isPending;
+  const deleteOrderHint =
+    order.status === 'COMPLETED'
+      ? 'Solo se pueden eliminar órdenes canceladas.'
+      : 'Primero debes cancelar la orden para poder eliminarla.';
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -205,7 +212,7 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
                   <Button
                     type="button"
                     variant="outline"
-                    className="w-full"
+                    className="w-full h-auto whitespace-normal wrap-break-word py-2 text-center sm:px-4"
                     disabled={isMutationPending}
                     onClick={() =>
                       updateOrder.mutate({
@@ -220,7 +227,7 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
                 <Button
                   type="button"
                   variant="outline"
-                  className="w-full border-success/60 text-success/80 hover:text-success"
+                  className="h-auto w-full border-success/60 text-success/80 hover:text-success"
                   disabled={isMutationPending}
                   onClick={() => completeOrder.mutate({ id: order.id })}
                 >
@@ -229,7 +236,7 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
                 <Button
                   type="button"
                   variant="outline"
-                  className="w-full border-destructive/60 text-destructive/80 hover:text-destructive"
+                  className="h-auto w-full border-destructive/60 text-destructive/80 hover:text-destructive"
                   disabled={isMutationPending}
                   onClick={() => cancelOrder.mutate(order.id)}
                 >
@@ -242,6 +249,34 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
                   ? 'No es posible cambiar el estado de una orden cancelada.'
                   : 'No es posible cambiar el estado de una orden completada.'}
               </p>
+            )}
+          </div>
+
+          <Separator />
+          <div className="flex flex-col items-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="inline-flex" tabIndex={order.status === 'CANCELLED' ? undefined : 0}>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="text-destructive/80 hover:text-destructive"
+                    disabled={isMutationPending || order.status !== 'CANCELLED'}
+                    onClick={() => softDeleteOrder.mutate(order.id, { onSuccess: () => onOpenChange(false) })}
+                  >
+                    <Trash2 className="size-4" />
+                    Eliminar orden
+                  </Button>
+                </span>
+              </TooltipTrigger>
+              {order.status !== 'CANCELLED' && (
+                <TooltipContent side="top" variant="outline" size="sm" className="hidden sm:block">
+                  {deleteOrderHint}
+                </TooltipContent>
+              )}
+            </Tooltip>
+            {order.status !== 'CANCELLED' && (
+              <p className="px-4 text-center text-xs text-muted-foreground sm:hidden">{deleteOrderHint}</p>
             )}
           </div>
         </div>
