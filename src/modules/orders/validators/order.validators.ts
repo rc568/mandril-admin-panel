@@ -4,6 +4,7 @@ import { CLIENT_ONLY_DOCUMENT_TYPE_KEYS, ORDER_STATUS } from '../constants/order
 import { messages } from '../constants/order.messages';
 
 const ORDER_CREATE_STATUSES = ORDER_STATUS.filter((status) => status !== 'CANCELLED');
+const ORDER_UPDATE_STATUSES = ORDER_STATUS.filter((status) => status !== 'CANCELLED' && status !== 'COMPLETED');
 const DEFAULT_ORDER_TYPE = 'SALE';
 const DEFAULT_ORDER_PRODUCT_TYPE = 'SALE';
 
@@ -75,5 +76,27 @@ export const createOrderSchema = z
         message: messages.VALIDATION.DUPLICATE_PRODUCT,
         path: ['products']
       });
+    }
+  });
+
+export const updateOrderSchema = z
+  .object({
+    salesChannelId: smallIntPositive().optional(),
+    status: z.enum(ORDER_UPDATE_STATUSES).optional(),
+    observation: emptyToUndefined(baseStringSchema.optional()),
+    products: z.array(orderProductSchema).nonempty().optional(),
+    client: clientSchema.optional()
+  })
+  .check(({ value, issues }) => {
+    if (value.products) {
+      const variantIds = value.products.map((product) => product.variantId);
+      if (new Set(variantIds).size !== variantIds.length) {
+        issues.push({
+          code: 'custom',
+          input: value.products,
+          message: messages.VALIDATION.DUPLICATE_PRODUCT,
+          path: ['products']
+        });
+      }
     }
   });
