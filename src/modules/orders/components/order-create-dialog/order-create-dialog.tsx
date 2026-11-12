@@ -172,7 +172,7 @@ export const OrderCreateDialog = ({ open, onOpenChange }: Props) => {
                 label="Tipo de documento del cliente"
                 value={documentTypeField.value ?? ''}
                 onChange={(value) => {
-                  documentTypeField.onChange(value === '__clear__' ? null : value);
+                  documentTypeField.onChange(value === '__clear__' ? undefined : value);
                 }}
                 error={errors.client?.documentNumberType?.message}
                 options={[
