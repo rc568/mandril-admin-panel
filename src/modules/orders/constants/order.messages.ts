@@ -3,6 +3,7 @@ export const messages = {
   BILLING_CREATED: 'Comprobante registrado exitosamente.',
   ORDER_UPDATED: 'Venta actualizada exitosamente.',
   ORDER_NOT_MODIFIED: 'No se han realizado modificaciones en la venta.',
+  ORDER_FIELDS_CANNOT_BE_CLEARED: 'El servicio no permite borrar información existente de una orden.',
   VALIDATION: {
     CLIENT_DATA_REQUIRED: 'Ingresa al menos un dato del cliente.',
     CLIENT_DOCUMENT_NUMBER_REQUIRED: 'Debe definirse el número de documento.',
