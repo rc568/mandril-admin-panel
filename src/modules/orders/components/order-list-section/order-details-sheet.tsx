@@ -7,7 +7,8 @@ import { useOrderMutation } from '@/hooks/query/order';
 import { formatCurrency } from '@/lib/currency';
 import { formatDate } from '@/lib/date-utils';
 import { cn } from '@/lib/utils';
-import { Trash2 } from 'lucide-react';
+import { Edit, Trash2 } from 'lucide-react';
+import { useNavigate } from 'react-router';
 import {
   BILLING_STATUS_CONFIG,
   CLIENT_DOCUMENT_TYPE_CONFIG,
@@ -25,12 +26,14 @@ interface Props {
 }
 
 export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
+  const navigate = useNavigate();
   const { updateOrder, cancelOrder, completeOrder, softDeleteOrder } = useOrderMutation();
 
   if (!order) return;
 
   const canUpdateStatus = order.type === 'SALE';
   const canManageOrder = order.status === 'PENDING' || order.status === 'PAID';
+  const canUpdateOrder = canUpdateStatus && canManageOrder;
   const isMutationPending =
     updateOrder.isPending || cancelOrder.isPending || completeOrder.isPending || softDeleteOrder.isPending;
   const deleteOrderHint =
@@ -40,20 +43,42 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-2xl overflow-y-auto px-6">
-        <SheetHeader className="px-0">
+      <SheetContent className="sm:max-w-2xl overflow-y-auto">
+        <SheetHeader className="border-b px-6">
           <SheetTitle>DETALLE DE ORDEN</SheetTitle>
           <SheetDescription asChild>
-            <div className="text-right text-sm italic flex justify-between">
-              <span className="text-muted-foreground italic">{formatDate(order.createdAt)}</span>
-              <div className="text-muted-foreground">
-                <span>Creado por: </span>
-                <span className="truncate">{order.createdBy}</span>
+            <div>
+              <div className="text-right text-sm italic flex justify-between">
+                <span className="text-muted-foreground italic">{formatDate(order.createdAt)}</span>
+                <div className="text-muted-foreground">
+                  <span>Creado por: </span>
+                  <span className="truncate">{order.createdBy}</span>
+                </div>
+              </div>
+              <div className="pt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  disabled={!canUpdateOrder || isMutationPending}
+                  onClick={() => {
+                    navigate(`/ventas/editar/${order.id}`);
+                    onOpenChange(false);
+                  }}
+                >
+                  <Edit />
+                  Editar orden
+                </Button>
+                {!canUpdateOrder && (
+                  <p className="pt-2 text-center text-xs text-muted-foreground">
+                    Solo se pueden editar órdenes de venta pendientes o pagadas.
+                  </p>
+                )}
               </div>
             </div>
           </SheetDescription>
         </SheetHeader>
-        <div className="pb-8 space-y-4">
+        <div className="px-6 pb-8 space-y-4">
           <div className="space-y-2">
             <div className="rounded-lg border bg-muted/30 p-4">
               <dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">

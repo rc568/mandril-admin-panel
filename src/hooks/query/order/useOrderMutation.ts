@@ -31,6 +31,7 @@ export const useOrderMutation = () => {
 
   const updateOrder = useApiMutation<UpdateOrderResponse, UpdateOrderRequest>({
     mutationFn: updateOrderAction,
+    successMessage: messages.ORDER_UPDATED,
     onSuccess: invalidateOrders
   });
 
