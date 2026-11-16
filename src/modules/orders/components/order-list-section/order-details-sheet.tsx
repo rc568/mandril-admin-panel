@@ -14,6 +14,7 @@ import {
   CLIENT_DOCUMENT_TYPE_CONFIG,
   INVOICE_TYPE_CONFIG,
   NO_INFO,
+  ORDER_PRODUCT_TYPE_CONFIG,
   ORDER_STATUS_CONFIG
 } from '../../constants/order.constants';
 import type { OrderMapped } from '../../interfaces/ui';
@@ -189,27 +190,36 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
               Productos ( {order.products.length} productos únicos • {order.numProducts} unidades en total )
             </h2>
             <div className="space-y-2 rounded-lg border bg-muted/30 px-4 divide-y">
-              {order.products.map((product) => (
-                <div key={product.code} className="flex justify-between items-center text-sm py-2">
+              {order.products.map((orderProduct) => (
+                <div key={orderProduct.id} className="flex justify-between items-center text-sm py-2">
                   <div>
                     <div className="flex flex-col gap-1">
-                      <span className="font-medium">
-                        {product.code} - {product.name}
-                      </span>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-medium">
+                          {orderProduct.code} - {orderProduct.name}
+                        </span>
+                        <BaseBadge
+                          label={ORDER_PRODUCT_TYPE_CONFIG[orderProduct.type].label}
+                          className={ORDER_PRODUCT_TYPE_CONFIG[orderProduct.type].className}
+                        />
+                      </div>
                       <div className="font-medium flex flex-wrap gap-1">
-                        {product.variantAttributes?.length > 0 &&
-                          product.variantAttributes.map((va) => (
-                            <Badge className="bg-amber-200 text-primary">
+                        {orderProduct.variantAttributes?.length > 0 &&
+                          orderProduct.variantAttributes.map((va) => (
+                            <Badge
+                              key={`${orderProduct.id}-${va.attributeId}-${va.valueId}`}
+                              className="bg-amber-200 text-primary"
+                            >
                               {va.attribute}: {va.value}
                             </Badge>
                           ))}
                       </div>
                       <span className="text-muted-foreground block">
-                        {product.quantity} unidad(es) × {formatCurrency(product.price)}
+                        {orderProduct.quantity} unidad(es) × {formatCurrency(orderProduct.price)}
                       </span>
                     </div>
                   </div>
-                  <span className="font-medium">{formatCurrency(product.subTotal)}</span>
+                  <span className="font-medium">{formatCurrency(orderProduct.subTotal)}</span>
                 </div>
               ))}
             </div>

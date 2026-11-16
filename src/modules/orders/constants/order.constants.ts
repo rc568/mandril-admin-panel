@@ -1,4 +1,11 @@
-import type { BillingStatus, DocumentType, InvoiceType, OrderStatus, OrderType } from '../interfaces/api';
+import type {
+  BillingStatus,
+  DocumentType,
+  InvoiceType,
+  OrderProductType,
+  OrderStatus,
+  OrderType
+} from '../interfaces/api';
 
 export const NO_INFO = 'Sin información';
 export const ALL_ORDER_STATUS = 'ALL';
@@ -25,6 +32,11 @@ export const ORDER_TYPE_CONFIG = {
   RETURN: { label: 'Devolución', className: 'text-red-900' },
   EXCHANGE: { label: 'Cambio', className: 'text-yellow-800' }
 } as const satisfies Record<OrderType, { label: string; className: string }>;
+
+export const ORDER_PRODUCT_TYPE_CONFIG = {
+  SALE: { label: 'Venta', className: 'bg-green-100 text-green-800' },
+  RETURN: { label: 'Devolución', className: 'bg-red-100 text-red-800' }
+} as const satisfies Record<OrderProductType, { label: string; className: string }>;
 
 export const SALES_CHANNEL_CONFIG: Record<string, { className: string }> = {
   WhatsApp: { className: 'bg-green-100 text-green-800' },
