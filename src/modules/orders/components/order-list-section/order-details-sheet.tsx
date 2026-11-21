@@ -46,9 +46,9 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
 
   if (!order) return;
 
-  const canUpdateStatus = order.type === 'SALE';
   const canManageOrder = order.status === 'PENDING' || order.status === 'PAID';
-  const canUpdateOrder = canUpdateStatus && canManageOrder;
+  const canUpdateStatus = order.type === 'SALE';
+  const canUpdateOrder = canManageOrder;
   const canCreateRelatedOrder = order.status === 'COMPLETED' && order.type !== 'RETURN';
   const relatedOrderType = relatedOrder?.id === order.id ? relatedOrder.type : null;
   const isMutationPending =
@@ -145,7 +145,7 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
 
                 {!canUpdateOrder && (
                   <p className="pt-2 text-center text-xs text-muted-foreground">
-                    Solo se pueden editar órdenes de venta pendientes o pagadas.
+                    Solo se pueden editar órdenes pendientes o pagadas.
                   </p>
                 )}
               </div>

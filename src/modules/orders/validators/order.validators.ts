@@ -182,3 +182,8 @@ export const updateOrderSchema = z
       }
     }
   });
+
+export const updateRelatedOrderSchema = z.object({
+  salesChannelId: smallIntPositive().optional(),
+  observation: emptyToUndefined(baseStringSchema.optional())
+});
