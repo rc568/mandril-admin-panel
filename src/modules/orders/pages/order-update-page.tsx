@@ -3,6 +3,7 @@ import { useOrderById } from '@/hooks/query/order';
 import { useSalesChannel } from '@/hooks/query/sales-channel';
 import { useNavigate, useParams } from 'react-router';
 import { OrderUpdateForm } from '../components/order-update/order-update-form';
+import { OrderRelatedUpdateForm } from '../components/order-update/order-related-update-form';
 import { PageMessage } from '../components/page-message';
 
 export const OrderUpdatePage = () => {
@@ -35,10 +36,6 @@ export const OrderUpdatePage = () => {
   const order = orderQuery.data;
   if (!order) return <PageMessage title="No se encontró la orden." onBack={() => navigate('/ventas')} />;
 
-  if (order.type !== 'SALE') {
-    return <PageMessage title="Este tipo de orden no se puede editar." onBack={() => navigate('/ventas')} />;
-  }
-
   if (order.status !== 'PENDING' && order.status !== 'PAID') {
     return (
       <PageMessage
@@ -57,6 +54,25 @@ export const OrderUpdatePage = () => {
         description="Vuelve al listado e inténtalo nuevamente."
         onBack={() => navigate('/ventas')}
       />
+    );
+  }
+
+  if (order.type !== 'SALE') {
+    const orderTypeLabel = order.type === 'EXCHANGE' ? 'cambio' : 'devolución';
+
+    return (
+      <div className="mx-auto max-w-7xl">
+        <Title
+          title={`Editar orden de ${orderTypeLabel}`}
+          subtitle="Actualiza el canal de venta y las observaciones."
+          showLink={false}
+        />
+        <OrderRelatedUpdateForm
+          order={order}
+          salesChannelId={salesChannel.id}
+          salesChannels={salesChannelQuery.data ?? []}
+        />
+      </div>
     );
   }
 
