@@ -1,13 +1,21 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useOrderMutation } from '@/hooks/query/order';
 import { formatCurrency } from '@/lib/currency';
 import { formatDate } from '@/lib/date-utils';
+import { notifyToast } from '@/lib/toast/toast-adapter';
 import { cn } from '@/lib/utils';
-import { Edit, Trash2 } from 'lucide-react';
+import { ArrowLeftRight, Edit, MoreHorizontal, RotateCcw, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
   BILLING_STATUS_CONFIG,
@@ -17,8 +25,13 @@ import {
   ORDER_PRODUCT_TYPE_CONFIG,
   ORDER_STATUS_CONFIG
 } from '../../constants/order.constants';
+import { messages } from '../../constants/order.messages';
+import type { CompleteOrderItemInput, OrderType } from '../../interfaces/api';
 import type { OrderMapped } from '../../interfaces/ui';
 import { BaseBadge } from '../base-badge';
+import { OrderRelatedCreateDialog } from '../order-related-create-dialog';
+
+type RelatedOrderType = Extract<OrderType, 'EXCHANGE' | 'RETURN'>;
 
 interface Props {
   order: OrderMapped | null;
@@ -28,23 +41,82 @@ interface Props {
 
 export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
   const navigate = useNavigate();
-  const { updateOrder, cancelOrder, completeOrder, softDeleteOrder } = useOrderMutation();
+  const { updateOrder, cancelOrder, completeOrder: completeOrderMutation, softDeleteOrder } = useOrderMutation();
+  const [relatedOrder, setRelatedOrder] = useState<{ id: string; type: RelatedOrderType } | null>(null);
 
   if (!order) return;
 
   const canUpdateStatus = order.type === 'SALE';
   const canManageOrder = order.status === 'PENDING' || order.status === 'PAID';
   const canUpdateOrder = canUpdateStatus && canManageOrder;
+  const canCreateRelatedOrder = order.status === 'COMPLETED' && order.type !== 'RETURN';
+  const relatedOrderType = relatedOrder?.id === order.id ? relatedOrder.type : null;
   const isMutationPending =
-    updateOrder.isPending || cancelOrder.isPending || completeOrder.isPending || softDeleteOrder.isPending;
+    updateOrder.isPending || cancelOrder.isPending || completeOrderMutation.isPending || softDeleteOrder.isPending;
   const deleteOrderHint =
     order.status === 'COMPLETED'
       ? 'Solo se pueden eliminar órdenes canceladas.'
       : 'Primero debes cancelar la orden para poder eliminarla.';
 
+  const completeOrder = () => {
+    if (order.type !== 'EXCHANGE') {
+      completeOrderMutation.mutate({ id: order.id });
+      return;
+    }
+
+    const returnItems: CompleteOrderItemInput[] = order.products
+      .filter((op) => op.type === 'RETURN')
+      .map((op) => ({
+        orderProductId: op.id,
+        quantity: op.quantity,
+        condition: 'AVAILABLE'
+      }));
+
+    const [firstItem, ...remainingItems] = returnItems;
+
+    if (!firstItem) {
+      notifyToast.error(messages.VALIDATION.NO_SALE_PRODUCTS_ON_EXCHANGE_ORDER);
+      return;
+    }
+
+    completeOrderMutation.mutate({ id: order.id, body: { items: [firstItem, ...remainingItems] } });
+  };
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="sm:max-w-2xl overflow-y-auto">
+        {canCreateRelatedOrder && (
+          <div className="absolute right-8 top-1.5">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  aria-label="Crear orden relacionada"
+                  className="hover:bg-transparent"
+                >
+                  <MoreHorizontal className="size-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onSelect={() => setRelatedOrder({ id: order.id, type: 'EXCHANGE' })}
+                  className="cursor-pointer"
+                >
+                  <ArrowLeftRight className="size-4" />
+                  Crear orden de cambio
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onSelect={() => setRelatedOrder({ id: order.id, type: 'RETURN' })}
+                  className="cursor-pointer"
+                >
+                  <RotateCcw className="size-4" />
+                  Crear orden de devolución
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )}
         <SheetHeader className="border-b px-6">
           <SheetTitle>DETALLE DE ORDEN</SheetTitle>
           <SheetDescription asChild>
@@ -70,6 +142,7 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
                   <Edit />
                   Editar orden
                 </Button>
+
                 {!canUpdateOrder && (
                   <p className="pt-2 text-center text-xs text-muted-foreground">
                     Solo se pueden editar órdenes de venta pendientes o pagadas.
@@ -264,7 +337,7 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
                   variant="outline"
                   className="h-auto w-full border-success/60 text-success/80 hover:text-success"
                   disabled={isMutationPending}
-                  onClick={() => completeOrder.mutate({ id: order.id })}
+                  onClick={() => completeOrder()}
                 >
                   Completar
                 </Button>
@@ -316,6 +389,20 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
           </div>
         </div>
       </SheetContent>
+      {relatedOrderType && (
+        <OrderRelatedCreateDialog
+          open={Boolean(relatedOrderType)}
+          order={order}
+          type={relatedOrderType}
+          onOpenChange={(dialogOpen) => {
+            if (!dialogOpen) setRelatedOrder(null);
+          }}
+          onCreated={() => {
+            setRelatedOrder(null);
+            onOpenChange(false);
+          }}
+        />
+      )}
     </Sheet>
   );
 };
