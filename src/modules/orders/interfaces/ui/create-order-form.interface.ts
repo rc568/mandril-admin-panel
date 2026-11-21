@@ -1,9 +1,9 @@
 import type { z } from '@/lib/zod';
 import type { ProductVariant } from '@/modules/products/interfaces/api/product.interface';
-import type { createOrderSchema, orderProductSchema } from '../../validators/order.validators';
+import type { createOrderSchema, saleOrderProductSchema } from '../../validators/order.validators';
 
 // Add types for UI / TS ONLY
-export type OrderProductForm = z.infer<typeof orderProductSchema> & {
+export type OrderProductForm = z.infer<typeof saleOrderProductSchema> & {
   name: string;
   code: string;
   purchasePrice: number;
