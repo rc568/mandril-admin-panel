@@ -26,10 +26,11 @@ import {
   ORDER_STATUS_CONFIG
 } from '../../constants/order.constants';
 import { messages } from '../../constants/order.messages';
-import type { CompleteOrderItemInput, OrderType } from '../../interfaces/api';
+import type { OrderType } from '../../interfaces/api';
 import type { OrderMapped } from '../../interfaces/ui';
 import { BaseBadge } from '../base-badge';
 import { OrderRelatedCreateDialog } from '../order-related-create-dialog';
+import { OrderReturnCompletionDialog } from './order-return-completion-dialog';
 
 type RelatedOrderType = Extract<OrderType, 'EXCHANGE' | 'RETURN'>;
 
@@ -43,6 +44,7 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
   const navigate = useNavigate();
   const { updateOrder, cancelOrder, completeOrder: completeOrderMutation, softDeleteOrder } = useOrderMutation();
   const [relatedOrder, setRelatedOrder] = useState<{ id: string; type: RelatedOrderType } | null>(null);
+  const [isReturnConditionDialogOpen, setIsReturnConditionDialogOpen] = useState(false);
 
   if (!order) return;
 
@@ -57,29 +59,18 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
     order.status === 'COMPLETED'
       ? 'Solo se pueden eliminar órdenes canceladas.'
       : 'Primero debes cancelar la orden para poder eliminarla.';
-
   const completeOrder = () => {
-    if (order.type !== 'EXCHANGE') {
+    if (order.type === 'SALE') {
       completeOrderMutation.mutate({ id: order.id });
       return;
     }
 
-    const returnItems: CompleteOrderItemInput[] = order.products
-      .filter((op) => op.type === 'RETURN')
-      .map((op) => ({
-        orderProductId: op.id,
-        quantity: op.quantity,
-        condition: 'AVAILABLE'
-      }));
-
-    const [firstItem, ...remainingItems] = returnItems;
-
-    if (!firstItem) {
-      notifyToast.error(messages.VALIDATION.NO_SALE_PRODUCTS_ON_EXCHANGE_ORDER);
+    if (!order.products.some((product) => product.type === 'RETURN')) {
+      notifyToast.error(messages.VALIDATION.NO_RETURN_PRODUCTS_ON_ORDER);
       return;
     }
 
-    completeOrderMutation.mutate({ id: order.id, body: { items: [firstItem, ...remainingItems] } });
+    setIsReturnConditionDialogOpen(true);
   };
 
   return (
@@ -403,6 +394,11 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
           }}
         />
       )}
+      <OrderReturnCompletionDialog
+        order={order}
+        open={isReturnConditionDialogOpen}
+        onOpenChange={setIsReturnConditionDialogOpen}
+      />
     </Sheet>
   );
 };
