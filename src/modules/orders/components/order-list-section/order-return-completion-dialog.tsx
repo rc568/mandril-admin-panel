@@ -1,4 +1,5 @@
 import { InputField } from '@/components/common/form';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -95,10 +96,21 @@ export const OrderReturnCompletionDialog = ({ order, open, onOpenChange }: Props
 
             return (
               <div key={product.id} className="space-y-3 rounded-md border p-3">
-                <div>
+                <div className="space-y-1">
                   <p className="text-sm font-medium">
                     {product.code} - {product.name}
                   </p>
+                  <div className="font-medium flex flex-wrap gap-1">
+                    {product.variantAttributes?.length > 0 &&
+                      product.variantAttributes.map((va) => (
+                        <Badge
+                          key={`${product.id}-${va.attributeId}-${va.valueId}`}
+                          className="bg-amber-200 text-primary"
+                        >
+                          {va.attribute}: {va.value}
+                        </Badge>
+                      ))}
+                  </div>
                   <p className="text-xs text-muted-foreground">Cantidad devuelta: {product.quantity}</p>
                 </div>
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
