@@ -3,6 +3,7 @@ import type {
   DocumentType,
   InvoiceType,
   OrderProductType,
+  ReturnCondition,
   OrderStatus,
   OrderType
 } from '../interfaces/api';
@@ -37,6 +38,14 @@ export const ORDER_PRODUCT_TYPE_CONFIG = {
   SALE: { label: 'Venta', className: 'bg-green-100 text-green-800' },
   RETURN: { label: 'Devolución', className: 'bg-red-100 text-red-800' }
 } as const satisfies Record<OrderProductType, { label: string; className: string }>;
+
+export const RETURN_CONDITION_CONFIG = {
+  AVAILABLE: { label: 'Disponible para la venta' },
+  QUARANTINE: { label: 'En cuarentena' },
+  DEFECTIVE: { label: 'Defectuoso' }
+} as const satisfies Record<ReturnCondition, { label: string }>;
+
+export const RETURN_CONDITION_KEYS = Object.keys(RETURN_CONDITION_CONFIG) as ReturnCondition[];
 
 export const SALES_CHANNEL_CONFIG: Record<string, { className: string }> = {
   WhatsApp: { className: 'bg-green-100 text-green-800' },
