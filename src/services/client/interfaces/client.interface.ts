@@ -1,5 +1,7 @@
+import type { IdentityDocumentType } from '@/constants/interfaces/document.interface';
 import type { BillingReceiptType } from '@/modules/orders/billing/interfaces/api';
-import type { ClientDocumentType, DocumentType } from '@/modules/orders/interfaces/api/order.interface';
+
+export type ClientDocumentType = Exclude<IdentityDocumentType, 'SIN DOCUMENTO' | 'RUC'>;
 
 export interface SearchClient {
   clientId: string;
@@ -11,6 +13,6 @@ export interface SearchClient {
   phoneNumber2: string | null;
   billingName: string;
   billingReceiptType: BillingReceiptType;
-  billingDocumentNumberType: DocumentType;
+  billingDocumentNumberType: IdentityDocumentType;
   billingDocumentNumber: string | null;
 }
