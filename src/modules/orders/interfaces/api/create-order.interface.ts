@@ -1,4 +1,5 @@
-import type { ClientDocumentType, Order, OrderStatus } from './order.interface';
+import type { ClientDocumentType } from '@/services/client/interfaces/client.interface';
+import type { Order, OrderStatus } from './order.interface';
 
 type CreateOrderStatus = Extract<OrderStatus, 'PENDING' | 'PAID' | 'COMPLETED'>;
 
