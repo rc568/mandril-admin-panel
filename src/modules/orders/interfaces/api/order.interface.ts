@@ -41,7 +41,7 @@ export interface OrderProductResponse {
 
 interface OrderBillingResponse {
   id: string;
-  code: string;
+  code: string | null;
   amount: string;
   status: BillingStatus;
   createdAt: string;
