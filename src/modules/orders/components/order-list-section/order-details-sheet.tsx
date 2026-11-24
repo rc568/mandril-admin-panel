@@ -17,10 +17,9 @@ import { cn } from '@/lib/utils';
 import { ArrowLeftRight, Edit, MoreHorizontal, RotateCcw, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { BILLING_STATUS_CONFIG, INVOICE_TYPE_CONFIG } from '../../billing/constants/billing.constants';
 import {
-  BILLING_STATUS_CONFIG,
   CLIENT_DOCUMENT_TYPE_CONFIG,
-  INVOICE_TYPE_CONFIG,
   NO_INFO,
   ORDER_PRODUCT_TYPE_CONFIG,
   ORDER_STATUS_CONFIG

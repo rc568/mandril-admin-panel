@@ -7,16 +7,16 @@ import { formatLongDate } from '@/lib/date-utils';
 import { cn } from '@/lib/utils';
 import { CalendarIcon, Filter, X } from 'lucide-react';
 import { useState } from 'react';
+import { ORDER_STATUS_OPTIONS_ARRAY } from '../../constants/order.constants';
+
+import { AsyncSelectField, SelectField } from '@/components/common/form';
+import { useSalesChannel } from '@/hooks/query/sales-channel';
 import {
   BILLING_STATUS,
   BILLING_STATUS_CONFIG,
   INVOICE_TYPE_CONFIG,
-  INVOICE_TYPE_KEYS,
-  ORDER_STATUS_OPTIONS_ARRAY
-} from '../../constants/order.constants';
-
-import { AsyncSelectField, SelectField } from '@/components/common/form';
-import { useSalesChannel } from '@/hooks/query/sales-channel';
+  INVOICE_TYPE_KEYS
+} from '../../billing/constants/billing.constants';
 import type { GetOrdersFilters } from '../../interfaces/ui';
 import { getFilterDisplayValue } from '../../utils/order-list-filters.utils';
 

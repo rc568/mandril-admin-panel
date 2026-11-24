@@ -1,8 +1,5 @@
-import type {
-  BillingReceiptType,
-  ClientDocumentType,
-  DocumentType
-} from '@/modules/orders/interfaces/api/order.interface';
+import type { BillingReceiptType } from '@/modules/orders/billing/interfaces/api';
+import type { ClientDocumentType, DocumentType } from '@/modules/orders/interfaces/api/order.interface';
 
 export interface SearchClient {
   clientId: string;
