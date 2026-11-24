@@ -1,4 +1,5 @@
-import type { DocumentType, OrderProductType, OrderStatus, OrderType, ReturnCondition } from '../interfaces/api';
+import type { IdentityDocumentType } from '@/constants/interfaces/document.interface';
+import type { OrderProductType, OrderStatus, OrderType, ReturnCondition } from '../interfaces/api';
 
 export const NO_INFO = 'Sin información';
 export const ALL_ORDER_STATUS = 'ALL';
@@ -48,7 +49,7 @@ export const SALES_CHANNEL_CONFIG: Record<string, { className: string }> = {
   Linio: { className: 'bg-orange-500 text-orange-100' }
 };
 
-export const CLIENT_DOCUMENT_TYPE_CONFIG: Record<DocumentType, { label: string }> = {
+export const CLIENT_DOCUMENT_TYPE_CONFIG: Record<IdentityDocumentType, { label: string }> = {
   'SIN DOCUMENTO': { label: 'Sin documento' },
   'CARNE DE EXTRANJERIA': { label: 'Carne de extranjería' },
   PASAPORTE: { label: 'Pasaporte' },
@@ -56,7 +57,7 @@ export const CLIENT_DOCUMENT_TYPE_CONFIG: Record<DocumentType, { label: string }
   RUC: { label: 'RUC' },
   OTRO: { label: 'Otro' }
 };
-export const CLIENT_DOCUMENT_TYPE_KEYS = Object.keys(CLIENT_DOCUMENT_TYPE_CONFIG) as DocumentType[];
+export const CLIENT_DOCUMENT_TYPE_KEYS = Object.keys(CLIENT_DOCUMENT_TYPE_CONFIG) as IdentityDocumentType[];
 export const CLIENT_ONLY_DOCUMENT_TYPE_KEYS = CLIENT_DOCUMENT_TYPE_KEYS.filter(
   (document) => document !== 'RUC' && document !== 'SIN DOCUMENTO'
 );

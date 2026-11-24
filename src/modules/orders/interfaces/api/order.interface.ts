@@ -1,6 +1,6 @@
+import type { IdentityDocumentType } from '@/constants/interfaces/document.interface';
 import type { BillingReceiptType, BillingStatus } from '../../billing/interfaces/api';
 
-export type DocumentType = 'SIN DOCUMENTO' | 'CARNE DE EXTRANJERIA' | 'PASAPORTE' | 'DNI' | 'RUC' | 'OTRO';
 export type ClientDocumentType = 'CARNE DE EXTRANJERIA' | 'PASAPORTE' | 'DNI' | 'OTRO';
 export type OrderStatus = 'PENDING' | 'PAID' | 'COMPLETED' | 'CANCELLED';
 export type OrderType = 'SALE' | 'EXCHANGE' | 'RETURN';
@@ -48,7 +48,7 @@ interface OrderBillingResponse {
   createdBy: string;
   billingName: string;
   billingReceiptType: BillingReceiptType;
-  billingDocumentNumberType: DocumentType;
+  billingDocumentNumberType: IdentityDocumentType;
   billingDocumentNumber: string | null;
 }
 
