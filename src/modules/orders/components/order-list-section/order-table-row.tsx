@@ -2,8 +2,8 @@ import { TableCell, TableRow } from '@/components/ui/table';
 import { formatCurrency } from '@/lib/currency';
 import { formatDate } from '@/lib/date-utils';
 import { MoreHorizontal } from 'lucide-react';
+import { BILLING_STATUS_CONFIG } from '../../billing/constants/billing.constants';
 import {
-  BILLING_STATUS_CONFIG,
   DEFAULT_BADGE_CLASSNAME,
   NO_INFO,
   ORDER_STATUS_CONFIG,

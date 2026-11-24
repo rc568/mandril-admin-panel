@@ -1,8 +1,10 @@
 import { formatShortDate } from '@/lib/date-utils';
 import type { SalesChannel } from '@/services/sales-channel/interfaces/sales-channel.interface';
+import { BILLING_STATUS_CONFIG, INVOICE_TYPE_CONFIG } from '../billing/constants/billing.constants';
+import { isBillingStatus, isInvoiceType } from '../billing/utils/type-guards.utils';
 import type { LocalOrderFilters } from '../components/order-list-section/order-list-filters';
-import { BILLING_STATUS_CONFIG, INVOICE_TYPE_CONFIG, ORDER_STATUS_CONFIG } from '../constants/order.constants';
-import { isBillingStatus, isInvoiceType, isOrderStatus } from './type-guards.utils';
+import { ORDER_STATUS_CONFIG } from '../constants/order.constants';
+import { isOrderStatus } from './type-guards.utils';
 
 export const getFilterDisplayValue = (
   key: keyof LocalOrderFilters,

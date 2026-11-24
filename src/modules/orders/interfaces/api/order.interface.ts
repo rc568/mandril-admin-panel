@@ -1,10 +1,7 @@
+import type { BillingReceiptType, BillingStatus } from '../../billing/interfaces/api';
+
 export type DocumentType = 'SIN DOCUMENTO' | 'CARNE DE EXTRANJERIA' | 'PASAPORTE' | 'DNI' | 'RUC' | 'OTRO';
 export type ClientDocumentType = 'CARNE DE EXTRANJERIA' | 'PASAPORTE' | 'DNI' | 'OTRO';
-
-export type BillingStatus = 'PENDING' | 'ISSUED' | 'VOIDED';
-
-export type InvoiceType = 'FACTURA' | 'BOLETA' | 'SIN COMPROBANTE';
-export type BillingReceiptType = Exclude<InvoiceType, 'SIN COMPROBANTE'>;
 export type OrderStatus = 'PENDING' | 'PAID' | 'COMPLETED' | 'CANCELLED';
 export type OrderType = 'SALE' | 'EXCHANGE' | 'RETURN';
 export type OrderProductType = 'SALE' | 'RETURN';
@@ -42,7 +39,7 @@ export interface OrderProductResponse {
   }[];
 }
 
-export interface BillingResponse {
+interface OrderBillingResponse {
   id: string;
   code: string;
   amount: string;
@@ -50,7 +47,7 @@ export interface BillingResponse {
   createdAt: string;
   createdBy: string;
   billingName: string;
-  billingReceiptType: 'FACTURA' | 'BOLETA';
+  billingReceiptType: BillingReceiptType;
   billingDocumentNumberType: DocumentType;
   billingDocumentNumber: string | null;
 }
@@ -69,5 +66,5 @@ export interface Order {
   client: OrderClientResponse;
   channel: string;
   products: OrderProductResponse[];
-  billing: BillingResponse[];
+  billing: OrderBillingResponse[];
 }

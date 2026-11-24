@@ -1,7 +1,8 @@
 import { useSearchParams } from 'react-router';
+import { isBillingStatus, isInvoiceType } from '../billing/utils/type-guards.utils';
 import { ORDER_SORT_BY_ARRAY } from '../constants/order.constants';
 import type { GetOrdersFilters } from '../interfaces/ui';
-import { isBillingStatus, isInvoiceType, isOrderStatus } from '../utils/type-guards.utils';
+import { isOrderStatus } from '../utils/type-guards.utils';
 
 interface UseTableFiltersConfig {
   defaultPage?: number;
