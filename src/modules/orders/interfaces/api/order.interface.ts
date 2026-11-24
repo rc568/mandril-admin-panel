@@ -1,7 +1,7 @@
 import type { IdentityDocumentType } from '@/constants/interfaces/document.interface';
+import type { ClientDocumentType } from '@/services/client/interfaces/client.interface';
 import type { BillingReceiptType, BillingStatus } from '../../billing/interfaces/api';
 
-export type ClientDocumentType = 'CARNE DE EXTRANJERIA' | 'PASAPORTE' | 'DNI' | 'OTRO';
 export type OrderStatus = 'PENDING' | 'PAID' | 'COMPLETED' | 'CANCELLED';
 export type OrderType = 'SALE' | 'EXCHANGE' | 'RETURN';
 export type OrderProductType = 'SALE' | 'RETURN';

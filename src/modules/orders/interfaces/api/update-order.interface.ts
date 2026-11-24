@@ -1,4 +1,5 @@
-import type { ClientDocumentType, Order, OrderProductType, OrderStatus } from './order.interface';
+import type { ClientDocumentType } from '@/services/client/interfaces/client.interface';
+import type { Order, OrderProductType, OrderStatus } from './order.interface';
 
 // Order updates only support SALE lines, RETURN lines are rejected by the service.
 interface UpdateOrderProductInput {
