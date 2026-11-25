@@ -31,7 +31,6 @@ const getPayload = (values: CreateBillingForm): CreateBillingPayload => {
   const common = {
     amount: values.amount,
     billingName: values.billingName,
-    billingAddress: values.billingAddress,
     note: values.note
   };
 
@@ -92,7 +91,6 @@ export const CreateBillingDialog = ({ order, open, onOpenChange }: Props) => {
       status: 'PENDING',
       amount: Number(order.totalSale),
       billingName: order.client.contactName ?? '',
-      billingAddress: '',
       note: '',
       billingReceiptType: 'BOLETA',
       billingDocumentNumberType: order.client.documentNumberType ?? 'DNI',
@@ -230,12 +228,6 @@ export const CreateBillingDialog = ({ order, open, onOpenChange }: Props) => {
             </div>
           )}
 
-          <TextareaField
-            label="Dirección fiscal (opcional)"
-            maxLength={255}
-            {...register('billingAddress')}
-            error={errors.billingAddress?.message}
-          />
           <TextareaField label="Nota (opcional)" maxLength={600} {...register('note')} error={errors.note?.message} />
 
           <DialogFooter>
