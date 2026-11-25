@@ -7,7 +7,6 @@ import { Separator } from '@/components/ui/separator';
 import { commonMessages } from '@/constants/messages';
 import { useOrderMutation } from '@/hooks/query/order';
 import { filterNullishFields } from '@/lib/react-hook-form/utils';
-import type { SearchClient } from '@/services/client/interfaces/client.interface';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { ShoppingCart, User } from 'lucide-react';
 import { useEffect } from 'react';
@@ -22,7 +21,6 @@ import {
 import type { CreateOrderForm, CreateOrderPayload } from '../../interfaces/ui';
 import { createOrderSchema } from '../../validators/order.validators';
 import { AddOrderProducts } from './add-order-products';
-import { ExistingClientsSearchBar } from './existing-clients-search-bar';
 import { SalesChannelSelectInput } from './sales-channel-select-input';
 
 interface Props {
@@ -36,7 +34,6 @@ export const OrderCreateDialog = ({ open, onOpenChange }: Props) => {
     register,
     control,
     formState: { errors },
-    setValue,
     resetField,
     handleSubmit,
     reset
@@ -52,20 +49,6 @@ export const OrderCreateDialog = ({ open, onOpenChange }: Props) => {
   const { field: statusField } = useController({ name: 'status', control });
   const { field: documentTypeField } = useController({ name: 'client.documentNumberType', control });
   const { createOrder } = useOrderMutation();
-
-  const setClientInfoToForm = (client: SearchClient) => {
-    setValue('client.contactName', client.contactName ?? '');
-    setValue('client.email', client.email ?? '');
-    setValue('client.phoneNumber1', client.phoneNumber1 ?? '');
-    setValue('client.phoneNumber2', client.phoneNumber2 ?? '');
-    if (client.documentNumberType && client.documentNumber) {
-      setValue('client.documentNumberType', client.documentNumberType);
-      setValue('client.documentNumber', client.documentNumber);
-    } else {
-      resetField('client.documentNumberType');
-      resetField('client.documentNumber');
-    }
-  };
 
   const onSubmit = async (data: CreateOrderForm) => {
     const filtered = filterNullishFields(data);
@@ -128,10 +111,6 @@ export const OrderCreateDialog = ({ open, onOpenChange }: Props) => {
               <div className="flex items-center gap-2 sm:col-span-2">
                 <User className="h-4 w-4 text-muted-foreground" />
                 <h3 className="text-sm font-semibold">Datos del cliente</h3>
-              </div>
-
-              <div className="sm:col-span-2">
-                <ExistingClientsSearchBar setClientData={setClientInfoToForm} />
               </div>
 
               {errors.client?.message && <FormErrorMessage text={String(errors.client.message)} />}
