@@ -2,6 +2,8 @@ import { baseApi } from '@/lib/axios/api';
 import type {
   CreateBillingRequest,
   CreateBillingResponse,
+  DeleteBillingRequest,
+  DeleteBillingResponse,
   IssueBillingRequest,
   IssueBillingResponse,
   UpdateBillingRequest,
@@ -12,6 +14,11 @@ import type {
 
 export const createBilling = async ({ orderId, body }: CreateBillingRequest) => {
   const response = await baseApi.post<CreateBillingResponse>(`/orders/${orderId}/billing`, body);
+  return response.data;
+};
+
+export const deleteBilling = async ({ id }: DeleteBillingRequest) => {
+  const response = await baseApi.delete<DeleteBillingResponse>(`/billing/${id}`);
   return response.data;
 };
 
