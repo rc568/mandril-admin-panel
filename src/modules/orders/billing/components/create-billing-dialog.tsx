@@ -11,6 +11,7 @@ import {
 import { CURRENCY_SYMBOL } from '@/constants/unit';
 import { useBillingMutation } from '@/hooks/query/order';
 import { CLIENT_DOCUMENT_TYPE_CONFIG } from '@/modules/orders/constants/order.constants';
+import type { SearchClient } from '@/services/client/interfaces/client.interface';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { useController, useForm } from 'react-hook-form';
 import type { Order } from '../../interfaces/api';
@@ -18,6 +19,7 @@ import { IDENTITY_DOCUMENT_TYPE_KEYS } from '../constants/billing.constants';
 import type { CreateBillingPayload } from '../interfaces/api';
 import type { CreateBillingForm } from '../interfaces/ui';
 import { createBillingSchema } from '../validators/billing.validators';
+import { ExistingBillingSearchBar } from './existing-billing-search-bar';
 
 interface Props {
   order: Order;
@@ -107,6 +109,13 @@ export const CreateBillingDialog = ({ order, open, onOpenChange }: Props) => {
     await createBilling.mutateAsync({ orderId: order.id, body }, { onSuccess: () => onOpenChange(false) });
   });
 
+  const setBillingInfoToForm = (client: SearchClient) => {
+    setValue('billingName', client.billingName);
+    setValue('billingReceiptType', client.billingReceiptType);
+    setValue('billingDocumentNumberType', client.billingDocumentNumberType);
+    setValue('billingDocumentNumber', client.billingDocumentNumber ?? '');
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
@@ -142,6 +151,10 @@ export const CreateBillingDialog = ({ order, open, onOpenChange }: Props) => {
                 { id: 'ISSUED', label: 'Emitido' }
               ]}
             />
+          </div>
+
+          <div className="sm:col-span-2">
+            <ExistingBillingSearchBar setClientData={setBillingInfoToForm} />
           </div>
 
           <InputField
