@@ -9,13 +9,13 @@ import { Separator } from '@/components/ui/separator';
 import { formatCurrency } from '@/lib/currency';
 import { formatDate } from '@/lib/date-utils';
 import { cn } from '@/lib/utils';
-import { Ban, FilePenLine, MoreHorizontal, Send, Trash2 } from 'lucide-react';
+import { Check, MoreHorizontal, SquarePen, Trash2, X } from 'lucide-react';
 import { useState } from 'react';
+import { BaseBadge } from '../../components/base-badge';
 import { CLIENT_DOCUMENT_TYPE_CONFIG, NO_INFO } from '../../constants/order.constants';
 import type { OrderMapped } from '../../interfaces/ui';
 import { BILLING_STATUS_CONFIG, INVOICE_TYPE_CONFIG } from '../constants/billing.constants';
 import type { BillingStatus } from '../interfaces/api';
-import { BaseBadge } from '../../components/base-badge';
 import { DeleteBillingDialog } from './delete-billing-dialog';
 import { EditBillingDialog } from './edit-billing-dialog';
 import { IssueBillingDialog } from './issue-billing-dialog';
@@ -41,7 +41,7 @@ export const BillingCard = ({ billing }: Props) => {
     <>
       <div className="space-y-4 rounded-lg border bg-muted/30 p-4">
         <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0 space-y-1 text-sm font-medium uppercase">
+          <div className="min-w-0 space-y-2 text-sm font-medium uppercase">
             <div className="flex flex-wrap items-center gap-2">
               <span>{INVOICE_TYPE_CONFIG[billing.billingReceiptType].label}</span>
               <BaseBadge
@@ -49,7 +49,13 @@ export const BillingCard = ({ billing }: Props) => {
                 className={cn(BILLING_STATUS_CONFIG[billing.status].className, 'bg-transparent normal-case')}
               />
             </div>
-            <span className="block truncate font-normal italic text-muted-foreground">{billing.code ?? NO_INFO}</span>
+            <span
+              className={cn('block truncate font-normal italic text-muted-foreground normal-case', {
+                'text-xs': !billing.code
+              })}
+            >
+              {billing.code ?? 'Serie y correlativo pendiente'}
+            </span>
           </div>
           {actions.length > 0 && (
             <DropdownMenu>
@@ -66,38 +72,34 @@ export const BillingCard = ({ billing }: Props) => {
               <DropdownMenuContent align="end">
                 {actions.includes('edit') && (
                   <DropdownMenuItem onSelect={() => setDialog('edit')} className="cursor-pointer">
-                    <FilePenLine className="size-4" />
-                    Editar comprobante
+                    <SquarePen className="size-4" />
+                    Editar
                   </DropdownMenuItem>
                 )}
                 {actions.includes('issue') && (
                   <DropdownMenuItem onSelect={() => setDialog('issue')} className="cursor-pointer">
-                    <Send className="size-4" />
-                    Emitir comprobante
+                    <Check className="size-4" />
+                    Emitir
                   </DropdownMenuItem>
                 )}
                 {actions.includes('delete') && (
-                  <DropdownMenuItem
-                    onSelect={() => setDialog('delete')}
-                    className="cursor-pointer text-destructive focus:text-destructive"
-                  >
+                  <DropdownMenuItem onSelect={() => setDialog('delete')} className="cursor-pointer">
                     <Trash2 className="size-4" />
-                    Eliminar comprobante
+                    Eliminar
                   </DropdownMenuItem>
                 )}
                 {actions.includes('void') && (
-                  <DropdownMenuItem
-                    onSelect={() => setDialog('void')}
-                    className="cursor-pointer text-destructive focus:text-destructive"
-                  >
-                    <Ban className="size-4" />
-                    Anular comprobante
+                  <DropdownMenuItem onSelect={() => setDialog('void')} className="cursor-pointer">
+                    <X className="size-4" />
+                    Anular
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
           )}
         </div>
+
+        <Separator />
 
         <div className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
           <div>

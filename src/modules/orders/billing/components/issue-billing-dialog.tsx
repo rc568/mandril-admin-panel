@@ -46,7 +46,8 @@ export const IssueBillingDialog = ({ billing, open, onOpenChange }: Props) => {
         <DialogHeader>
           <DialogTitle>Emitir comprobante</DialogTitle>
           <DialogDescription>
-            Ingresa el código asignado al comprobante. Formato esperado: {codeFormat}.
+            Ingresa la serie y correlativo del comprobante.
+            <p>Formato esperado: {codeFormat}.</p>
           </DialogDescription>
         </DialogHeader>
 
