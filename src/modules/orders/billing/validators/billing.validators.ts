@@ -105,3 +105,75 @@ export const createBillingSchema = z
       }
     }
   });
+
+export const updateBillingSchema = z
+  .object({
+    amount: z.coerce.number().positive(BILLING_VALIDATION_MESSAGES.AMOUNT_MUST_BE_POSITIVE),
+    billingName: z
+      .string()
+      .trim()
+      .min(1, BILLING_VALIDATION_MESSAGES.BILLING_NAME_REQUIRED)
+      .max(255, 'La razón social no puede superar los 255 caracteres.'),
+    billingReceiptType: z.enum(['FACTURA', 'BOLETA']),
+    billingDocumentNumberType: z.enum(IDENTITY_DOCUMENT_TYPE_KEYS),
+    billingDocumentNumber: emptyToUndefined(z.string().trim().max(25).optional())
+  })
+  .check(({ value, issues }) => {
+    if (value.billingReceiptType === 'FACTURA') {
+      if (value.billingDocumentNumberType !== 'RUC') {
+        issues.push({
+          code: 'custom',
+          input: value.billingDocumentNumberType,
+          message: BILLING_VALIDATION_MESSAGES.DOCUMENT_TYPE_INVALID_FOR_INVOICE,
+          path: ['billingDocumentNumberType']
+        });
+      }
+      if (value.billingDocumentNumber && !RUC_REGEX.test(value.billingDocumentNumber)) {
+        issues.push({
+          code: 'custom',
+          input: value.billingDocumentNumber,
+          message: BILLING_VALIDATION_MESSAGES.RUC_INVALID,
+          path: ['billingDocumentNumber']
+        });
+      } else if (!value.billingDocumentNumber) {
+        issues.push({
+          code: 'custom',
+          input: value.billingDocumentNumber,
+          message: BILLING_VALIDATION_MESSAGES.DOCUMENT_NUMBER_REQUIRED,
+          path: ['billingDocumentNumber']
+        });
+      }
+    } else if (value.billingDocumentNumberType === 'RUC') {
+      issues.push({
+        code: 'custom',
+        input: value.billingDocumentNumberType,
+        message: BILLING_VALIDATION_MESSAGES.DOCUMENT_TYPE_INVALID_FOR_RECEIPT,
+        path: ['billingDocumentNumberType']
+      });
+    } else if (value.billingDocumentNumberType === 'SIN DOCUMENTO' && value.billingDocumentNumber) {
+      issues.push({
+        code: 'custom',
+        input: value.billingDocumentNumber,
+        message: BILLING_VALIDATION_MESSAGES.DOCUMENT_NUMBER_NOT_ALLOWED,
+        path: ['billingDocumentNumber']
+      });
+    } else if (value.billingDocumentNumberType !== 'SIN DOCUMENTO' && !value.billingDocumentNumber) {
+      issues.push({
+        code: 'custom',
+        input: value.billingDocumentNumber,
+        message: BILLING_VALIDATION_MESSAGES.DOCUMENT_NUMBER_REQUIRED,
+        path: ['billingDocumentNumber']
+      });
+    }
+  });
+
+export const getIssueBillingSchema = (receiptType: 'BOLETA' | 'FACTURA') =>
+  z.object({
+    code: z
+      .string()
+      .trim()
+      .regex(
+        receiptType === 'FACTURA' ? INVOICE_CODE_FACTURA_REGEX : INVOICE_CODE_BOLETA_REGEX,
+        BILLING_VALIDATION_MESSAGES.BILLING_CODE_INVALID
+      )
+  });
