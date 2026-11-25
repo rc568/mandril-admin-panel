@@ -17,7 +17,6 @@ export const createBillingSchema = z
       .trim()
       .min(1, BILLING_VALIDATION_MESSAGES.BILLING_NAME_REQUIRED)
       .max(255, 'La razón social no puede superar los 255 caracteres.'),
-    billingAddress: emptyToUndefined(baseStringSchema.max(255).optional()),
     note: emptyToUndefined(baseStringSchema.max(600).optional()),
     billingReceiptType: z.enum(['FACTURA', 'BOLETA']),
     billingDocumentNumberType: z.enum(IDENTITY_DOCUMENT_TYPE_KEYS),
