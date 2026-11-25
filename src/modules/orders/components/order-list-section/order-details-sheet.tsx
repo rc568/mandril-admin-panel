@@ -14,9 +14,10 @@ import { formatCurrency } from '@/lib/currency';
 import { formatDate } from '@/lib/date-utils';
 import { notifyToast } from '@/lib/toast/toast-adapter';
 import { cn } from '@/lib/utils';
-import { ArrowLeftRight, Edit, MoreHorizontal, RotateCcw, Trash2 } from 'lucide-react';
+import { ArrowLeftRight, Edit, MoreHorizontal, Plus, RotateCcw, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { CreateBillingDialog } from '../../billing/components/create-billing-dialog';
 import { BILLING_STATUS_CONFIG, INVOICE_TYPE_CONFIG } from '../../billing/constants/billing.constants';
 import {
   CLIENT_DOCUMENT_TYPE_CONFIG,
@@ -44,6 +45,7 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
   const { updateOrder, cancelOrder, completeOrder: completeOrderMutation, softDeleteOrder } = useOrderMutation();
   const [relatedOrder, setRelatedOrder] = useState<{ id: string; type: RelatedOrderType } | null>(null);
   const [isReturnConditionDialogOpen, setIsReturnConditionDialogOpen] = useState(false);
+  const [isCreateBillingDialogOpen, setIsCreateBillingDialogOpen] = useState(false);
 
   if (!order) return;
 
@@ -51,6 +53,8 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
   const canUpdateStatus = order.type === 'SALE';
   const canUpdateOrder = canManageOrder;
   const canCreateRelatedOrder = order.status === 'COMPLETED' && order.type !== 'RETURN';
+  const canCreateBilling = order.status === 'PAID' || order.status === 'COMPLETED';
+  const hasPendingBilling = order.billing.some((billing) => billing.status === 'PENDING');
   const relatedOrderType = relatedOrder?.id === order.id ? relatedOrder.type : null;
   const isMutationPending =
     updateOrder.isPending || cancelOrder.isPending || completeOrderMutation.isPending || softDeleteOrder.isPending;
@@ -199,7 +203,29 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Comprobantes</h2>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">Comprobantes</h2>
+              {canCreateBilling && !hasPendingBilling && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  className="font-normal text-xs"
+                  onClick={() => setIsCreateBillingDialogOpen(true)}
+                >
+                  <Plus className="size-3" />
+                  Añadir comprobante
+                </Button>
+              )}
+            </div>
+            {canCreateBilling && hasPendingBilling && (
+              <p className="text-xs text-muted-foreground">Ya existe un comprobante pendiente para esta orden.</p>
+            )}
+            {!canCreateBilling && (
+              <p className="text-xs text-muted-foreground">
+                Solo se pueden crear comprobantes para órdenes pagadas o completadas.
+              </p>
+            )}
             <div className="space-y-4">
               {order.billing.length > 0 ? (
                 order.billing.map((billing) => (
@@ -242,7 +268,7 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
                 ))
               ) : (
                 <div className="rounded-lg border border-dashed bg-muted/30 p-4">
-                  <span className="text-sm italic text-muted-foreground">Sin comprobantes emitidos</span>
+                  <span className="text-sm italic text-muted-foreground">Sin comprobantes registrados</span>
                 </div>
               )}
             </div>
@@ -398,6 +424,13 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
         open={isReturnConditionDialogOpen}
         onOpenChange={setIsReturnConditionDialogOpen}
       />
+      {canCreateBilling && (
+        <CreateBillingDialog
+          order={order}
+          open={isCreateBillingDialogOpen}
+          onOpenChange={setIsCreateBillingDialogOpen}
+        />
+      )}
     </Sheet>
   );
 };
