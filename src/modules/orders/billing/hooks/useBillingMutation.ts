@@ -3,6 +3,7 @@ import { queryClient } from '@/lib/tanstack-query/query-client';
 import { ordersKeys } from '@/hooks/query/order/orders.keys';
 import {
   createBillingAction,
+  deleteBillingAction,
   issueBillingAction,
   updateBillingAction,
   voidBillingAction
@@ -11,6 +12,8 @@ import { billingMessages } from '@/modules/orders/billing/constants/billing.mess
 import type {
   CreateBillingRequest,
   CreateBillingResponse,
+  DeleteBillingRequest,
+  DeleteBillingResponse,
   IssueBillingRequest,
   IssueBillingResponse,
   UpdateBillingRequest,
@@ -25,6 +28,12 @@ export const useBillingMutation = () => {
   const createBilling = useApiMutation<CreateBillingResponse, CreateBillingRequest>({
     mutationFn: createBillingAction,
     successMessage: billingMessages.BILLING_CREATED,
+    onSuccess: invalidateOrders
+  });
+
+  const deleteBilling = useApiMutation<DeleteBillingResponse, DeleteBillingRequest>({
+    mutationFn: deleteBillingAction,
+    successMessage: billingMessages.BILLING_DELETED,
     onSuccess: invalidateOrders
   });
 
@@ -46,5 +55,5 @@ export const useBillingMutation = () => {
     onSuccess: invalidateOrders
   });
 
-  return { createBilling, updateBilling, issueBilling, voidBilling };
+  return { createBilling, deleteBilling, updateBilling, issueBilling, voidBilling };
 };

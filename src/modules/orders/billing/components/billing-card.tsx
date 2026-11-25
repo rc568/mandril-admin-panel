@@ -9,13 +9,14 @@ import { Separator } from '@/components/ui/separator';
 import { formatCurrency } from '@/lib/currency';
 import { formatDate } from '@/lib/date-utils';
 import { cn } from '@/lib/utils';
-import { Ban, FilePenLine, MoreHorizontal, Send } from 'lucide-react';
+import { Ban, FilePenLine, MoreHorizontal, Send, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { CLIENT_DOCUMENT_TYPE_CONFIG, NO_INFO } from '../../constants/order.constants';
 import type { OrderMapped } from '../../interfaces/ui';
 import { BILLING_STATUS_CONFIG, INVOICE_TYPE_CONFIG } from '../constants/billing.constants';
 import type { BillingStatus } from '../interfaces/api';
 import { BaseBadge } from '../../components/base-badge';
+import { DeleteBillingDialog } from './delete-billing-dialog';
 import { EditBillingDialog } from './edit-billing-dialog';
 import { IssueBillingDialog } from './issue-billing-dialog';
 import { VoidBillingDialog } from './void-billing-dialog';
@@ -26,14 +27,14 @@ interface Props {
   billing: Billing;
 }
 
-const ACTIONS_BY_STATUS: Record<BillingStatus, ('edit' | 'issue' | 'void')[]> = {
-  PENDING: ['edit', 'issue'],
+const ACTIONS_BY_STATUS: Record<BillingStatus, ('delete' | 'edit' | 'issue' | 'void')[]> = {
+  PENDING: ['edit', 'issue', 'delete'],
   ISSUED: ['void'],
   VOIDED: []
 };
 
 export const BillingCard = ({ billing }: Props) => {
-  const [dialog, setDialog] = useState<'edit' | 'issue' | 'void' | null>(null);
+  const [dialog, setDialog] = useState<'delete' | 'edit' | 'issue' | 'void' | null>(null);
   const actions = ACTIONS_BY_STATUS[billing.status];
 
   return (
@@ -73,6 +74,15 @@ export const BillingCard = ({ billing }: Props) => {
                   <DropdownMenuItem onSelect={() => setDialog('issue')} className="cursor-pointer">
                     <Send className="size-4" />
                     Emitir comprobante
+                  </DropdownMenuItem>
+                )}
+                {actions.includes('delete') && (
+                  <DropdownMenuItem
+                    onSelect={() => setDialog('delete')}
+                    className="cursor-pointer text-destructive focus:text-destructive"
+                  >
+                    <Trash2 className="size-4" />
+                    Eliminar comprobante
                   </DropdownMenuItem>
                 )}
                 {actions.includes('void') && (
@@ -116,6 +126,11 @@ export const BillingCard = ({ billing }: Props) => {
       </div>
 
       <EditBillingDialog billing={billing} open={dialog === 'edit'} onOpenChange={(open) => !open && setDialog(null)} />
+      <DeleteBillingDialog
+        billing={billing}
+        open={dialog === 'delete'}
+        onOpenChange={(open) => !open && setDialog(null)}
+      />
       <IssueBillingDialog
         billing={billing}
         open={dialog === 'issue'}
