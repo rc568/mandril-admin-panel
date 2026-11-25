@@ -13,18 +13,12 @@ import { useOrderMutation } from '@/hooks/query/order';
 import { formatCurrency } from '@/lib/currency';
 import { formatDate } from '@/lib/date-utils';
 import { notifyToast } from '@/lib/toast/toast-adapter';
-import { cn } from '@/lib/utils';
 import { ArrowLeftRight, Edit, MoreHorizontal, Plus, RotateCcw, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { CreateBillingDialog } from '../../billing/components/create-billing-dialog';
-import { BILLING_STATUS_CONFIG, INVOICE_TYPE_CONFIG } from '../../billing/constants/billing.constants';
-import {
-  CLIENT_DOCUMENT_TYPE_CONFIG,
-  NO_INFO,
-  ORDER_PRODUCT_TYPE_CONFIG,
-  ORDER_STATUS_CONFIG
-} from '../../constants/order.constants';
+import { BillingCard } from '../../billing/components/billing-card';
+import { NO_INFO, ORDER_PRODUCT_TYPE_CONFIG, ORDER_STATUS_CONFIG } from '../../constants/order.constants';
 import { messages } from '../../constants/order.messages';
 import type { OrderType } from '../../interfaces/api';
 import type { OrderMapped } from '../../interfaces/ui';
@@ -228,44 +222,7 @@ export const OrderDetailsSheet = ({ order, open, onOpenChange }: Props) => {
             )}
             <div className="space-y-4">
               {order.billing.length > 0 ? (
-                order.billing.map((billing) => (
-                  <div className="rounded-lg border bg-muted/30 p-4 space-y-4">
-                    <div className="text-sm font-medium uppercase">
-                      <div>
-                        <span className="pr-2">{INVOICE_TYPE_CONFIG[billing.billingReceiptType].label}</span>
-                        <BaseBadge
-                          label={BILLING_STATUS_CONFIG[billing.status].label}
-                          className={cn(BILLING_STATUS_CONFIG[billing.status].className, 'bg-transparent normal-case')}
-                        />
-                      </div>
-                      <div>
-                        <span className="font-normal italic text-muted-foreground">{billing.code ?? NO_INFO}</span>
-                      </div>
-                    </div>
-                    <Separator className="h-12" />
-                    <dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
-                      <div className="col-span-3">
-                        <dt className="text-xs text-muted-foreground">Razón Social</dt>
-                        <dd className="text-foreground">{billing.billingName ?? NO_INFO}</dd>
-                      </div>
-                      <div>
-                        <dt className="text-xs text-muted-foreground">Tipo de documento</dt>
-                        <dd className="text-foreground">
-                          {CLIENT_DOCUMENT_TYPE_CONFIG[billing.billingDocumentNumberType].label}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-xs text-muted-foreground">Número de documento</dt>
-                        <dd className="text-foreground">{billing.billingDocumentNumber ?? NO_INFO}</dd>
-                      </div>
-                    </dl>
-                    <Separator className="h-12" />
-                    <div className="text-xs text-muted-foreground flex justify-between italic">
-                      <span>{formatDate(billing.createdAt)}</span>
-                      <span>Creado por {billing.createdBy}</span>
-                    </div>
-                  </div>
-                ))
+                order.billing.map((billing) => <BillingCard key={billing.id} billing={billing} />)
               ) : (
                 <div className="rounded-lg border border-dashed bg-muted/30 p-4">
                   <span className="text-sm italic text-muted-foreground">Sin comprobantes registrados</span>
